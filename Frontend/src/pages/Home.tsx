@@ -110,7 +110,7 @@ const Home = () => {
         {categories.map((item, i) => (
           <div
             key={i}
-            className="flex gap-3 items-center px-3 hover:bg-[#e4e3e3] py-1 justify-between hover:cursor-pointer font-medium"
+            className="flex gap-3 items-center px-3 hover:bg-[#e4e3e3] py-1 transition-all justify-between hover:cursor-pointer font-medium"
             onMouseEnter={() => handleCategoryHover(i)}
             onMouseLeave={handleCategoryLeave}
           >
@@ -140,7 +140,7 @@ const Home = () => {
                 {item.subcategories.map((subcategory, index) => (
                   <li
                     key={index}
-                    className="text-sm hover:text-[#f85606] px-5 py-1 hover:bg-[#e4e3e3]"
+                    className="text-sm hover:text-[#f85606] px-3 transition-all py-1 hover:bg-[#e4e3e3]"
                   >
                     {subcategory}
                   </li>

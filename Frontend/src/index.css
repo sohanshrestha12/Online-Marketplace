@@ -10,3 +10,7 @@ body {
     padding: 0;
     box-sizing: border-box;
 }
+
+.padding_Right{
+    padding-right: 35px !important;
+}

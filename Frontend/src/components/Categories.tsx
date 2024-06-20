@@ -16,10 +16,10 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
       <div className="grid grid-cols-12">
         {categories.map((item, i) => (
           <div
-            className="col-span-2 gap-1 h-[150px] w-[180px] shadow-md bg-white"
+            className="col-span-2 gap-1 h-[150px] w-[180px] hover:cursor-pointer hover:shadow-md bg-white hover:border-b"
             key={i}
           >
-            <div className="flex justify-center flex-col gap-3 items-center w-full hover:cursor-pointer hover:shadow-xl">
+            <div className="flex justify-center flex-col gap-3 items-center w-full ">
               <div className="w-[80px] h-[80px] ">
                 <img
                   className="h-full w-full object-cover"

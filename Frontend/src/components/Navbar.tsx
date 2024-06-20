@@ -26,7 +26,7 @@ const Navbar = () => {
         <div className="flex-1 flex justify-center">
           <div className="w-[60%] flex items-center relative">
             <Input
-              className="w-full rounded-xl pr-8 focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus-visible:border-2 focus-visible:shadow-sm"
+              className="w-full padding_Right rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus-visible:border-2 focus:border-black focus-visible:shadow-sm"
               placeholder="Search"
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -71,11 +71,17 @@ const Navbar = () => {
       </div>
       <div>
         <ul>
-            <li className="flex gap-5 text-sm font-medium">
-                <Link className="no-underline text-black" to="/">Home</Link>
-                <Link className="no-underline text-black" to="/">Help & Support</Link>
-                <Link className="no-underline text-black" to="/seller">Become a seller</Link>
-            </li>
+          <li className="flex gap-5 text-sm font-medium">
+            <Link className="no-underline text-black" to="/">
+              Home
+            </Link>
+            <Link className="no-underline text-black" to="/">
+              Help & Support
+            </Link>
+            <Link className="no-underline text-black" to="/seller">
+              Become a seller
+            </Link>
+          </li>
         </ul>
       </div>
       <div className="h-[1px] w-full bg-slate-300 opacity-50 mb-3"></div>
