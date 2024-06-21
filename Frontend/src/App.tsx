@@ -5,11 +5,14 @@ import Seller from "./components/Seller";
 import Login from "./pages/Login";
 import ProductDetails from "./pages/ProductDetails";
 import SignUp from "./pages/SignUp";
+import ProductLists from "./pages/ProductLists";
+import Error from "./pages/Error";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <AppLayout/>,
+    errorElement:<Error/>,
     children:[
       {
         index:true,
@@ -29,6 +32,9 @@ const router = createBrowserRouter([
       {
         path:'productDetails',
         element:<ProductDetails/>
+      },{
+        path:'productLists',
+        element:<ProductLists/>
       }
     ]
   },
