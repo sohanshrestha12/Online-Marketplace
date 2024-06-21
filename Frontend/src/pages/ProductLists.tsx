@@ -1,3 +1,4 @@
+import CategoryFilter from "@/components/CategoryFilter";
 import { useEffect, useState } from "react";
 
 const ProductLists = () => {
@@ -71,7 +72,9 @@ const ProductLists = () => {
         <div className="h-[1px] bg-black opacity-10 my-2"></div>
       </div>
       <div className="grid grid-cols-12 gap-5">
-        <div className="col-span-3">Filter</div>
+        <div className="col-span-3 mt-2">
+          <CategoryFilter/>
+        </div>
         <div className="col-span-9 grid grid-cols-12">
           {shoes.map((shoe, index) => (
             <div

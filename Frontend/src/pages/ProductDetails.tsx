@@ -140,10 +140,10 @@ const ProductDetails = () => {
           </div>
         </div>
         <div className="flex gap-2 mt-5">
-          <div className="basis-1/2 flex justify-center font-bold items-center bg-[#f85606] text-white py-2">
+          <div className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-[#f85606] text-white py-2">
             Buy Now
           </div>
-          <div className="basis-1/2 flex justify-center font-bold items-center bg-black text-white">
+          <div className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-black text-white">
             Add to Cart
           </div>
         </div>

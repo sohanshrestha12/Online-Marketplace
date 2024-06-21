@@ -58,7 +58,7 @@ const Footer = () => {
           </p>
           <p className="text-sm hover:cursor-pointer mb-1">Address:</p>
           <p className="text-sm hover:cursor-pointer mb-2 ml-3">
-            Kirtipur,Kathmandu
+            Kirtipur, Kathmandu
           </p>
         </div>
         <div className="col-span-12 flex justify-between items-center gap-2 mt-5">
