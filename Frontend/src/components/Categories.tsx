@@ -11,7 +11,7 @@ interface CategoriesProps {
 }
 const Categories: React.FC<CategoriesProps> = ({ categories }) => {
   return (
-    <div className="mt-5">
+    <div className="mt-5 max-w-screen-2xl">
       <h3 className="text-lg font-semibold mb-4">Categories</h3>
       <div className="grid grid-cols-12">
         {categories.map((item, i) => (

@@ -105,58 +105,58 @@ const Home = () => {
 
   return (
     <>
-    <div className="grid grid-cols-12 gap-3">
-      <div className="col-span-3 bg-[#fffefe] shadow-md py-3 flex flex-col gap-1 rounded-lg relative">
-        {categories.map((item, i) => (
-          <div
-            key={i}
-            className="flex gap-3 items-center px-3 hover:bg-[#e4e3e3] py-1 transition-all justify-between hover:cursor-pointer font-medium"
-            onMouseEnter={() => handleCategoryHover(i)}
-            onMouseLeave={handleCategoryLeave}
-          >
-            <div className="flex gap-3 items-center">
-              <span
-                className={`${activeCategory === i ? "text-[#f85606]" : ""}`}
-              >
-                {item.icon}
-              </span>
-              <p
-                className={`text-sm m-0 ${
-                  activeCategory === i ? "text-[#f85606]" : ""
-                }`}
-              >
-                {item.name}
-              </p>
+      <div className="grid grid-cols-12 gap-3 max-w-screen-2xl">
+        <div className="col-span-3 bg-[#fffefe] shadow-md py-3 flex flex-col gap-1 rounded-lg relative">
+          {categories.map((item, i) => (
+            <div
+              key={i}
+              className="flex gap-3 items-center px-3 hover:bg-[#e4e3e3] py-1 transition-all justify-between hover:cursor-pointer font-medium"
+              onMouseEnter={() => handleCategoryHover(i)}
+              onMouseLeave={handleCategoryLeave}
+            >
+              <div className="flex gap-3 items-center">
+                <span
+                  className={`${activeCategory === i ? "text-[#f85606]" : ""}`}
+                >
+                  {item.icon}
+                </span>
+                <p
+                  className={`text-sm m-0 ${
+                    activeCategory === i ? "text-[#f85606]" : ""
+                  }`}
+                >
+                  {item.name}
+                </p>
+              </div>
+              {activeCategory === i && (
+                <FaChevronRight
+                  className={`text-sm ${
+                    activeCategory === i ? "text-[#f85606]" : ""
+                  }`}
+                />
+              )}
+              {activeCategory === i && (
+                <ul className="absolute left-[102%] z-10 top-0 h-full flex flex-col gap-1 py-3 w-[200px] shadow-md bg-[#fffefe] rounded-md p-2">
+                  {item.subcategories.map((subcategory, index) => (
+                    <li
+                      key={index}
+                      className="text-sm hover:text-[#f85606] px-3 transition-all py-1 hover:bg-[#e4e3e3]"
+                    >
+                      {subcategory}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-            {activeCategory === i && (
-              <FaChevronRight
-                className={`text-sm ${
-                  activeCategory === i ? "text-[#f85606]" : ""
-                }`}
-              />
-            )}
-            {activeCategory === i && (
-              <ul className="absolute left-[102%] z-10 top-0 h-full flex flex-col gap-1 py-3 w-[200px] shadow-md bg-[#fffefe] rounded-md p-2">
-                {item.subcategories.map((subcategory, index) => (
-                  <li
-                    key={index}
-                    className="text-sm hover:text-[#f85606] px-3 transition-all py-1 hover:bg-[#e4e3e3]"
-                  >
-                    {subcategory}
-                  </li>
-                ))}
-              </ul>
-            )}
+          ))}
+        </div>
+        <div className="col-span-9 items-center flex justify-center h-[70vh]">
+          <div className="w-[100%] h-full">
+            <CarouselComponent />
           </div>
-        ))}
-      </div>
-      <div className="col-span-9 items-center flex justify-center h-[70vh]">
-        <div className="w-[100%] h-full">
-          <CarouselComponent />
         </div>
       </div>
-    </div>
-    <Categories categories={categories} />
+      <Categories categories={categories} />
     </>
   );
 };

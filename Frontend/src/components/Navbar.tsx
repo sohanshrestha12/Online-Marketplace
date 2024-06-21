@@ -21,7 +21,11 @@ const Navbar = () => {
     <nav className="flex flex-col gap-3 max-w-screen-2xl pt-4 pb-3">
       <div className="flex gap-5">
         <div>
-          <h1 className="font-bold tracking-wider text-4xl">GrandBazaar</h1>
+          <Link to={"/"}>
+            <h1 className="font-bold tracking-wider text-4xl hover:cursor-pointer">
+              GrandBazaar
+            </h1>
+          </Link>
         </div>
         <div className="flex-1 flex justify-center">
           <div className="w-[60%] flex items-center relative">
