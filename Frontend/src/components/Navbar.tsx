@@ -40,7 +40,9 @@ const Navbar = () => {
         </div>
         <div className="flex gap-4 mr-5">
           <ToolTip name={"Add to cart"}>
-            <LuShoppingCart className="text-xl hover:cursor-pointer" />
+            <Link to={"/AddToCart"}>
+              <LuShoppingCart className="text-xl hover:cursor-pointer" />
+            </Link>
           </ToolTip>
           <ToolTip name={"Favourites"}>
             <MdOutlineFavoriteBorder className="text-xl hover:cursor-pointer" />
