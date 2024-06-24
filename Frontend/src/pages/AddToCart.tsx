@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react";
 
@@ -53,7 +54,7 @@ const AddToCart = () => {
     },
   ];
   return (
-    <div className="grid grid-cols-12">
+    <div className="grid gap-4 grid-cols-12">
       <div className="col-span-8 flex flex-col gap-4">
         {shoeArray.map((item, i) => (
           <div key={i} className="flex flex-col gap-4">
@@ -77,7 +78,22 @@ const AddToCart = () => {
           </div>
         ))}
       </div>
-      <div className="col-span-4">Cart</div>
+      <div className="col-span-4">
+        <Card>
+          <h3 className="text-center font-semibold font-xl px-3 py-4 bg-gray-100 border-b">
+            Cart
+          </h3>
+          <div className="px-2 py-3">
+            <div className="flex justify-between">
+              <h5>SubTotal Product</h5>
+              <p>
+                Rs.
+                {selectedItems.reduce((total, item) => total + item.price, 0).toFixed(2)}
+              </p>
+            </div>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };

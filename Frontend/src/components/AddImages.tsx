@@ -1,7 +1,12 @@
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { BsImages } from "react-icons/bs";
-const AddImages = () => {
+
+interface AddImagesProps {
+  onImagesChange: (images: File[]) => void;
+}
+
+const AddImages = ({onImagesChange}:AddImagesProps) => {
   const [images, setImages] = useState<File[]>([]);
   const [imageShow, setImageShow] = useState<{ url: string }[]>([]);
   const imageHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -10,6 +15,7 @@ const AddImages = () => {
     const length = files?.length;
     if (length && length > 0) {
       setImages([...images, ...files]);
+      onImagesChange([...images, ...files]);
       const imageUrl = [];
 
       for (let i = 0; i < length; i++) {
@@ -27,8 +33,11 @@ const AddImages = () => {
       tempUrl[index] = { url: URL.createObjectURL(img) };
       setImages([...tempImages]);
       setImageShow([...tempUrl]);
+      onImagesChange(tempImages);
     }
   };
+
+  
   return (
     <div className="grid lg:grid-cols-4 grid-cols-1 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 md:gap-4 xs:gap-4 gap-3 w-full text-black mb-4">
       {imageShow.map((img, i) => (
