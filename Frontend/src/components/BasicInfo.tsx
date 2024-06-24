@@ -11,8 +11,24 @@ import { Button } from "./ui/button";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 
 const BasicInfo = () => {
-  const [images, setImages] = useState<File[]>([]);
   const [value, setValue] = useState("");
+
+  const [images, setImages] = useState<File[]>([]);
+  const [imageShow, setImageShow] = useState<{ url: string }[]>([]);
+
+  const insertImage = (files:File[])=>{
+      setImages([...images, ...files]);
+  }
+  const changeImage = (tempImages: File[]) => {
+    setImages([...tempImages]);
+  };
+  const insertImageUrl = (imgUrl:{url:string}[])=>{
+    setImageShow([...imageShow, ...imgUrl]);
+  }
+  const changeImageUrl = (imgUrl:{url:string}[])=>{
+    setImageShow([ ...imgUrl]);
+  }
+
   interface Option {
     value: string;
     label: string;
@@ -54,16 +70,11 @@ const BasicInfo = () => {
     console.log(images);
     console.log(values);
     resetForm();
-    setImages([]); 
+    setImages([]);
+    setImageShow([]);
     setValue("");
   };
-
-//   const resetImages = () => {
-//     setImages([]);
-//     setImageShow([]);
-//     onImagesChange([]);
-//   };
-
+  
   return (
     <>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -89,7 +100,12 @@ const BasicInfo = () => {
                     </p>
                     <p className="text-xs mb-2">Upload between 3 to 8 images</p>
                     <AddImages
-                      onImagesChange={(newImages) => setImages(newImages)}
+                      insertImage={insertImage}
+                      insertImageUrl={insertImageUrl}
+                      changeImage={changeImage}
+                      images={images}
+                      imageShow={imageShow}
+                      changeImageUrl={changeImageUrl}
                     />
                   </div>
                   <div className="flex space-x-2 items-center">
