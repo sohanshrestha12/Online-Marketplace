@@ -3,6 +3,7 @@ import Person from "../assets/images/person.jpg";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { ReactNode, useState } from "react";
 import { createContext } from "react";
+import { Link } from "react-router-dom";
 
 interface SideBarProps {
   children: ReactNode;
@@ -17,7 +18,7 @@ const SideBar = ({ children }: SideBarProps) => {
   const [expanded, setExpanded] = useState<boolean>(true);
 
   return (
-    <aside className={`h-screen ${expanded ? "w-64" : "w-fit"} `}>
+    <aside className={`h-screen sticky top-0 left-0 ${expanded ? "w-64" : "w-fit"} `}>
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-3 flex justify-between items-center">
           <span
@@ -25,7 +26,8 @@ const SideBar = ({ children }: SideBarProps) => {
               expanded ? "w-32" : "w-0"
             }`}
           >
-            GrandBazar <p className="text-sm font-semibold">Seller Center</p>
+            <Link to={'/'} className="hover:cursor-pointer"> GrandBazar </Link>
+            <p className="text-sm font-semibold">Seller Center</p>
           </span>
           <button
             onClick={() => {
@@ -36,7 +38,7 @@ const SideBar = ({ children }: SideBarProps) => {
             {expanded ? <TbChevronsLeft /> : <TbChevronsRight />}
           </button>
         </div>
-        <SidebarContext.Provider value={{expanded}}>
+        <SidebarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-3">{children}</ul>
         </SidebarContext.Provider>
         <div className="border-t flex p-3">

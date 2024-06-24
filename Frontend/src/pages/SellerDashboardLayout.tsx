@@ -2,6 +2,7 @@ import SideBar from "@/components/SideBar";
 import SideBarItem from "@/components/SideBarItem";
 import { useEffect, useState } from "react";
 import { MdDashboard } from "react-icons/md";
+import { VscAdd } from "react-icons/vsc";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 const SellerDashboardLayout = () => {
@@ -31,7 +32,7 @@ const SellerDashboardLayout = () => {
         </Link>
         <Link to="/sellerDashboard/addProduct">
           <SideBarItem
-            icon={<MdDashboard />}
+            icon={<VscAdd />}
             text={"Add Product"}
             alert
             active={activeItem === "addProduct"}
