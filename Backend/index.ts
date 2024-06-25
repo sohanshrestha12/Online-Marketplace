@@ -4,8 +4,20 @@ import { connectToDB } from "./src/config/dbConnect";
 import routes from "./src/routes/v1";
 import { errorResponse } from "./src/utils/HttpResponse";
 import { globalErrorHandler } from "./src/Middleware/globalErrorHandler";
+import cors from "cors";
+import bodyParser from 'body-parser';
+
+
 (async () => {
   const app = express();
+   app.use(bodyParser.json());
+   app.use(bodyParser.json());
+   const corsOptions = {
+     origin: true,
+     credentials: true,
+   };
+    app.use(cors(corsOptions));
+
 
   app.use("/api/v1", routes);
 
