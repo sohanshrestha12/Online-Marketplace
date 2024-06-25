@@ -11,3 +11,7 @@ export const createUserRepo = (
     return details as UserWithoutPassword;
   });
 };
+
+export const getUserByEmail = (email: string): Promise<UserDocument | null> => {
+  return UserModel.findOne({ email: email });
+};
