@@ -151,7 +151,7 @@ const BasicInfo = () => {
                         htmlFor="category"
                         className="font-semibold whitespace-no-wrap !w-[120px]"
                       >
-                        Category
+                        Category{" "}
                         <span className="text-rose-500 text-lg font-bold ">
                           *
                         </span>
