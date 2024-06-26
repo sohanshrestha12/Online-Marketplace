@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <nav className="flex flex-col gap-3 max-w-screen-2xl pt-4 pb-3">
+    <nav className="flex flex-col gap-3 max-w-screen-2xl pt-3 pb-3">
       <div className="flex gap-5">
         <div>
           <Link to={"/"}>
