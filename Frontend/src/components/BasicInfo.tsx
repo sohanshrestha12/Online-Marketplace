@@ -3,22 +3,30 @@ import { Card, CardTitle } from "@/components/ui/card";
 import Select from "react-select";
 import { Input } from "./ui/input";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Button } from "./ui/button";
 
-import { createProduct } from "@/api/Product";
+import { createProduct, getAllCategories } from "@/api/Product";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { IoIosClose } from "react-icons/io";
+import { Category } from "@/Types/Category";
 
 const BasicInfo = () => {
+  interface Option {
+    value: string;
+    label: string;
+  }
   const [value, setValue] = useState("");
 
   const [images, setImages] = useState<File[]>([]);
   const [imageShow, setImageShow] = useState<{ url: string }[]>([]);
   const [size, setSize] = useState<number[]>([]);
   const [sizeInput, setSizeInput] = useState("");
+  const [allCategory, setAllCategory] = useState<Category[]>([]);
+  const [level1Category, setLevel1Category] = useState<Option | null>(null);
+  const [level2Category, setLevel2Category] = useState<Option | null>(null);
 
   const insertImage = (files: File[]) => {
     setImages([...images, ...files]);
@@ -33,17 +41,6 @@ const BasicInfo = () => {
     setImageShow([...imgUrl]);
   };
 
-  interface Option {
-    value: string;
-    label: string;
-  }
-
-  const categoryOptions: Option[] = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-  ];
-
   interface FormValues {
     name: string;
     category: Option | null;
@@ -51,7 +48,6 @@ const BasicInfo = () => {
     colorFamily: Option | null;
     quantity: number | string;
     price: number | string;
-    
     description: string;
     video: string;
   }
@@ -85,9 +81,9 @@ const BasicInfo = () => {
         }
       }
     });
-    size.forEach((item)=>{
-      formData.append("size",item.toString());
-    })
+    size.forEach((item) => {
+      formData.append("size", item.toString());
+    });
 
     images.forEach((image) => {
       // console.log("this is console img", image);
@@ -113,6 +109,8 @@ const BasicInfo = () => {
     setSize([]);
     setSizeInput("");
     setValue("");
+    setLevel1Category(null);
+    setLevel2Category(null);
   };
 
   const handleAddSize = () => {
@@ -120,15 +118,51 @@ const BasicInfo = () => {
     setSizeInput("");
   };
 
-  const handleRemoveSize =(i:number)=>{
-    const updatedSize = size.filter((_,index)=>index !== i);
+  const handleRemoveSize = (i: number) => {
+    const updatedSize = size.filter((_, index) => index !== i);
     setSize(updatedSize);
-  }
+  };
 
+  useEffect(() => {
+    const fetchAllCategory = async () => {
+      try {
+        const response = await getAllCategories();
+        setAllCategory(response.data.data);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAllCategory();
+  }, []);
 
+  const categoryOptions: Option[] = allCategory.map((item) => ({
+    value: item.name,
+    label: item.name,
+  }));
+
+  const level1CategoryOptions: Option[] = allCategory
+    .filter((cat) => cat.level === 1)
+    .map((item) => ({
+      value: item.name,
+      label: item.name,
+    }));
+  const level2CategoryOptions: Option[] = allCategory
+    .filter((cat) => cat.level === 2 && cat.parent === level1Category?.value)
+    .map((item) => ({
+      value: item.name,
+      label: item.name,
+    }));
+  const level3CategoryOptions: Option[] = allCategory
+    .filter((cat) => cat.level === 3 && cat.parent === level2Category?.value)
+    .map((item) => ({
+      value: item.name,
+      label: item.name,
+    }));
 
   return (
     <>
+     
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ setFieldValue, values }) => (
           <Form>
@@ -204,13 +238,33 @@ const BasicInfo = () => {
                         </span>
                       </label>
                     </div>
-                    <Select
-                      className="w-full"
-                      name="category"
-                      value={values.category}
-                      options={categoryOptions}
-                      onChange={(option) => setFieldValue("category", option)}
-                    />
+                    <div className="grid grid-cols-3 gap-2 w-full">
+                      <Select
+                        className="w-full"
+                        value={level1Category}
+                        options={level1CategoryOptions}
+                        onChange={(option) => {
+                          setLevel1Category(option);
+                          setLevel2Category(null);
+                          values.category = null;
+                        }}
+                      />
+                      <Select
+                        isDisabled={level1Category === null}
+                        className="w-full"
+                        value={level2Category}
+                        options={level2CategoryOptions}
+                        onChange={(option) => {setLevel2Category(option);values.category = null}}
+                      />
+                      <Select
+                        isDisabled={level2Category === null}
+                        className="w-full"
+                        name="category"
+                        value={values.category}
+                        options={level3CategoryOptions}
+                        onChange={(option) => setFieldValue("category", option)}
+                      />
+                    </div>
                   </div>
                   <div>
                     <div className="mb-3">
@@ -328,7 +382,10 @@ const BasicInfo = () => {
                                     <li className="py-1 px-3 bg-indigo-200 rounded">
                                       {item}
                                     </li>
-                                    <IoIosClose onClick={()=>handleRemoveSize(i)} className="absolute p-1 bg-indigo-400 rounded-full invisible opacity-30 transition-all group-hover:!visible group-hover:!opacity-100 hover:cursor-pointer text-white text-xl -top-2 -right-1"/>
+                                    <IoIosClose
+                                      onClick={() => handleRemoveSize(i)}
+                                      className="absolute p-1 bg-indigo-400 rounded-full invisible opacity-30 transition-all group-hover:!visible group-hover:!opacity-100 hover:cursor-pointer text-white text-xl -top-2 -right-1"
+                                    />
                                   </div>
                                 </div>
                               ))}
