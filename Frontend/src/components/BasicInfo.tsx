@@ -3,32 +3,35 @@ import { Card, CardTitle } from "@/components/ui/card";
 import Select from "react-select";
 import { Input } from "./ui/input";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Button } from "./ui/button";
 
 import { createProduct } from "@/api/Product";
 import { Field, Form, Formik, FormikHelpers } from "formik";
+import { IoIosClose } from "react-icons/io";
 
 const BasicInfo = () => {
   const [value, setValue] = useState("");
 
   const [images, setImages] = useState<File[]>([]);
   const [imageShow, setImageShow] = useState<{ url: string }[]>([]);
+  const [size, setSize] = useState<number[]>([]);
+  const [sizeInput, setSizeInput] = useState("");
 
-  const insertImage = (files:File[])=>{
-      setImages([...images, ...files]);
-  }
+  const insertImage = (files: File[]) => {
+    setImages([...images, ...files]);
+  };
   const changeImage = (tempImages: File[]) => {
     setImages([...tempImages]);
   };
-  const insertImageUrl = (imgUrl:{url:string}[])=>{
+  const insertImageUrl = (imgUrl: { url: string }[]) => {
     setImageShow([...imageShow, ...imgUrl]);
-  }
-  const changeImageUrl = (imgUrl:{url:string}[])=>{
-    setImageShow([ ...imgUrl]);
-  }
+  };
+  const changeImageUrl = (imgUrl: { url: string }[]) => {
+    setImageShow([...imgUrl]);
+  };
 
   interface Option {
     value: string;
@@ -46,9 +49,9 @@ const BasicInfo = () => {
     category: Option | null;
     brand: Option | null;
     colorFamily: Option | null;
-    price: number;
-    quantity: number;
-    size: number;
+    quantity: number | string;
+    price: number | string;
+    
     description: string;
     video: string;
   }
@@ -57,43 +60,20 @@ const BasicInfo = () => {
     category: null,
     brand: null,
     colorFamily: null,
-    price: 0,
-    quantity: 0,
-    size: 0,
+    price: "",
+    quantity: "",
     description: "",
     video: "",
   };
-  // const formDataToProduct = (formData: FormData): Product => {
-  //   const product: Product = {
-  //     name: formData.get("name") as string,
-  //     category: formData.get("category") as string,
-  //     brand: formData.get("brand") as string,
-  //     colorFamily: formData.get("colorFamily") as string,
-  //     price: Number(formData.get("price")),
-  //     quantity: Number(formData.get("quantity")),
-  //     size: Number(formData.get("size")),
-  //     description: formData.get("description") as string,
-  //     videoUrl: formData.get("video") as string,
-  //     images: [], 
-  //   };
 
-  //   const imageFiles = formData.getAll("images");
-  //   for (let i = 0; i < imageFiles.length; i++) {
-  //     const file = imageFiles[i] as File;
-  //     product.images.push(file);
-  //   }
-
-  //   return product;
-  // };
-
-  const handleSubmit = async(
+  const handleSubmit = async (
     values: FormValues,
     { resetForm }: FormikHelpers<FormValues>
   ) => {
     // console.log(images);
     // console.log(values);
     const formData = new FormData();
-    Object.keys(values).forEach((key)=>{
+    Object.keys(values).forEach((key) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const value = (values as any)[key];
 
@@ -104,31 +84,49 @@ const BasicInfo = () => {
           formData.append(key, value.toString());
         }
       }
+    });
+    size.forEach((item)=>{
+      formData.append("size",item.toString());
     })
-    images.forEach((image)=>{
-      console.log('this is console img',image);
-      formData.append('images',image)
-    })
-    
+
+    images.forEach((image) => {
+      // console.log("this is console img", image);
+      formData.append("images", image);
+    });
+
     const response = await createProduct(formData);
     console.log(response);
-    for (const pair of formData.entries()) {
-      // console.log(`${pair[0]}: ${pair[1]}`);
-      if (pair[1] instanceof File) {
-        console.log(`${pair[0]}:`);
-        console.log(`  Name: ${pair[1].name}`);
-        console.log(`  Type: ${pair[1].type}`);
-        console.log(`  Size: ${pair[1].size} bytes`);
-      } else {
-        console.log(`${pair[0]}: ${pair[1]}`);
-      }
-    }
+    // for (const pair of formData.entries()) {
+    //   // console.log(`${pair[0]}: ${pair[1]}`);
+    //   if (pair[1] instanceof File) {
+    //     console.log(`${pair[0]}:`);
+    //     console.log(`  Name: ${pair[1].name}`);
+    //     console.log(`  Type: ${pair[1].type}`);
+    //     console.log(`  Size: ${pair[1].size} bytes`);
+    //   } else {
+    //     console.log(`${pair[0]}: ${pair[1]}`);
+    //   }
+    // }
     resetForm();
     setImages([]);
     setImageShow([]);
+    setSize([]);
+    setSizeInput("");
     setValue("");
   };
-  
+
+  const handleAddSize = () => {
+    setSize([...size, parseInt(sizeInput.trim())]);
+    setSizeInput("");
+  };
+
+  const handleRemoveSize =(i:number)=>{
+    const updatedSize = size.filter((_,index)=>index !== i);
+    setSize(updatedSize);
+  }
+
+
+
   return (
     <>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -192,12 +190,7 @@ const BasicInfo = () => {
                         </span>
                       </label>
                     </div>
-                    <Field
-                      name="name"
-                      type="text"
-                      id="name"
-                      as={Input}
-                    />
+                    <Field name="name" type="text" id="name" as={Input} />
                   </div>
                   <div className="flex mb-5">
                     <div>
@@ -293,7 +286,7 @@ const BasicInfo = () => {
                           <Field type="number" name="quantity" as={Input} />
                         </div>
                       </div>
-                      <div className="flex gap-4 flex-wrap">
+                      <div className="flex gap-4 flex-col flex-wrap">
                         <div className="flex-1">
                           <label htmlFor="size">
                             Size{" "}
@@ -301,13 +294,47 @@ const BasicInfo = () => {
                               *
                             </span>
                           </label>
-                          <Field
-                            type="number"
-                            name="size"
-                            placeholder="In cm"
-                            as={Input}
-                          />
+                          <div className="flex gap-4">
+                            <Field
+                              type="number"
+                              placeholder="In cm"
+                              value={sizeInput}
+                              onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                              ) => setSizeInput(e.target.value)}
+                              onKeyDown={(
+                                e: React.KeyboardEvent<HTMLInputElement>
+                              ) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  handleAddSize();
+                                }
+                              }}
+                              as={Input}
+                            />
+
+                            <Button type="button" onClick={handleAddSize}>
+                              Add Size
+                            </Button>
+                          </div>
                         </div>
+                        {size && (
+                          <div className="flex items-center gap-2">
+                            <label>Sizes: </label>
+                            <ul className="flex gap-2">
+                              {size.map((item, i) => (
+                                <div key={i}>
+                                  <div className="relative group">
+                                    <li className="py-1 px-3 bg-indigo-200 rounded">
+                                      {item}
+                                    </li>
+                                    <IoIosClose onClick={()=>handleRemoveSize(i)} className="absolute p-1 bg-indigo-400 rounded-full invisible opacity-30 transition-all group-hover:!visible group-hover:!opacity-100 hover:cursor-pointer text-white text-xl -top-2 -right-1"/>
+                                  </div>
+                                </div>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
