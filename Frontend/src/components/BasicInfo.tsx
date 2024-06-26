@@ -8,6 +8,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Button } from "./ui/button";
 
+import { createProduct } from "@/api/Product";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 
 const BasicInfo = () => {
@@ -41,7 +42,7 @@ const BasicInfo = () => {
   ];
 
   interface FormValues {
-    productName: string;
+    name: string;
     category: Option | null;
     brand: Option | null;
     colorFamily: Option | null;
@@ -52,7 +53,7 @@ const BasicInfo = () => {
     video: string;
   }
   const initialValues: FormValues = {
-    productName: "",
+    name: "",
     category: null,
     brand: null,
     colorFamily: null,
@@ -62,13 +63,66 @@ const BasicInfo = () => {
     description: "",
     video: "",
   };
+  // const formDataToProduct = (formData: FormData): Product => {
+  //   const product: Product = {
+  //     name: formData.get("name") as string,
+  //     category: formData.get("category") as string,
+  //     brand: formData.get("brand") as string,
+  //     colorFamily: formData.get("colorFamily") as string,
+  //     price: Number(formData.get("price")),
+  //     quantity: Number(formData.get("quantity")),
+  //     size: Number(formData.get("size")),
+  //     description: formData.get("description") as string,
+  //     videoUrl: formData.get("video") as string,
+  //     images: [], 
+  //   };
 
-  const handleSubmit = (
+  //   const imageFiles = formData.getAll("images");
+  //   for (let i = 0; i < imageFiles.length; i++) {
+  //     const file = imageFiles[i] as File;
+  //     product.images.push(file);
+  //   }
+
+  //   return product;
+  // };
+
+  const handleSubmit = async(
     values: FormValues,
     { resetForm }: FormikHelpers<FormValues>
   ) => {
-    console.log(images);
-    console.log(values);
+    // console.log(images);
+    // console.log(values);
+    const formData = new FormData();
+    Object.keys(values).forEach((key)=>{
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const value = (values as any)[key];
+
+      if (value !== null && value !== undefined) {
+        if (typeof value === "object") {
+          formData.append(key, JSON.stringify(value.value));
+        } else {
+          formData.append(key, value.toString());
+        }
+      }
+    })
+    images.forEach((image)=>{
+      console.log('this is console img',image);
+      formData.append('images',image)
+    })
+    
+    const response = await createProduct(formData);
+    console.log(response);
+    for (const pair of formData.entries()) {
+      // console.log(`${pair[0]}: ${pair[1]}`);
+      if (pair[1] instanceof File) {
+        console.log(`${pair[0]}:`);
+        console.log(`  Name: ${pair[1].name}`);
+        console.log(`  Type: ${pair[1].type}`);
+        console.log(`  Size: ${pair[1].size} bytes`);
+      } else {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
+    }
     resetForm();
     setImages([]);
     setImageShow([]);
@@ -129,7 +183,7 @@ const BasicInfo = () => {
                   <div className="flex mb-3">
                     <div>
                       <label
-                        htmlFor="productName"
+                        htmlFor="name"
                         className="font-semibold whitespace-no-wrap !w-[120px]"
                       >
                         Product Name{" "}
@@ -139,9 +193,9 @@ const BasicInfo = () => {
                       </label>
                     </div>
                     <Field
-                      name="productName"
+                      name="name"
                       type="text"
-                      id="productName"
+                      id="name"
                       as={Input}
                     />
                   </div>

@@ -5,20 +5,20 @@ import routes from "./src/routes/v1";
 import { errorResponse } from "./src/utils/HttpResponse";
 import { globalErrorHandler } from "./src/Middleware/globalErrorHandler";
 import cors from "cors";
-import bodyParser from 'body-parser';
-
+import bodyParser from "body-parser";
+import path from "path";
 
 (async () => {
   const app = express();
-   app.use(bodyParser.json());
-   app.use(bodyParser.json());
-   const corsOptions = {
-     origin: true,
-     credentials: true,
-   };
-    app.use(cors(corsOptions));
+  app.use(bodyParser.json());
+  app.use(bodyParser.json());
+  const corsOptions = {
+    origin: true,
+    credentials: true,
+  };
+  app.use(cors(corsOptions));
 
-
+  app.use(express.static(path.join(__dirname, "uploads")));
   app.use("/api/v1", routes);
 
   app.all("*", (req: Request, res: Response) => {
