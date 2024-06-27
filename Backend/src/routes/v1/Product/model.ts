@@ -4,7 +4,7 @@ export interface Product {
   name: string;
   description: string;
   category: string;
-  brand: string;
+  brand?: string;
   price: number;
   colorFamily: string;
   size: number;
@@ -33,8 +33,8 @@ const productSchema = new mongoose.Schema<Product>(
     },
     brand: {
       type: String,
-      required: [true, "Brand is Required"],
-      unique: false,
+      required: false,
+      unique: true,
     },
     videoUrl: {
       type: String,
