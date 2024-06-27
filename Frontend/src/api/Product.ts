@@ -7,3 +7,7 @@ export const createProduct = (product:FormData)=> {
 export const getAllCategories = () =>{
     return MarketUrl.get("/category");
 } 
+
+export const getAllBrands = () => {
+    return MarketUrl.get("/brand");
+}

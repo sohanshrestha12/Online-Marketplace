@@ -8,7 +8,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Button } from "./ui/button";
 
-import { createProduct, getAllCategories } from "@/api/Product";
+import { createProduct, getAllBrands, getAllCategories } from "@/api/Product";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { IoIosClose } from "react-icons/io";
 import { Category } from "@/Types/Category";
@@ -17,6 +17,11 @@ const BasicInfo = () => {
   interface Option {
     value: string;
     label: string;
+    category?:string;
+  }
+  interface Brand{
+    name: string,
+    category:string,
   }
   const [value, setValue] = useState("");
 
@@ -26,7 +31,8 @@ const BasicInfo = () => {
   const [sizeInput, setSizeInput] = useState("");
   const [allCategory, setAllCategory] = useState<Category[]>([]);
   const [level1Category, setLevel1Category] = useState<Option | null>(null);
-  const [level2Category, setLevel2Category] = useState<Option | null>(null);
+  const [level2Category, setLevel2Category] = useState<Option | null>(null); 
+  const [brands, setBrands] = useState<Brand[]>([]); 
 
   const insertImage = (files: File[]) => {
     setImages([...images, ...files]);
@@ -75,7 +81,7 @@ const BasicInfo = () => {
 
       if (value !== null && value !== undefined) {
         if (typeof value === "object") {
-          formData.append(key, JSON.stringify(value.value));
+          formData.append(key, value.value);
         } else {
           formData.append(key, value.toString());
         }
@@ -135,6 +141,26 @@ const BasicInfo = () => {
     };
     fetchAllCategory();
   }, []);
+
+  useEffect(()=>{
+    const fetchAllBrands = async() => {
+      try {
+        const response = await getAllBrands();
+        setBrands(response.data.data);
+        console.log(response);
+        
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchAllBrands();
+  },[])
+
+  const brandOptions:Option[] = brands.map((item)=>({
+    value:item.name,
+    label:item.name,
+    category:item.category
+  }))
 
   const categoryOptions: Option[] = allCategory.map((item) => ({
     value: item.name,
@@ -289,7 +315,7 @@ const BasicInfo = () => {
                             </span>
                           </label>
                           <Select
-                            options={categoryOptions}
+                            options={brandOptions.filter(brand => brand.category === values.category?.value)}
                             name="brand"
                             value={values.brand}
                             onChange={(option) =>
