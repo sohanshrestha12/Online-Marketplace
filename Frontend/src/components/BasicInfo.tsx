@@ -161,10 +161,9 @@ const BasicInfo = () => {
     }));
 
   return (
-    <>
-     
+    <>  
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ setFieldValue, values }) => (
+        {({ setFieldValue, values, isSubmitting }) => (
           <Form>
             <Card>
               <CardTitle className="bg-gray-50 px-2 py-3 border-b text-md font-semibold">
@@ -420,9 +419,10 @@ const BasicInfo = () => {
               <div className="flex justify-end mb-3 mr-3">
                 <Button
                   type="submit"
+                  disabled={isSubmitting}
                   className="bg-indigo-500 hover:bg-indigo-600"
                 >
-                  Add Product
+                  {isSubmitting?"Adding...":"Add Product"}
                 </Button>
               </div>
             </Card>

@@ -11,7 +11,7 @@ export interface Product {
   quantity: number;
   rating?: number;
   videoUrl?: string;
-  images: string[] | File[];
+  images?: string[] | File[];
 }
 
 const productSchema = new mongoose.Schema<Product>(
@@ -56,14 +56,14 @@ const productSchema = new mongoose.Schema<Product>(
       required: [true,"Quantity is Required"],
       unique:false,
     },
-    size: {
+    size: [{
       type: Number,
       required: [true,"Size is Required"],
       unique:false,
-    },
+    }],
     rating: {
       type: Number,
-      required: [true,"Rating is Required"],
+      required: false,
       unique:false,
     },
     images:[{
