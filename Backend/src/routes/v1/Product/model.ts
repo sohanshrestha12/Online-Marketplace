@@ -6,7 +6,7 @@ export interface Product {
   category: string;
   brand?: string;
   price: number;
-  colorFamily: string;
+  colorFamily: string[];
   size: number;
   quantity: number;
   rating?: number;
@@ -41,11 +41,11 @@ const productSchema = new mongoose.Schema<Product>(
       required: false,
       unique: false,
     },
-    colorFamily: {
+    colorFamily: [{
       type: String,
       required: [true, "Color is Required"],
       unique: false,
-    },
+    }],
     price: {
       type: Number,
       required: [true,"Price is Required"],

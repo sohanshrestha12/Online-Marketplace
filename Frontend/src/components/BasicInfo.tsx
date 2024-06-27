@@ -17,11 +17,12 @@ const BasicInfo = () => {
   interface Option {
     value: string;
     label: string;
-    category?:string;
+    category?: string;
+    color?: string;
   }
-  interface Brand{
-    name: string,
-    category:string,
+  interface Brand {
+    name: string;
+    category: string;
   }
   const [value, setValue] = useState("");
 
@@ -31,8 +32,8 @@ const BasicInfo = () => {
   const [sizeInput, setSizeInput] = useState("");
   const [allCategory, setAllCategory] = useState<Category[]>([]);
   const [level1Category, setLevel1Category] = useState<Option | null>(null);
-  const [level2Category, setLevel2Category] = useState<Option | null>(null); 
-  const [brands, setBrands] = useState<Brand[]>([]); 
+  const [level2Category, setLevel2Category] = useState<Option | null>(null);
+  const [brands, setBrands] = useState<Brand[]>([]);
 
   const insertImage = (files: File[]) => {
     setImages([...images, ...files]);
@@ -73,14 +74,19 @@ const BasicInfo = () => {
     { resetForm }: FormikHelpers<FormValues>
   ) => {
     // console.log(images);
-    // console.log(values);
+    console.log(values);
     const formData = new FormData();
     Object.keys(values).forEach((key) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const value = (values as any)[key];
 
       if (value !== null && value !== undefined) {
-        if (typeof value === "object") {
+        if (Array.isArray(value)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          value.forEach((item: any) => {
+            formData.append(key, item.value.toString());
+          });
+        } else if (typeof value === "object") {
           formData.append(key, value.value);
         } else {
           formData.append(key, value.toString());
@@ -142,29 +148,23 @@ const BasicInfo = () => {
     fetchAllCategory();
   }, []);
 
-  useEffect(()=>{
-    const fetchAllBrands = async() => {
+  useEffect(() => {
+    const fetchAllBrands = async () => {
       try {
         const response = await getAllBrands();
         setBrands(response.data.data);
         console.log(response);
-        
       } catch (error) {
         console.log(error);
       }
-    }
+    };
     fetchAllBrands();
-  },[])
+  }, []);
 
-  const brandOptions:Option[] = brands.map((item)=>({
-    value:item.name,
-    label:item.name,
-    category:item.category
-  }))
-
-  const categoryOptions: Option[] = allCategory.map((item) => ({
+  const brandOptions: Option[] = brands.map((item) => ({
     value: item.name,
     label: item.name,
+    category: item.category,
   }));
 
   const level1CategoryOptions: Option[] = allCategory
@@ -186,8 +186,43 @@ const BasicInfo = () => {
       label: item.name,
     }));
 
+  const colorOptions: Option[] = [
+    { value: "red", label: "Red", color: "#FF0000" },
+    { value: "green", label: "Green", color: "#00FF00" },
+    { value: "blue", label: "Blue", color: "#0000FF" },
+    { value: "yellow", label: "Yellow", color: "#FFFF00" },
+    { value: "orange", label: "Orange", color: "#FFA500" },
+    { value: "purple", label: "Purple", color: "#800080" },
+    { value: "pink", label: "Pink", color: "#FFC0CB" },
+    { value: "brown", label: "Brown", color: "#A52A2A" },
+    { value: "black", label: "Black", color: "#000000" },
+    { value: "white", label: "White", color: "#FFFFFF" },
+    { value: "gray", label: "Gray", color: "#808080" },
+
+    // Metallic Colors
+    { value: "gold", label: "Gold", color: "#FFD700" },
+    { value: "silver", label: "Silver", color: "#C0C0C0" },
+    { value: "bronze", label: "Bronze", color: "#CD7F32" },
+
+    // Pastel Colors
+    { value: "lavender", label: "Lavender", color: "#E6E6FA" },
+    { value: "mint", label: "Mint", color: "#98FF98" },
+    { value: "peach", label: "Peach", color: "#FFDAB9" },
+
+    // Neon Colors
+    { value: "neonPink", label: "Neon Pink", color: "#FF1493" },
+    { value: "neonGreen", label: "Neon Green", color: "#39FF14" },
+    { value: "neonYellow", label: "Neon Yellow", color: "#FFFF00" },
+    { value: "neonOrange", label: "Neon Orange", color: "#FFA500" },
+
+    // Earthy Colors
+    { value: "earthBrown", label: "Earth Brown", color: "#8B4513" },
+    { value: "earthGreen", label: "Earth Green", color: "#556B2F" },
+    { value: "earthGray", label: "Earth Gray", color: "#A9A9A9" },
+  ];
+
   return (
-    <>  
+    <>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ setFieldValue, values, isSubmitting }) => (
           <Form>
@@ -226,7 +261,12 @@ const BasicInfo = () => {
                     >
                       Video Url
                     </label>
-                    <Field name="video" type="text" id="video" as={Input} />
+                    <div className="w-full">
+                      <p className="py-1 text-xs text-gray-500">
+                        Leave empty if no video url.
+                      </p>
+                      <Field name="video" type="text" id="video" as={Input} />
+                    </div>
                   </div>
                 </Card>
                 <Card className="text-sm px-3 mb-4 py-4">
@@ -272,6 +312,7 @@ const BasicInfo = () => {
                           setLevel1Category(option);
                           setLevel2Category(null);
                           values.category = null;
+                          values.brand = null;
                         }}
                       />
                       <Select
@@ -279,7 +320,11 @@ const BasicInfo = () => {
                         className="w-full"
                         value={level2Category}
                         options={level2CategoryOptions}
-                        onChange={(option) => {setLevel2Category(option);values.category = null}}
+                        onChange={(option) => {
+                          setLevel2Category(option);
+                          values.category = null;
+                          values.brand = null;
+                        }}
                       />
                       <Select
                         isDisabled={level2Category === null}
@@ -311,11 +356,20 @@ const BasicInfo = () => {
                           <label htmlFor="brand">
                             Brand{" "}
                             <span className="text-lg text-rose-500 font-bold">
-                              *
+                              *{" "}
+                            </span>
+                            <span className="text-xs">
+                              {values.category?.value
+                                ? ""
+                                : "Please select the category first"}
                             </span>
                           </label>
                           <Select
-                            options={brandOptions.filter(brand => brand.category === values.category?.value)}
+                            isDisabled={!values.category?.value}
+                            options={brandOptions.filter(
+                              (brand) =>
+                                brand.category === values.category?.value
+                            )}
                             name="brand"
                             value={values.brand}
                             onChange={(option) =>
@@ -331,12 +385,33 @@ const BasicInfo = () => {
                             </span>
                           </label>
                           <Select
-                            options={categoryOptions}
+                            isMulti
+                            options={colorOptions}
                             name="colorFamily"
                             value={values.colorFamily}
                             onChange={(option) =>
                               setFieldValue("colorFamily", option)
                             }
+                            formatOptionLabel={(option) => (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <span
+                                  className="rounded-sm"
+                                  style={{
+                                    display: "inline-block",
+                                    width: 20,
+                                    height: 10,
+                                    backgroundColor: option.color,
+                                    marginRight: 10,
+                                  }}
+                                />
+                                {option.label}
+                              </div>
+                            )}
                           />
                         </div>
                       </div>
@@ -448,7 +523,7 @@ const BasicInfo = () => {
                   disabled={isSubmitting}
                   className="bg-indigo-500 hover:bg-indigo-600"
                 >
-                  {isSubmitting?"Adding...":"Add Product"}
+                  {isSubmitting ? "Adding..." : "Add Product"}
                 </Button>
               </div>
             </Card>
