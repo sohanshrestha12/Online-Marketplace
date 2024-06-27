@@ -2,6 +2,7 @@ import { Category } from "@/Types/Category";
 import { getAllCategories } from "@/api/Product";
 import CarouselComponent from "@/components/Carousel";
 import Categories from "@/components/Categories";
+import { imageMapping } from "@/utils/Mapping/ImageMapping";
 import { useEffect, useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
 import {
@@ -14,11 +15,10 @@ import {
   FiShoppingCart,
   FiSmartphone,
   FiTool,
-  FiTv
+  FiTv,
 } from "react-icons/fi";
 import { GiPirateCoat } from "react-icons/gi";
 import { PiDressLight } from "react-icons/pi";
-
 const Home = () => {
   const [allCategory, setAllCategory] = useState<Category[]>([]);
   const [level1Category, setLevel1Category] = useState<Category[]>([]);
@@ -29,7 +29,9 @@ const Home = () => {
     null
   );
   const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [subHoverTimeout, setSubHoverTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [subHoverTimeout, setSubHoverTimeout] = useState<NodeJS.Timeout | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -50,21 +52,21 @@ const Home = () => {
   }, [allCategory]);
 
   const handleSubCategoryHover = (name: string) => {
-     if (subHoverTimeout) {
-       clearTimeout(subHoverTimeout);
-     }
-     if (hoverTimeout) {
-       clearTimeout(hoverTimeout);
-     }
+    if (subHoverTimeout) {
+      clearTimeout(subHoverTimeout);
+    }
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+    }
     setActiveSubCategory(name);
   };
 
-  const handleSubCategoryLeave =() =>{
-     const subTimeout = setTimeout(() => {
-       setActiveSubCategory(null);
-     }, 200);
-     setSubHoverTimeout(subTimeout);
-  }
+  const handleSubCategoryLeave = () => {
+    const subTimeout = setTimeout(() => {
+      setActiveSubCategory(null);
+    }, 200);
+    setSubHoverTimeout(subTimeout);
+  };
 
   const handleCategoryHover = (name: string) => {
     if (hoverTimeout) {
@@ -82,7 +84,6 @@ const Home = () => {
     setHoverTimeout(timeout);
   };
 
-
   const iconMapping: { [key: string]: JSX.Element } = {
     "Women's Fashion": <PiDressLight />,
     "Health & Beauty": <FiHeart />,
@@ -97,6 +98,7 @@ const Home = () => {
     "Sports & Outdoor": <FiActivity />,
     "Motors, Tools & DIY": <FiTool />,
   };
+
 
   return (
     <>
@@ -165,7 +167,7 @@ const Home = () => {
                           </p>
                         </li>
                         {activeSubCategory === subcategory.name && (
-                          <ul className="absolute left-[102%] z-10 top-0 h-full flex flex-col transition-all gap-1 py-3 w-[200px] shadow-md bg-[#fffefe] rounded-md p-2">
+                          <ul className="absolute content-start left-[102%] z-10 top-0 h-full flex flex-wrap transition-all gap-3 py-3 w-[500px] shadow-md bg-[#fffefe] rounded-md p-2">
                             {level3Category.filter(
                               (l3category) =>
                                 activeSubCategory === l3category.parent
@@ -176,12 +178,18 @@ const Home = () => {
                                     activeSubCategory === l3category.parent
                                 )
                                 .map((l3cat, i) => (
-                                  <li
-                                    key={i}
-                                    className="text-sm hover:text-[#f85606] px-3 transition-all py-1 hover:bg-[#e4e3e3]"
-                                  >
-                                    {l3cat.name}
-                                  </li>
+                                  <div key={i} className="h-fit w-[130px]">
+                                    <li className="text-sm m-0 flex flex-col gap-2 items-center  hover:text-[#f85606] px-3 transition-all py-1 h-full hover:bg-[#f0efef]">
+                                      <img
+                                        className="w-[80px] h-[80px] object-cover rounded-full"
+                                        src={imageMapping[l3cat.name]}
+                                        alt="404 product"
+                                      />
+                                      <p className="text-center">
+                                        {l3cat.name}
+                                      </p>
+                                    </li>
+                                  </div>
                                 ))
                             ) : (
                               <li className="text-sm px-3 text-center py-1 text-gray-500">
