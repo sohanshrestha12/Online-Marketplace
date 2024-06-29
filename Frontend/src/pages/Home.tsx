@@ -2,6 +2,7 @@ import { Category } from "@/Types/Category";
 import { getAllCategories } from "@/api/Product";
 import CarouselComponent from "@/components/Carousel";
 import Categories from "@/components/Categories";
+import RecentProduct from "@/components/RecentProduct";
 import { imageMapping } from "@/utils/Mapping/ImageMapping";
 import { useEffect, useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
@@ -212,6 +213,7 @@ const Home = () => {
         </div>
       </div>
       <Categories categories={allCategory} />
+      <RecentProduct/>
     </>
   );
 };

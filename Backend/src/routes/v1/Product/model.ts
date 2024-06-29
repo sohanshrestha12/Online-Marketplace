@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
 export interface Product {
+  _id?: string;
+  createdAt?:string;
   name: string;
   description: string;
   category: string;

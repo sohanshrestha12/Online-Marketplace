@@ -9,7 +9,6 @@ const categorySchema = new mongoose.Schema(
         },
         parent:{
             type: String,
-            ref:'Category',
             required:false,
             unique:false
         },

@@ -11,3 +11,10 @@ export const getAllCategories = () =>{
 export const getAllBrands = () => {
     return MarketUrl.get("/brand");
 }
+
+export const getAllProducts = () => {
+  return MarketUrl.get("/product");
+};
+export const getProductById = (id:string) => {
+  return MarketUrl.get(`/product/${id}`);
+};

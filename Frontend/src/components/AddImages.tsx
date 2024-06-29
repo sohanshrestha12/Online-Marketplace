@@ -59,7 +59,7 @@ const AddImages = ({
     <div className="grid lg:grid-cols-4 grid-cols-1 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 md:gap-4 xs:gap-4 gap-3 w-full text-black mb-4">
       {imageShow.map((img, i) => (
         <div key={i} className="h-[180px] relative">
-          <label htmlFor={i.toString()}>
+          <label htmlFor={i.toString()} className="h-full">
             <img
               src={img.url}
               className="w-full h-full rounded-sm object-cover hover:cursor-pointer"

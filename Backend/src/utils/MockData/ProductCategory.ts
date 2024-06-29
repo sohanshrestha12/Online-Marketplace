@@ -35,7 +35,16 @@ const categories = [
   { name: "Lipstick", parent: "Makeup", level: 3 },
   { name: "Eyeshadow", parent: "Makeup", level: 3 },
   { name: "Haircare", parent: "Health & Beauty", level: 2 },
+  { name: "Shampoo", parent: "Haircare", level: 3 },
+  { name: "Conditioner", parent: "Haircare", level: 3 },
+  { name: "Hair Treatments", parent: "Haircare", level: 3 },
+  { name: "Hair Oils & Serums", parent: "Haircare", level: 3 },
+  { name: "Hair Loss Products", parent: "Haircare", level: 3 },
   { name: "Personal Care", parent: "Health & Beauty", level: 2 },
+  { name: "Oral Care", parent: "Personal Care", level: 3 },
+  { name: "Bath & Body", parent: "Personal Care", level: 3 },
+  { name: "Shaving & Hair Removal", parent: "Personal Care", level: 3 },
+  { name: "Sun Care", parent: "Personal Care", level: 3 },
 
   { name: "Men's Fashion", level: 1 },
   { name: "Men's Shirts", parent: "Men's Fashion", level: 2 },
@@ -67,14 +76,26 @@ const categories = [
   { name: "Bracelets", parent: "Jewelry", level: 3 },
   { name: "Earrings", parent: "Jewelry", level: 3 },
   { name: "Eyewear", parent: "Watches & Accessories", level: 2 },
+  { name: "Sunglasses", parent: "Eyewear", level: 3 },
+  { name: "Contact Lenses", parent: "Eyewear", level: 3 },
+  { name: "Reading Glasses", parent: "Eyewear", level: 3 },
 
   { name: "Electronic Devices", level: 1 },
   { name: "Smartphones", parent: "Electronic Devices", level: 2 },
+  { name: "Android Phones", parent: "Smartphones", level: 3 },
+  { name: "iPhones", parent: "Smartphones", level: 3 },
+  { name: "Foldable Phones", parent: "Smartphones", level: 3 },
   { name: "Laptops", parent: "Electronic Devices", level: 2 },
+  { name: "Ultrabooks", parent: "Laptops", level: 3 },
+  { name: "Gaming Laptops", parent: "Laptops", level: 3 },
+  { name: "Chromebooks", parent: "Laptops", level: 3 },
+  { name: "MacBooks", parent: "Laptops", level: 3 },
   { name: "Tablets", parent: "Electronic Devices", level: 2 },
   { name: "Android Tablets", parent: "Tablets", level: 3 },
   { name: "iPad & iOS Tablets", parent: "Tablets", level: 3 },
   { name: "Wearables", parent: "Electronic Devices", level: 2 },
+  { name: "Fitness Trackers", parent: "Wearables", level: 3 },
+  { name: "VR Headsets", parent: "Wearables", level: 3 },
 
   { name: "TV & Home Appliances", level: 1 },
   { name: "Televisions", parent: "TV & Home Appliances", level: 2 },
@@ -128,8 +149,6 @@ const categories = [
   { name: "Lighting", parent: "Home Improvement", level: 3 },
   { name: "Hardware", parent: "Home Improvement", level: 3 },
 ];
-
-
 
 // console.log(categories)
 async function seedCategories() {
