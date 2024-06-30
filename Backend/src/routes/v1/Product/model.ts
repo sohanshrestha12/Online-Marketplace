@@ -36,7 +36,7 @@ const productSchema = new mongoose.Schema<Product>(
     brand: {
       type: String,
       required: false,
-      unique: true,
+      unique: false,
     },
     videoUrl: {
       type: String,

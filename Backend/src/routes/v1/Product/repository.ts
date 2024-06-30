@@ -1,6 +1,7 @@
 import CustomError from "../../../utils/Error";
 import { CategoryModel } from "../Category/model";
 import { Product, ProductModel } from "./model";
+import { SearchQuery } from "./types";
 
 export const createProduct = (body:Product,files:string[]):Promise<Product> => {
     const product = new ProductModel({...body,images:files});
@@ -38,3 +39,11 @@ export const getProductById = async(id: string): Promise<Product | null> => {
   };;
   return modifiedProduct;
 };
+
+export const filterProducts =async(query:SearchQuery):Promise<Product[] | null> =>{
+  if(!query.category){
+    console.log('be here')
+    return ProductModel.find({});
+  }
+  return ProductModel.find(query);
+}

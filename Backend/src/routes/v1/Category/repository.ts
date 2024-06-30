@@ -1,5 +1,6 @@
-import { CategoryModel } from "./model"
+import { CategoryModel } from "./model";
 
 export const getAllCategory = () =>{
     return CategoryModel.find({});
 }
+

@@ -1,6 +1,8 @@
 import CustomError from "../../../utils/Error";
+import { getCategoryBrand } from "../Brand/repository";
 import { Product } from "./model";
-import { createProduct, getAllProducts, getProductById } from "./repository";
+import { createProduct, filterProducts, getAllProducts, getProductById } from "./repository";
+import { SearchQuery } from "./types";
 
 const ProductService = {
   async createProduct(body: Product, files: string[]) {
@@ -13,6 +15,11 @@ const ProductService = {
     const task = await getProductById(id);
     if (!task) throw new CustomError("Invalid id", 404);
     return task;
+  },
+  async filterProducts(query:SearchQuery){
+    const categoryBrand = await getCategoryBrand(query.category)
+    const filter = await filterProducts(query);
+    return { categoryBrand, filter };
   },
 };
 

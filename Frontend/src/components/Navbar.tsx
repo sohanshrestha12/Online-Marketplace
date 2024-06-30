@@ -1,8 +1,3 @@
-import { Input } from "@/components/ui/input";
-import { LuShoppingCart } from "react-icons/lu";
-import { MdOutlineFavoriteBorder } from "react-icons/md";
-import { ModeToggle } from "./ThemeToggle";
-import Person from "../assets/images/person.jpg";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,12 +6,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Field, Form, Formik } from "formik";
 import { IoIosArrowDown } from "react-icons/io";
-import ToolTip from "./ToolTip";
+import { LuShoppingCart } from "react-icons/lu";
+import { MdOutlineFavoriteBorder } from "react-icons/md";
 import { RiSearchLine } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Person from "../assets/images/person.jpg";
+import { ModeToggle } from "./ThemeToggle";
+import ToolTip from "./ToolTip";
+
+const initialValues = {
+  search: "",
+};
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  
+  const handleSearch = (values: { search: string }) => {
+    navigate(`/productLists?category=${values.search}`)
+  };
   return (
     <nav className="flex flex-col gap-3 max-w-screen-2xl pt-3 pb-3">
       <div className="flex gap-5">
@@ -28,14 +38,25 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="flex-1 flex justify-center">
-          <div className="w-[60%] flex items-center relative">
-            <Input
-              className="w-full padding_Right rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus-visible:border-2 focus:border-black focus-visible:shadow-sm"
-              placeholder="Search"
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-              <RiSearchLine className="cursor-pointer" />
-            </div>
+          <div className="w-[100%] flex justify-center items-center relative">
+            <Formik initialValues={initialValues} onSubmit={handleSearch}>
+              {({ handleSubmit }) => (
+                <Form className="w-[60%] flex items-center relative">
+                  <Field
+                    className="w-full padding_Right rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus-visible:border-2 focus:border-black focus-visible:shadow-sm"
+                    placeholder="Search"
+                    as={Input}
+                    name="search"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <RiSearchLine
+                      className="cursor-pointer"
+                      onClick={() => handleSubmit()}
+                    />
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
         <div className="flex gap-4 mr-5">
