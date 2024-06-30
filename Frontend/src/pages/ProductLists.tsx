@@ -11,24 +11,27 @@ const ProductLists = () => {
   const [filteredProducts, setFilteredProducts] = useState<FetchProduct[]>([]);
   const [allBrands, setAllBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [checkedBrands, setCheckedBrands] = useState<string[]>(() => {
-    const storedBrands = localStorage.getItem("checkedBrands");
-    return storedBrands ? JSON.parse(storedBrands) : [];
-  });
-  const [selectedColors, setSelectedColors] = useState<string[]>(() => {
-    const storedColors = localStorage.getItem("selectedColors");
-    return storedColors ? JSON.parse(storedColors) : [];
-  });
- const [minPrice, setMinPrice] = useState<string>(() => {
-   const storedMinPrice = localStorage.getItem("minPrice");
-   return storedMinPrice ? JSON.parse(storedMinPrice): "";
- });
+//   const [checkedBrands, setCheckedBrands] = useState<string[]>(() => {
+//     const storedBrands = localStorage.getItem("checkedBrands");
+//     return storedBrands ? JSON.parse(storedBrands) : [];
+//   });
+//   const [selectedColors, setSelectedColors] = useState<string[]>(() => {
+//     const storedColors = localStorage.getItem("selectedColors");
+//     return storedColors ? JSON.parse(storedColors) : [];
+//   });
+//  const [minPrice, setMinPrice] = useState<string>(() => {
+//    const storedMinPrice = localStorage.getItem("minPrice");
+//    return storedMinPrice ? JSON.parse(storedMinPrice): "";
+//  });
 
- const [maxPrice, setMaxPrice] = useState<string>(() => {
-   const storedMaxPrice = localStorage.getItem("maxPrice");
-   return storedMaxPrice ? JSON.parse(storedMaxPrice) :"";
- });
-
+//  const [maxPrice, setMaxPrice] = useState<string>(() => {
+//    const storedMaxPrice = localStorage.getItem("maxPrice");
+//    return storedMaxPrice ? JSON.parse(storedMaxPrice) :"";
+//  });
+ const [checkedBrands, setCheckedBrands] = useState<string[]>([]);
+ const [selectedColors, setSelectedColors] = useState<string[]>([]);
+ const [minPrice, setMinPrice] = useState<string>("");
+ const [maxPrice, setMaxPrice] = useState<string>("");
   const handleMinPrice = (price: string) => {
     setMinPrice(price);
   };
@@ -139,7 +142,6 @@ const ProductLists = () => {
       }
       navigate(`${location.pathname}?${searchParams.toString()}`);
     } else {
-      console.log("here");
       fetchProductsFilter();
     }
   }, [location.search, checkedBrands, selectedColors]);
