@@ -14,6 +14,7 @@ import Profile from "./pages/Profile";
 import MyOrder from "./pages/MyOrder";
 import ProfileLayout from "./pages/ProfileLayout";
 import RequireAuth from "./components/Auth/RequireAuth";
+import RequireUser from "./components/Auth/RequireUser";
 
 const router = createBrowserRouter([
   {
@@ -71,7 +72,11 @@ const router = createBrowserRouter([
   },
   {
     path: "sellerDashboard",
-    element: <SellerDashboardLayout />,
+    element: (
+      <RequireUser>
+        <SellerDashboardLayout />
+      </RequireUser>
+    ),
     children: [
       {
         path: "addProduct",
