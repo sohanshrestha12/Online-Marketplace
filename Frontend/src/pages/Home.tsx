@@ -20,7 +20,9 @@ import {
 } from "react-icons/fi";
 import { GiPirateCoat } from "react-icons/gi";
 import { PiDressLight } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
+  const navigate = useNavigate();
   const [allCategory, setAllCategory] = useState<Category[]>([]);
   const [level1Category, setLevel1Category] = useState<Category[]>([]);
   const [level2Category, setLevel2Category] = useState<Category[]>([]);
@@ -104,6 +106,10 @@ const Home = () => {
     "Motors, Tools & DIY": <FiTool />,
   };
 
+  const handleCategoryClick = (name:string)=>{
+    navigate(`/productLists?category=${name}`);
+  }
+
 
   return (
     <>
@@ -183,7 +189,13 @@ const Home = () => {
                                     activeSubCategory === l3category.parent
                                 )
                                 .map((l3cat, i) => (
-                                  <div key={i} className="h-fit w-[130px]">
+                                  <div
+                                    key={i}
+                                    className="h-fit w-[130px]"
+                                    onClick={() =>
+                                      handleCategoryClick(l3cat.name)
+                                    }
+                                  >
                                     <li className="text-sm m-0 flex flex-col gap-2 items-center  hover:text-[#f85606] px-3 transition-all py-1 h-full hover:bg-[#f0efef]">
                                       <img
                                         className="w-[80px] h-[80px] object-cover rounded-full"
@@ -217,7 +229,7 @@ const Home = () => {
         </div>
       </div>
       <Categories categories={allCategory} />
-      <RecentProduct/>
+      <RecentProduct />
     </>
   );
 };
