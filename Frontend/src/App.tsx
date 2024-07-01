@@ -13,6 +13,7 @@ import AddProduct from "./pages/AddProduct";
 import Profile from "./pages/Profile";
 import MyOrder from "./pages/MyOrder";
 import ProfileLayout from "./pages/ProfileLayout";
+import RequireAuth from "./components/Auth/RequireAuth";
 
 const router = createBrowserRouter([
   {
@@ -50,29 +51,33 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <ProfileLayout />,
-        children:[
+        element: (
+          <RequireAuth>
+            <ProfileLayout />
+          </RequireAuth>
+        ),
+        children: [
           {
-            index:true,
-            element:<Profile/>
+            index: true,
+            element: <Profile />,
           },
           {
-            path:"myOrders",
-            element:<MyOrder/>
-          }
-        ]
+            path: "myOrders",
+            element: <MyOrder />,
+          },
+        ],
       },
     ],
   },
   {
     path: "sellerDashboard",
     element: <SellerDashboardLayout />,
-    children:[
+    children: [
       {
-        path:"addProduct",
-        element:<AddProduct/>
+        path: "addProduct",
+        element: <AddProduct />,
       },
-    ]
+    ],
   },
 ]);
 

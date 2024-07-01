@@ -9,7 +9,7 @@ interface RequireAuthProps {
 const RequireAuth = ({children}:RequireAuthProps) => {
     const auth = useAuth();
     if(!auth.user){
-        return <Navigate to='login'/>
+        return <Navigate to='/login'/>
     }
   return (
     children
