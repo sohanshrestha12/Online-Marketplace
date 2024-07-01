@@ -1,17 +1,29 @@
 import { LoginUser } from "@/Types/Auth";
 import { loginValidation } from "@/Validation/LoginValidation";
 import { login } from "@/api/Auth";
+import { useAuth } from "@/components/Auth/ProtectedRoutes";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Login = () => {
+  const {user} = useAuth();
+  const navigate = useNavigate();
+  useEffect(()=>{
+    if(user){
+      navigate('/');
+    }
+  },[user]);
+  if(user){
+    return null;
+  }
   const initialValues: LoginUser = {
     email: "",
     password: "",

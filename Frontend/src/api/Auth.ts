@@ -1,5 +1,6 @@
 import { LoginUser, RegisterUser } from "@/Types/Auth";
 import { MarketUrl } from "@/config/Axios";
+import '../config/AxiosInterceptor';
 
 
 export const registerUser = (userData:RegisterUser)=> {
@@ -10,5 +11,5 @@ export const login = (userData: LoginUser) => {
 };
 
 export const getCurrentUser = () => {
-  return TaskUrl.get("/users/getCurrentUser");
+  return MarketUrl.get("/users/getCurrentUser");
 };

@@ -13,9 +13,9 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  useEffect(()=>{
-    console.log("User is :", user);
-  },[user])
+  // useEffect(()=>{
+  //   console.log("User is :", user);
+  // },[user])
   const login = (user:User) =>{
     setUser(user);
   }
@@ -29,9 +29,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       try {
         const accessToken = Cookies.get("accessToken");
         console.log(accessToken)
-        console.log("ran");
         if (accessToken) {
-          console.log("ran inside");
           const response = await getCurrentUser();
           console.log(response);
           setUser(response.data.data);

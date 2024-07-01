@@ -10,7 +10,6 @@ const deSerializeUser = async(req:Request,res:Response,next:NextFunction) =>{
    
     if(decodedToken){
         res.locals.user = decodedToken;
-        console.log('from deserialize user',res.locals.user);
     }
     return next();
 } 

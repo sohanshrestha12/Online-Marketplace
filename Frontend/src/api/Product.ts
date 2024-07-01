@@ -1,4 +1,6 @@
 import { MarketUrl } from "@/config/Axios";
+import "../config/AxiosInterceptor";
+
 
 export const createProduct = (product: FormData) => {
   return MarketUrl.post("/product", product, {

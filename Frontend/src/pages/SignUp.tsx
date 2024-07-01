@@ -1,17 +1,28 @@
 import { RegisterUser } from "@/Types/Auth";
 import { registerValidation } from "@/Validation/RegisterValidation";
 import { registerUser } from "@/api/Auth";
+import { useAuth } from "@/components/Auth/ProtectedRoutes";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
+  if (user) {
+    return null;
+  }
   const initialValues: RegisterUser = {
     username: "",
     password: "",
@@ -82,8 +93,12 @@ const SignUp = () => {
                   <ErrorMessage name="password" />
                 </div>
                 <div className="mt-4">
-                  <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting?"Signing Up..." : "Sign Up"}
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Signing Up..." : "Sign Up"}
                   </Button>
                 </div>
 
