@@ -1,6 +1,6 @@
 import { LoginUser } from "@/Types/Auth";
 import { loginValidation } from "@/Validation/LoginValidation";
-import { login } from "@/api/Auth";
+import { getCurrentUser, login } from "@/api/Auth";
 import { useAuth } from "@/components/Auth/ProtectedRoutes";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,14 +14,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Login = () => {
-  const {user} = useAuth();
+  const auth = useAuth();
   const navigate = useNavigate();
-  useEffect(()=>{
-    if(user){
-      navigate('/');
+  useEffect(() => {
+    if (auth.user) {
+      navigate("/");
     }
-  },[user]);
-  if(user){
+  }, [auth.user]);
+  if (auth.user) {
     return null;
   }
   const initialValues: LoginUser = {
@@ -30,9 +30,12 @@ const Login = () => {
   };
   const handleLogin = async (values: LoginUser) => {
     try {
-      console.log("Form values: ", values);
       const response = await login(values);
-      console.log(response);
+      if (response) {
+        const userResponse = await getCurrentUser();
+        auth.login(userResponse.data.data);
+      }
+      navigate("/");
       toast.success(response.data.message, {
         action: { label: "Close", onClick: () => console.log("close") },
       });

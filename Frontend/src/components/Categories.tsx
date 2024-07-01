@@ -1,5 +1,5 @@
 import { Category } from "@/Types/Category";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 
 interface CategoriesProps {
@@ -14,13 +14,17 @@ const shuffleArray = (array: Category[]) => {
   return array;
 };
 const Categories: React.FC<CategoriesProps> = ({ categories }) => {
-  const shuffledCategories = shuffleArray([...categories]);
+  const [shuffledCategories, setShuffledCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    setShuffledCategories(shuffleArray([...categories]));
+  }, [categories]);
   return (
     <div className="mt-5 max-w-screen-2xl">
       <h3 className="text-lg font-semibold mb-4">Categories</h3>
       <div className="grid grid-cols-12">
         {shuffledCategories
-          .filter((cate) => cate.level === 2)
+          .filter((cate) => cate.level === 3)
           .splice(0, 12)
           .map((item, i) => (
             <div

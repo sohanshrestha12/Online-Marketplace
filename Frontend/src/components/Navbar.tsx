@@ -12,10 +12,13 @@ import { IoIosArrowDown } from "react-icons/io";
 import { LuShoppingCart } from "react-icons/lu";
 import { MdOutlineFavoriteBorder } from "react-icons/md";
 import { RiSearchLine } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Person from "../assets/images/person.jpg";
 import { ModeToggle } from "./ThemeToggle";
 import ToolTip from "./ToolTip";
+import { useAuth } from "./Auth/ProtectedRoutes";
+import { toast } from "sonner";
+import { logout } from "@/api/Auth";
 
 const initialValues = {
   search: "",
@@ -23,13 +26,27 @@ const initialValues = {
 
 const Navbar = () => {
   const navigate = useNavigate();
-  
+  const auth = useAuth();
+
   const handleSearch = (values: { search: string }) => {
-    navigate(`/productLists?category=${values.search}`)
+    navigate(`/productLists?category=${values.search}`);
   };
+
+  const handleLogout = async() =>{
+    try {
+      await logout();
+      auth.logout();
+      toast.success("Logged out Successfully");
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const { user } = useAuth();
   return (
     <nav className="flex flex-col gap-3 max-w-screen-2xl pt-3 pb-3">
-      <div className="flex gap-5">
+      <div className="flex gap-5 items-center">
         <div>
           <Link to={"/"}>
             <h1 className="font-bold tracking-wider text-4xl hover:cursor-pointer">
@@ -41,7 +58,7 @@ const Navbar = () => {
           <div className="w-[100%] flex justify-center items-center relative">
             <Formik initialValues={initialValues} onSubmit={handleSearch}>
               {({ handleSubmit }) => (
-                <Form className="w-[60%] flex items-center relative">
+                <Form className="w-[80%] flex items-center relative">
                   <Field
                     className="w-full padding_Right rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus-visible:border-2 focus:border-black focus-visible:shadow-sm"
                     placeholder="Search"
@@ -70,29 +87,52 @@ const Navbar = () => {
           </ToolTip>
         </div>
         <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger className="focus:outline-none">
-              <div className="flex gap-2 items-center">
-                <div className="h-[45px] w-[45px] rounded-full flex">
-                  <img
-                    src={Person}
-                    className="rounded-full w-full h-full object-cover"
-                    alt="User"
-                  />
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="focus:outline-none">
+                <div className="flex gap-2 items-center">
+                  <div className="h-[45px] w-[45px] rounded-full flex">
+                    <img
+                      src={Person}
+                      className="rounded-full w-full h-full object-cover"
+                      alt="User"
+                    />
+                  </div>
+                  <p className="capitalize m-0">
+                    hello <span className="capitalize">{user?.username}</span>
+                  </p>
+                  <IoIosArrowDown />
                 </div>
-                <p className="capitalize m-0">hello abc</p>
-                <IoIosArrowDown />
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Team</DropdownMenuItem>
-              <DropdownMenuItem>Subscription</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Billing</DropdownMenuItem>
+                <DropdownMenuItem>Team</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout} className="hover:cursor-pointer" >Logout</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="flex items-center justify-between">
+              <NavLink
+                to={"/login"}
+                className={"mr-3 rounded px-3 p-2 hover:bg-gray-200"}
+              >
+                <p className=" rounded hover:cursor-pointer font-semibold ">
+                  Log in
+                </p>
+              </NavLink>
+              <div className="h-10 w-[0.7px] bg-gray-600 opacity-55"></div>
+
+              <NavLink
+                to={"/signUp"}
+                className={"ml-3 rounded px-3 p-2 hover:bg-gray-200"}
+              >
+                <p className=" font-semibold">Sign up</p>
+              </NavLink>
+            </div>
+          )}
         </div>
         <ModeToggle />
       </div>

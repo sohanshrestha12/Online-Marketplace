@@ -37,6 +37,25 @@ const AuthController = {
       next(error);
     }
   },
+  async logout(
+    req: Request<unknown, unknown, unknown>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      res.locals.user = null;
+      res.cookie("accessToken", "", { expires: new Date(0) });
+      res.cookie("refreshToken", "", { expires: new Date(0) });
+
+      return successResponse({
+        status: 200,
+        response: res,
+        message: "logout successful",
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 export default AuthController;

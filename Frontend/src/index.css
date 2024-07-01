@@ -14,3 +14,7 @@ body {
 .padding_Right{
     padding-right: 35px !important;
 }
+
+.active{
+    background-color: #e5e7eb;
+}

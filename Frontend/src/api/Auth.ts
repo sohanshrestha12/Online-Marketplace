@@ -13,3 +13,7 @@ export const login = (userData: LoginUser) => {
 export const getCurrentUser = () => {
   return MarketUrl.get("/users/getCurrentUser");
 };
+
+export const logout = () => {
+  return MarketUrl.post("/auth/logout");
+};
