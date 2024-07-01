@@ -34,8 +34,12 @@ const Login = () => {
       if (response) {
         const userResponse = await getCurrentUser();
         auth.login(userResponse.data.data);
+        if(userResponse.data.data.role === 'SELLER'){
+          navigate('/sellerDashboard');
+        }else{
+          navigate("/");
+        }
       }
-      navigate("/");
       toast.success(response.data.message, {
         action: { label: "Close", onClick: () => console.log("close") },
       });
