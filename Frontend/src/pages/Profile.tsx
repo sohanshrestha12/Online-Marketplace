@@ -21,7 +21,7 @@ const Profile = () => {
         <div className="col-span-4">
           <p className="text-xs">User Status</p>
           <p className="capitalize">
-            {auth.user?.role === "User" ? "Buyer" : "Seller"}
+            {auth.user?.role === "USER" ? "Buyer" : "Seller"}
           </p>
         </div>
       </div>
