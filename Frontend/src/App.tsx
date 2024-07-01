@@ -10,6 +10,9 @@ import Error from "./pages/Error";
 import AddToCart from "./pages/AddToCart";
 import SellerDashboardLayout from "./pages/SellerDashboardLayout";
 import AddProduct from "./pages/AddProduct";
+import Profile from "./pages/Profile";
+import MyOrder from "./pages/MyOrder";
+import ProfileLayout from "./pages/ProfileLayout";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +47,20 @@ const router = createBrowserRouter([
       {
         path: "AddToCart",
         element: <AddToCart />,
+      },
+      {
+        path: "profile",
+        element: <ProfileLayout />,
+        children:[
+          {
+            index:true,
+            element:<Profile/>
+          },
+          {
+            path:"myOrders",
+            element:<MyOrder/>
+          }
+        ]
       },
     ],
   },

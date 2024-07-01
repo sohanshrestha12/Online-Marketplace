@@ -32,7 +32,7 @@ const Navbar = () => {
     navigate(`/productLists?category=${values.search}`);
   };
 
-  const handleLogout = async() =>{
+  const handleLogout = async () => {
     try {
       await logout();
       auth.logout();
@@ -41,7 +41,7 @@ const Navbar = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const { user } = useAuth();
   return (
@@ -107,10 +107,19 @@ const Navbar = () => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <Link to={"/profile"}>
+                  <DropdownMenuItem className="hover:cursor-pointer">
+                    Profile
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuItem>Billing</DropdownMenuItem>
                 <DropdownMenuItem>Team</DropdownMenuItem>
-                <DropdownMenuItem onClick={handleLogout} className="hover:cursor-pointer" >Logout</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="hover:cursor-pointer"
+                >
+                  Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
