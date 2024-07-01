@@ -54,10 +54,6 @@ const Home = () => {
     setLevel3Category(allCategory.filter((item) => item.level === 3));
   }, [allCategory]);
 
-  useEffect(()=>{
-    console.log('all category ' , allCategory)
-  },[allCategory])
-
   const handleSubCategoryHover = (name: string) => {
     if (subHoverTimeout) {
       clearTimeout(subHoverTimeout);

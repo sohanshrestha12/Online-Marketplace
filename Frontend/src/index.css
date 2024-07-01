@@ -18,3 +18,7 @@ body {
 .active{
     background-color: #e5e7eb;
 }
+li[data-sonner-toast]{
+    padding: 10px;
+    align-items: center;
+}
