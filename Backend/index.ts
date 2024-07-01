@@ -7,6 +7,7 @@ import { globalErrorHandler } from "./src/Middleware/globalErrorHandler";
 import cors from "cors";
 import bodyParser from "body-parser";
 import path from "path";
+import deSerializeUser from "./src/Middleware/deSerializeUser";
 
 (async () => {
   const app = express();
@@ -19,6 +20,9 @@ import path from "path";
   app.use(cors(corsOptions));
 
   app.use(express.static(path.join(__dirname, "uploads")));
+
+  app.use(deSerializeUser);
+
   app.use("/api/v1", routes);
 
   app.all("*", (req: Request, res: Response) => {

@@ -42,7 +42,6 @@ export const getProductById = async(id: string): Promise<Product | null> => {
 
 export const filterProducts =async(query:SearchQuery):Promise<Product[] | null> =>{
   if(!query.category){
-    console.log('be here')
     return ProductModel.find({});
   }
   return ProductModel.find(query);

@@ -15,3 +15,7 @@ export const createUserRepo = (
 export const getUserByEmail = (email: string): Promise<UserDocument | null> => {
   return UserModel.findOne({ email: email });
 };
+
+export const getUserById = (id: string): Promise<UserDocument | null> => {
+  return UserModel.findById(id).select("-password");
+};

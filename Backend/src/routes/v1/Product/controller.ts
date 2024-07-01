@@ -67,7 +67,6 @@ const ProductController = {
     try {
       let query: SearchQuery = {};
       const { category, brand,colorFamily,minPrice,maxPrice } = req.query;
-      console.log(req.query);
       if (category) {
         const normalizedCategory = (category as string)
           .replace(/[^a-zA-Z0-9]/g, "")

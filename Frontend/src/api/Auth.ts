@@ -8,3 +8,7 @@ export const registerUser = (userData:RegisterUser)=> {
 export const login = (userData: LoginUser) => {
   return MarketUrl.post("/auth/login", userData);
 };
+
+export const getCurrentUser = () => {
+  return TaskUrl.get("/users/getCurrentUser");
+};

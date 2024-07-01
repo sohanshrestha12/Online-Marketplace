@@ -9,6 +9,7 @@ export interface User {
   email: string;
   password: string;
   role?: string;
+  googleId?:string;
 }
 
 export const userPrivateFields = ['password','__v','createdAt','updatedAt'];
@@ -24,6 +25,11 @@ const userSchema = new mongoose.Schema<UserDocument>(
       type: String,
       required: [true, "Username is Required"],
       unique: false,
+    },
+    googleId:{
+      type:String,
+      required:false,
+      unique:true
     },
     email: {
       type: String,
