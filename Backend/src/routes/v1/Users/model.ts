@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
     googleId:{
       type:String,
       required:false,
-      unique:true
+      unique:false
     },
     email: {
       type: String,
@@ -70,4 +70,4 @@ userSchema.methods.comparePassword = async function(candidatePassword:string){
     return await bcrypt.compare(candidatePassword,this.password);
 }
 
-export const UserModel = mongoose.model<UserDocument>('user',userSchema);
+export const UserModel = mongoose.model<UserDocument>('User',userSchema);

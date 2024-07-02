@@ -102,6 +102,7 @@ const BasicInfo = () => {
       formData.append("images", image);
     });
 
+    formData.append("uploadType", "product");
     const response = await createProduct(formData);
     console.log(response);
     // for (const pair of formData.entries()) {

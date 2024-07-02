@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 export interface Product {
   _id?: string;
@@ -14,6 +14,7 @@ export interface Product {
   rating?: number;
   videoUrl?: string;
   images?: string[] | File[];
+  createdBy:Types.ObjectId;
 }
 
 const productSchema = new mongoose.Schema<Product>(
@@ -72,7 +73,12 @@ const productSchema = new mongoose.Schema<Product>(
         type:String,
         required:[true,"Image is Required"],
         unique:false
-    }]
+    }],
+    createdBy:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"User",
+      required:[true,'User Id is required.'],
+    },
   },
   {
     timestamps: true,

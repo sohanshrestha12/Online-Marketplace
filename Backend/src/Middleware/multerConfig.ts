@@ -2,13 +2,20 @@ import multer from "multer";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./uploads");
+    const uploadType = req.body.category;
+    console.log(req.body.category);
+    let uploadPath = "uploads/";
+
+    if (uploadType) {
+      uploadPath += "products/";
+    } else {
+      uploadPath += "users/";
+    }
+
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      Date.now() + "-" + file.originalname
-    );
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 

@@ -62,8 +62,35 @@ import anTabs from "../../assets/images/androidTabs.jpeg";
 import apTabs from "../../assets/images/appleTabs.jpeg";
 import fitness from "../../assets/images/fitness.jpeg";
 import VR from "../../assets/images/Vr.webp";
+import Led from "../../assets/images/ledTv.jpeg";
+import smartTV from "../../assets/images/smartTv.jpeg";
+import oled from "../../assets/images/oled.jpeg";
+import ref1 from "../../assets/images/ref1.jpeg";
+import ref2 from "../../assets/images/ref2.jpeg";
+import ref3 from "../../assets/images/ref3.jpeg";
+import ref4 from "../../assets/images/ref4.jpeg";
+import tw from "../../assets/images/tw.jpeg";
+import fw from "../../assets/images/fw.jpeg";
+import sw from "../../assets/images/sw.jpeg";
+import faw from "../../assets/images/faw.jpeg";
+import micro1 from "../../assets/images/micro1.jpeg";
+import micro2 from "../../assets/images/micro2.jpeg";
 
 export const imageMapping: { [key: string]: string } = {
+  "LED TVs": Led,
+  "Smart TVs": smartTV,
+  "OLED TVs": oled,
+  "Single Door Refrigerators": ref1,
+  "Double Door Refrigerators": ref2,
+  "Side-by-Side Refrigerators": ref3,
+  "Mini Refrigerators": ref4,
+  "Top Load Washing Machines": tw,
+  "Front Load Washing Machines": fw,
+  "Semi-Automatic Washing Machines": sw,
+  "Fully Automatic Washing Machines": faw,
+  "Solo Microwaves": micro1,
+  "Grill Microwaves": micro2,
+
   "Android Phones": android,
   "Foldable Phones": foldable,
   iPhones: apple,

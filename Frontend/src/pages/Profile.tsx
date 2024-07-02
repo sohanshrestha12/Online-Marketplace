@@ -9,7 +9,16 @@ const Profile = () => {
       <h3 className="text-2xl font-semibold">My Profile</h3>
       <h4 className="text-md mt-2 font-semibold">Account Information</h4>
       <hr className="my-2" />
+      <div>
+        <form >
+          <div>
+            {/* <img src={imagePreview} alt="404 Profile" width="200"/> */}
+          </div>
+          {/* <input type="file" onChange={handleImageChange}/> */}
+        </form>
+      </div>
       <div className="grid grid-cols-12 gap-2 mt-4">
+
         <div className="col-span-4">
           <p className="text-xs">Full Name</p>
           <p className="capitalize">{auth.user?.username}</p>

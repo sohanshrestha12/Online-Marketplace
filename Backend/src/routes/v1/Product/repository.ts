@@ -3,8 +3,8 @@ import { CategoryModel } from "../Category/model";
 import { Product, ProductModel } from "./model";
 import { SearchQuery } from "./types";
 
-export const createProduct = (body:Product,files:string[]):Promise<Product> => {
-    const product = new ProductModel({...body,images:files});
+export const createProduct = (body:Product,files:string[],user:string):Promise<Product> => {
+    const product = new ProductModel({...body,images:files,createdBy:user});
     return product.save();
 }
 
@@ -36,6 +36,7 @@ export const getProductById = async(id: string): Promise<Product | null> => {
     size: product.size,
     images: product.images,
     createdAt: product.createdAt,
+    createdBy:product.createdBy,
   };;
   return modifiedProduct;
 };

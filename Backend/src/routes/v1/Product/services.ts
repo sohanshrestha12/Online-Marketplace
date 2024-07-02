@@ -5,8 +5,8 @@ import { createProduct, filterProducts, getAllProducts, getProductById } from ".
 import { SearchQuery } from "./types";
 
 const ProductService = {
-  async createProduct(body: Product, files: string[]) {
-    return createProduct(body, files);
+  async createProduct(body: Product, files: string[],user:string) {
+    return createProduct(body, files,user);
   },
   async getAllProducts() {
     return getAllProducts();

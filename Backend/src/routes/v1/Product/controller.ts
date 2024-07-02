@@ -14,9 +14,11 @@ const ProductController = {
     try {
       const body = req.body;
       const files = req.files as Express.Multer.File[];
+      const user = res.locals.user;
       if (!files) throw new CustomError("Image is required", 404);
       const filesPath = files.map((file) => file.path.replace("uploads\\", ""));
-      const product = await ProductService.createProduct(body, filesPath);
+      console.log(filesPath);
+      const product = await ProductService.createProduct(body, filesPath,user);
       return successResponse({
         response: res,
         message: "Product created successfully",
