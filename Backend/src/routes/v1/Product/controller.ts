@@ -17,7 +17,6 @@ const ProductController = {
       const user = res.locals.user;
       if (!files) throw new CustomError("Image is required", 404);
       const filesPath = files.map((file) => file.path.replace("uploads\\", ""));
-      console.log(filesPath);
       const product = await ProductService.createProduct(body, filesPath,user);
       return successResponse({
         response: res,

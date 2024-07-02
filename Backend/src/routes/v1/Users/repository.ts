@@ -19,3 +19,10 @@ export const getUserByEmail = (email: string): Promise<UserDocument | null> => {
 export const getUserById = (id: string): Promise<UserDocument | null> => {
   return UserModel.findById(id).select("-password");
 };
+
+export const updateImage = async(userId:string,file:string)=>{
+  const user =await UserModel.findById(userId);
+  if(!user) return;
+  user.profileImage = file;
+  return user.save();
+}

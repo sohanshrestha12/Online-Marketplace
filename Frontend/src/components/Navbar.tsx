@@ -1,3 +1,4 @@
+import { logout } from "@/api/Auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,12 +14,10 @@ import { LuShoppingCart } from "react-icons/lu";
 import { MdOutlineFavoriteBorder } from "react-icons/md";
 import { RiSearchLine } from "react-icons/ri";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import Person from "../assets/images/person.jpg";
+import { toast } from "sonner";
+import { useAuth } from "./Auth/ProtectedRoutes";
 import { ModeToggle } from "./ThemeToggle";
 import ToolTip from "./ToolTip";
-import { useAuth } from "./Auth/ProtectedRoutes";
-import { toast } from "sonner";
-import { logout } from "@/api/Auth";
 
 const initialValues = {
   search: "",
@@ -93,7 +92,7 @@ const Navbar = () => {
                 <div className="flex gap-2 items-center">
                   <div className="h-[45px] w-[45px] rounded-full flex">
                     <img
-                      src={Person}
+                      src={`http://localhost:5100/${user.profileImage}`}
                       className="rounded-full w-full h-full object-cover"
                       alt="User"
                     />
@@ -112,7 +111,13 @@ const Navbar = () => {
                     Profile
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
+                {auth.user?.role === "SELLER" && (
+                  <Link to={"sellerDashboard"}>
+                    <DropdownMenuItem className="hover:cursor-pointer">
+                      Dashboard
+                    </DropdownMenuItem>
+                  </Link>
+                )}
                 <DropdownMenuItem>Team</DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={handleLogout}

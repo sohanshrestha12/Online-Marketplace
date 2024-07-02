@@ -14,9 +14,11 @@ export interface User{
   username:string;
   email:string;
   role:string;
+  profileImage?:string;
 }
 export interface AuthContextType {
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
+  updateUser:(user:User)=>void;
 }

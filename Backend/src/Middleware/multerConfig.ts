@@ -3,7 +3,6 @@ import multer from "multer";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadType = req.body.category;
-    console.log(req.body.category);
     let uploadPath = "uploads/";
 
     if (uploadType) {

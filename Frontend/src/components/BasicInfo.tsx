@@ -246,6 +246,7 @@ const BasicInfo = () => {
                       <span className="text-rose-500 text-lg">*</span>
                     </p>
                     <p className="text-xs mb-2">Upload between 3 to 8 images</p>
+                    <p className="text-xs mb-2">(Note: The first picture is used as cover picture of the Product.)</p>
                     <AddImages
                       insertImage={insertImage}
                       insertImageUrl={insertImageUrl}

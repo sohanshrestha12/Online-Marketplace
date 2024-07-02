@@ -19,6 +19,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = (user:User) =>{
     setUser(user);
   }
+  const updateUser = (user:User) =>{
+    setUser(user);
+  } 
 
   const logout = () => {
     setUser(null);
@@ -47,7 +50,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
      return null; // keep loader here
    }
   return (
-    <AuthContext.Provider value={{ user, logout,login }}>
+    <AuthContext.Provider value={{ user, logout,login,updateUser }}>
       {children}
     </AuthContext.Provider>
   );

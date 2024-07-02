@@ -10,6 +10,7 @@ export interface User {
   password: string;
   role?: string;
   googleId?:string;
+  profileImage?:string;
 }
 
 export const userPrivateFields = ['password','__v','createdAt','updatedAt'];
@@ -47,6 +48,11 @@ const userSchema = new mongoose.Schema<UserDocument>(
       required: false,
       default: UserRoles.USER,
     },
+    profileImage:{
+      type:String,
+      required:false,
+      default:'users/default.jpeg',
+    }
   },
   {
     timestamps: true,
