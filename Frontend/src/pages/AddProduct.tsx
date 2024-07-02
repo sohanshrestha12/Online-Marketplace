@@ -2,7 +2,6 @@ import BasicInfo from "@/components/BasicInfo";
 import { Card } from "@/components/ui/card";
 
 const AddProduct = () => {
-
   return (
     <div className="w-full gap-2 flex p-4 ">
       <div className=" w-[80%]">

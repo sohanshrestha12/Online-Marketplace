@@ -19,7 +19,7 @@ const ProductCarousel = ({
 }: ProductCarouselProps) => {
   return (
     <Carousel className="p-2">
-      <CarouselContent>
+      <CarouselContent className="px-3">
         {images.map((item, i) => (
           <CarouselItem
             key={i}

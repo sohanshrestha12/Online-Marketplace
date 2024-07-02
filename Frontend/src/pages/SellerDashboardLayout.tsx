@@ -1,6 +1,7 @@
 import SideBar from "@/components/SideBar";
 import SideBarItem from "@/components/SideBarItem";
 import { useEffect, useState } from "react";
+import { FaBox } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { VscAdd } from "react-icons/vsc";
 import { Link, Outlet, useLocation } from "react-router-dom";
@@ -13,6 +14,8 @@ const SellerDashboardLayout = () => {
 
     if (pathname.includes("addProduct")) {
       setActiveItem("addProduct");
+    }else if (pathname.includes("myProduct")) {
+      setActiveItem("myProduct");
     } else {
       setActiveItem("sellerDashboard");
     }
@@ -20,7 +23,7 @@ const SellerDashboardLayout = () => {
 
   console.log(location);
   return (
-    <div className="flex">
+    <div className="flex max-w-screen">
       <SideBar>
         <Link to="/sellerDashboard">
           <SideBarItem
@@ -38,7 +41,14 @@ const SellerDashboardLayout = () => {
             active={activeItem === "addProduct"}
           />
         </Link>
-        <SideBarItem icon={<MdDashboard />} text={"All Products"} alert />
+        <Link to="/sellerDashboard/myProduct">
+          <SideBarItem
+            icon={<FaBox />}
+            text={"My Product"}
+            alert
+            active={activeItem === "myProduct"}
+          />
+        </Link>
       </SideBar>
       <Outlet />
     </div>

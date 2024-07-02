@@ -12,6 +12,7 @@ import { createProduct, getAllBrands, getAllCategories } from "@/api/Product";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { IoIosClose } from "react-icons/io";
 import { Category } from "@/Types/Category";
+import { useProduct } from "@/contexts/ProductContext";
 
 const BasicInfo = () => {
   interface Option {
@@ -25,6 +26,8 @@ const BasicInfo = () => {
     category: string;
   }
   const [value, setValue] = useState("");
+  const { addProduct } = useProduct();
+
 
   const [images, setImages] = useState<File[]>([]);
   const [imageShow, setImageShow] = useState<{ url: string }[]>([]);
@@ -104,6 +107,7 @@ const BasicInfo = () => {
 
     formData.append("uploadType", "product");
     const response = await createProduct(formData);
+    addProduct(response.data.data);
     console.log(response);
     // for (const pair of formData.entries()) {
     //   // console.log(`${pair[0]}: ${pair[1]}`);

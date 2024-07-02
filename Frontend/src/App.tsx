@@ -15,6 +15,7 @@ import MyOrder from "./pages/MyOrder";
 import ProfileLayout from "./pages/ProfileLayout";
 import RequireAuth from "./components/Auth/RequireAuth";
 import RequireUser from "./components/Auth/RequireUser";
+import MyProduct from "./pages/MyProduct";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
       {
         path: "addProduct",
         element: <AddProduct />,
+      },
+      {
+        path: "myProduct",
+        element: <MyProduct/>,
       },
     ],
   },
