@@ -1,8 +1,32 @@
-import { Card, CardTitle } from "@/components/ui/card"
+import { useAuth } from "@/components/Auth/ProtectedRoutes";
+import { Button } from "@/components/ui/button";
+import { Card, CardTitle } from "@/components/ui/card";
 import { useProduct } from "@/contexts/ProductContext";
+import { useEffect } from "react";
 
 const MyProduct = () => {
-    const {products} = useProduct();
+  const { dashboardProducts, fetchDashboardProducts } = useProduct();
+  const { user } = useAuth();
+  useEffect(() => {
+    if (!user) return;
+    fetchDashboardProducts(user._id);
+  }, [user]);
+
+  const handleNextPage = () => {
+    if (!dashboardProducts) return;
+    if (!user) return;
+    if (dashboardProducts?.page < dashboardProducts?.totalPage) {
+      fetchDashboardProducts(user._id, dashboardProducts?.page + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (!dashboardProducts) return;
+    if (!user) return;
+    if (dashboardProducts?.page > 1) {
+      fetchDashboardProducts(user._id, dashboardProducts?.page - 1);
+    }
+  };
   return (
     <div className="w-full p-4 overflow-x-hidden">
       <Card>
@@ -46,7 +70,7 @@ const MyProduct = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {products.map((item, i) => (
+                    {dashboardProducts?.product.map((item, i) => (
                       <tr
                         key={i}
                         className="border-b hover:bg-neutral-100 transition duration-300 ease-in-out dark:border-neutral-500 dark:bg-neutral-700"
@@ -54,7 +78,7 @@ const MyProduct = () => {
                         <td className="whitespace-nowrap px-6 py-4 font-medium">
                           {i + 1}
                         </td>
-                        <td className="whitespace-nowrap px-6 font-medium py-4">
+                        <td className="whitespace-nowrap px-6 font-medium py-4 capitalize">
                           {item.name}
                         </td>
                         <td className="whitespace-nowrap font-medium  px-6 py-4">
@@ -85,10 +109,42 @@ const MyProduct = () => {
               </div>
             </div>
           </div>
+          <div className="flex gap-2 items-center justify-end px-2 py-3">
+            <div>
+              {dashboardProducts?.page && (
+                <div className="text-sm font-semibold text-slate-500">
+                  <span>{dashboardProducts.page}</span>
+                  <span> out of </span>
+                  <span>{dashboardProducts.totalPage}</span>
+                </div>
+              )}
+            </div>
+            <div>
+              <Button
+                onClick={handlePreviousPage}
+                disabled={
+                  dashboardProducts?.page !== undefined &&
+                  dashboardProducts.page <= 1
+                }
+              >
+                Previous
+              </Button>
+              <Button
+                onClick={handleNextPage}
+                className="ml-2"
+                disabled={
+                  dashboardProducts?.page !== undefined &&
+                  dashboardProducts.page >= dashboardProducts.totalPage
+                }
+              >
+                Next
+              </Button>
+            </div>
+          </div>
         </div>
       </Card>
     </div>
   );
-}
+};
 
-export default MyProduct
+export default MyProduct;

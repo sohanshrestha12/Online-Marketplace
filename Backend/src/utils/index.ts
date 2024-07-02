@@ -12,3 +12,8 @@ export function omit(
 
   return newObj;
 }
+
+
+export function isInteger(value: string): boolean {
+  return /^-?\d+$/.test(value);
+}

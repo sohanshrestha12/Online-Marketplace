@@ -16,8 +16,22 @@ export const getAllBrands = () => {
   return MarketUrl.get("/brand");
 };
 
-export const getAllProducts = () => {
-  return MarketUrl.get("/product");
+export const getAllProducts = (params: {
+  page?: number;
+  limit?: number;
+  category?: string;
+  createdBy?: string;
+}) => {
+  const { page,limit, category, createdBy } = params;
+
+  return MarketUrl.get("/product",{
+    params:{
+      page,
+      limit,
+      category,
+      createdBy
+    }
+  });
 };
 export const getProductById = (id: string) => {
   return MarketUrl.get(`/product/${id}`);

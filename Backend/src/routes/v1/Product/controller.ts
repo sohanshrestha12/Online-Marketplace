@@ -3,7 +3,7 @@ import { Product } from "./model";
 import CustomError from "../../../utils/Error";
 import { successResponse } from "../../../utils/HttpResponse";
 import ProductService from "./services";
-import { SearchQuery } from "./types";
+import { ProductQuery, SearchQuery } from "./types";
 
 const ProductController = {
   async createProduct(
@@ -28,9 +28,11 @@ const ProductController = {
       next(error);
     }
   },
-  async getAllProducts(req: Request, res: Response, next: NextFunction) {
+  async getAllProducts(req: Request<unknown,unknown,unknown,ProductQuery>, res: Response, next: NextFunction) {
     try {
-      const product = await ProductService.getAllProducts();
+      const query = req.query;
+      console.log(query);
+      const product = await ProductService.getAllProducts(query);
       return successResponse({
         response: res,
         message: "Product fetched successfully",

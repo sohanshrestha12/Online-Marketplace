@@ -2,14 +2,14 @@ import CustomError from "../../../utils/Error";
 import { getCategoryBrand } from "../Brand/repository";
 import { Product } from "./model";
 import { createProduct, filterProducts, getAllProducts, getProductById } from "./repository";
-import { SearchQuery } from "./types";
+import { ProductQuery, SearchQuery } from "./types";
 
 const ProductService = {
   async createProduct(body: Product, files: string[],user:string) {
     return createProduct(body, files,user);
   },
-  async getAllProducts() {
-    return getAllProducts();
+  async getAllProducts(query:ProductQuery) {
+    return getAllProducts(query);
   },
   async getProductById(id: string) {
     const task = await getProductById(id);

@@ -22,6 +22,13 @@ export interface FetchProduct {
   images: string[];
 }
 
+export interface FetchFilterProduct{
+  page:number,
+  product:FetchProduct[],
+  totalPage:number,
+  totalProduct:number,
+}
+
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
