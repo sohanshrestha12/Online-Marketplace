@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
     googleId:{
       type:String,
       required:false,
-      unique:false
+      unique:false,
     },
     email: {
       type: String,

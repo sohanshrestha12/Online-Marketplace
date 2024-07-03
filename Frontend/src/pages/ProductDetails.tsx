@@ -1,11 +1,15 @@
+import { addToCart } from "@/api/Cart";
 import { getProductById } from "@/api/Product";
 import ProductCarousel from "@/components/ProductCarousel";
 import ProductDescription from "@/components/ProductDescription";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import ReactImageMagnify from "react-image-magnify";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 export interface FetchProduct {
   _id?: string;
@@ -33,7 +37,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [quantity, setQuantity] = useState<string>("0");
+  const [quantity, setQuantity] = useState<string>("1");
   const [activeProduct, setActiveProduct] = useState<FetchProduct>();
   const [images, setImages] = useState<string[][]>([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
@@ -66,15 +70,33 @@ const ProductDetails = () => {
     setSelectedImageIndex(i);
   };
   const handleQuantity = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input = event.target.value;
-    setQuantity(input);
+     const value = event.target.value.trim();
+     const maxQuantity =
+       activeProduct && activeProduct.quantity > 0 ? activeProduct.quantity : 1;
+    if(value === ""){
+      setQuantity("1");
+    }
+    const parsedValue = parseInt(value);
+    console.log(maxQuantity);
+    if (isNaN(parsedValue)) {
+      setQuantity("1");
+    } else if (parsedValue > maxQuantity) {
+      setQuantity(maxQuantity.toString());
+    } else if (parsedValue < 1) {
+      setQuantity("1");
+    } else {
+      setQuantity(value);
+    }
   };
   const incrementQuantity = () => {
-    setQuantity((prev) => (parseInt(prev) + 1).toString());
+    if(!activeProduct) return;
+    setQuantity((prev) => (
+      activeProduct.quantity > parseInt(quantity)? (parseInt(prev) + 1).toString() : prev
+    ));
   };
   const decrementQuantity = () => {
     setQuantity((prev) =>
-      (parseInt(prev) > 0 ? parseInt(prev) - 1 : 0).toString()
+      (parseInt(prev) > 1 ? parseInt(prev) - 1 : 1).toString()
     );
   };
   if (loading) {
@@ -82,6 +104,30 @@ const ProductDetails = () => {
   }
   const segments = activeProduct?.category.split("/");
   const lastSegment = segments && segments.pop();
+
+  const handleAddToCart = async(activeProduct:FetchProduct,quantity:string) => {
+    try {
+      if(!activeProduct || !activeProduct._id) return;
+      const response = await addToCart(activeProduct._id,parseInt(quantity));
+      setActiveProduct((prevProduct) => {
+        if (!prevProduct) return prevProduct;
+        const newQuantity = prevProduct.quantity - parseInt(quantity);
+        return {
+          ...prevProduct,
+          quantity: newQuantity < 1 ? 0 : newQuantity,
+        };
+      });
+      setQuantity("1");
+      // setActiveProduct();
+      console.log(response);
+      toast.success('Added to the cart successfully');
+    } catch (error) {
+      console.log(error);
+      if(axios.isAxiosError(error)){
+        toast.error(error.response?.data.message);
+      }
+    }
+  };
 
   return (
     <div className="grid grid-cols-12">
@@ -178,24 +224,36 @@ const ProductDetails = () => {
         <div className="flex items-center gap-3">
           <p>Quantity</p>
           <div className="flex gap-2">
-            <div
-              className="bg-gray-50 px-3 py-2 text-2xl hover:bg-gray-200 cursor-pointer"
-              onClick={decrementQuantity}
-            >
-              -
+            <div>
+              <Button
+              disabled={activeProduct && activeProduct?.quantity <= 1 || parseInt(quantity) <=1}
+              variant={'outline'}
+                onClick={decrementQuantity}
+                className="bg-gray-50 px-3 py-2 text-2xl hover:bg-gray-200 cursor-pointer"
+              >
+                -
+              </Button>
             </div>
-            <Input
-              className="w-[40px] text-center overflow-hidden px-2"
-              value={quantity}
-              onChange={handleQuantity}
-              type="text"
-              name="quantity"
-            />
-            <div
-              className="bg-gray-50 px-3 py-2 text-2xl hover:bg-gray-200 cursor-pointer"
-              onClick={incrementQuantity}
-            >
-              +
+            <div>
+              <Input
+                className="w-[60px]  text-center overflow-hidden px-2 text-black"
+                value={quantity}
+                onChange={handleQuantity}
+                type="number"
+                name="quantity"
+                max={activeProduct?.quantity}
+                min={1}
+              />
+            </div>
+            <div>
+              <Button
+                variant={"outline"}
+                disabled={activeProduct && activeProduct?.quantity <= 1 || activeProduct && parseInt(quantity) >= activeProduct.quantity}
+                onClick={incrementQuantity}
+                className="bg-gray-50 px-3 py-2 text-2xl hover:bg-gray-200 cursor-pointer"
+              >
+                +
+              </Button>
             </div>
           </div>
         </div>
@@ -203,9 +261,17 @@ const ProductDetails = () => {
           <div className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-[#f85606] text-white py-2">
             Buy Now
           </div>
-          <div className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-black text-white">
+          <Button
+            disabled={activeProduct && activeProduct?.quantity <= 0}
+            onClick={() => {
+              if (activeProduct) {
+                handleAddToCart(activeProduct, quantity);
+              }
+            }}
+            className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-black text-white"
+          >
             Add to Cart
-          </div>
+          </Button>
         </div>
       </div>
       <div className="flex gap-3 col-span-6 mt-5">

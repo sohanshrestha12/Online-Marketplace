@@ -75,8 +75,34 @@ import sw from "../../assets/images/sw.jpeg";
 import faw from "../../assets/images/faw.jpeg";
 import micro1 from "../../assets/images/micro1.jpeg";
 import micro2 from "../../assets/images/micro2.jpeg";
+import micro3 from "../../assets/images/micro3.jpeg";
+import h1 from "../../assets/images/h1.jpeg";
+import h2 from "../../assets/images/h2.jpeg";
+import h3 from "../../assets/images/h3.jpeg";
+import pc1 from "../../assets/images/pc1.jpeg";
+import lap1 from "../../assets/images/lap1.jpeg";
+import wir1 from "../../assets/images/wir1.jpeg";
+import usb from "../../assets/images/usb.jpeg";
+import hdmi from "../../assets/images/HDMI.jpeg";
+import eth from "../../assets/images/Ethernet.jpeg";
+import aa from "../../assets/images/aa.jpeg";
+import aaa from "../../assets/images/aaa.jpeg";
+import rech from "../../assets/images/rech.jpeg";
 
 export const imageMapping: { [key: string]: string } = {
+  "Over-Ear Headphones": h1,
+  "On-Ear Headphones": h2,
+  "In-Ear Headphones": h3,
+  "Phone Chargers": pc1,
+  "Laptop Chargers": lap1,
+  "Wireless Chargers": wir1,
+  "USB Cables": usb,
+  "HDMI Cables": hdmi,
+  "Ethernet Cables": eth,
+  "AA Batteries": aa,
+  "AAA Batteries": aaa,
+  "Rechargeable Batteries": rech,
+
   "LED TVs": Led,
   "Smart TVs": smartTV,
   "OLED TVs": oled,
@@ -90,6 +116,7 @@ export const imageMapping: { [key: string]: string } = {
   "Fully Automatic Washing Machines": faw,
   "Solo Microwaves": micro1,
   "Grill Microwaves": micro2,
+  "Convection Microwaves": micro3,
 
   "Android Phones": android,
   "Foldable Phones": foldable,

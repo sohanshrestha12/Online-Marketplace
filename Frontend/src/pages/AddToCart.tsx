@@ -1,16 +1,13 @@
+import { getCartItems } from "@/api/Cart";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react";
+import { FetchProduct } from "./ProductDetails";
 
 const AddToCart = () => {
-  interface Shoe {
-    _id: number;
-    name: string;
-    image: string;
-    price: number;
-  }
-  const [selectedItems, setSelectedItems] = useState<Shoe[]>([]);
-  const handleCheckbox = (item: Shoe) => {
+
+  const [selectedItems, setSelectedItems] = useState<FetchProduct[]>([]);
+  const handleCheckbox = (item: FetchProduct) => {
     setSelectedItems((prevSelectedItems) => {
       if (prevSelectedItems.some((i) => i._id === item._id)) {
         return prevSelectedItems.filter((i) => i._id !== item._id);
@@ -22,55 +19,49 @@ const AddToCart = () => {
   useEffect(() => {
     console.log(selectedItems);
   }, [selectedItems]);
-  const shoeArray: Shoe[] = [
-    {
-      _id: 1,
-      name: "Classic Sneakers",
-      image:
-        "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1528&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      price: 59.99,
-    },
-    {
-      _id: 2,
 
-      name: "Running Shoes",
-      image:
-        "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c2hvZXN8ZW58MHx8MHx8fDA%3D",
-      price: 89.99,
-    },
-    {
-      _id: 3,
-      name: "High-top Sneakers",
-      image:
-        "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c2hvZXN8ZW58MHx8MHx8fDA%3D",
-      price: 69.99,
-    },
-    {
-      _id: 4,
-      name: "Casual Slip-ons",
-      image:
-        "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHNob2VzfGVufDB8fDB8fHww",
-      price: 49.99,
-    },
-  ];
+  interface CartItems {
+    userId:string,
+    productId:FetchProduct,
+    quantity:number
+  }
+  const [cartItems,setCartItems] = useState<CartItems[]>([]);
+
+  useEffect(()=>{
+    const fetchCartItems = async()=>{
+      try {
+        const response =await getCartItems();
+        setCartItems(response.data.data);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchCartItems();
+  },[]);
+
+
   return (
     <div className="grid gap-4 grid-cols-12">
       <div className="col-span-8 flex flex-col gap-4">
-        {shoeArray.map((item, i) => (
+        {cartItems.map((item, i) => (
           <div key={i} className="flex flex-col gap-4">
             <div className="flex gap-4">
-              <Checkbox onCheckedChange={() => handleCheckbox(item)} />
+              <Checkbox
+                onCheckedChange={() => handleCheckbox(item.productId)}
+              />
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-span-4">
                   <img
-                    src={item.image}
+                    src={`http://localhost:5100/${item.productId.images[0]}`}
                     className="w-[120px] h-[120px]"
                     alt="404 product"
                   />
                 </div>
                 <div className="col-span-8">
-                  <p className="text-lg font-semibold">{item.name}</p>
-                  <p className="text-lg font-semibold">RS. {item.price}</p>
+                  <p className="text-lg font-semibold">{item.productId.name}</p>
+                  <p className="text-lg font-semibold">RS. {item.productId.price}</p>
+                  <p className="text-lg font-semibold">Quantity: {item.quantity}</p>
                 </div>
               </div>
             </div>
@@ -88,7 +79,9 @@ const AddToCart = () => {
               <h5>SubTotal Product</h5>
               <p>
                 Rs.
-                {selectedItems.reduce((total, item) => total + item.price, 0).toFixed(2)}
+                {selectedItems
+                  .reduce((total, item) => total + item.price, 0)
+                  .toFixed(2)}
               </p>
             </div>
           </div>

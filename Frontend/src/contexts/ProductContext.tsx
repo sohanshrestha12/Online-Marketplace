@@ -46,7 +46,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   useEffect(() => {
     const fetchAllProduct = async () => {
       try {
-        const response = await getAllProducts({});
+        const response = await getAllProducts({limit:12});
         console.log("all products", response.data.data);
         setProducts(response.data.data.product);
       } catch (error) {

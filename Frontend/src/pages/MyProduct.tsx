@@ -1,12 +1,20 @@
+import Action from "@/components/Action";
 import { useAuth } from "@/components/Auth/ProtectedRoutes";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { useProduct } from "@/contexts/ProductContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const MyProduct = () => {
   const { dashboardProducts, fetchDashboardProducts } = useProduct();
   const { user } = useAuth();
+   const [isActionOpen, setActionOpen] = useState<number | null>(null);
+   const handleActionOpen = (index:number) => setActionOpen(index);
+   const handleActionClose = () => setActionOpen(null);
+    useEffect(()=>{
+      console.log('is action open',isActionOpen)
+    },[isActionOpen])
+
   useEffect(() => {
     if (!user) return;
     fetchDashboardProducts(user._id);
@@ -76,7 +84,7 @@ const MyProduct = () => {
                         className="border-b hover:bg-neutral-100 transition duration-300 ease-in-out dark:border-neutral-500 dark:bg-neutral-700"
                       >
                         <td className="whitespace-nowrap px-6 py-4 font-medium">
-                          {i + 1}
+                          {(dashboardProducts.page - 1) * 10 + i + 1}
                         </td>
                         <td className="whitespace-nowrap px-6 font-medium py-4 capitalize">
                           {item.name}
@@ -99,8 +107,16 @@ const MyProduct = () => {
                         <td className="whitespace-nowrap font-medium  px-6 py-4">
                           createdAt
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4 font-medium ">
-                          action
+                        <td
+                          className="whitespace-nowrap px-6 py-4 font-medium "
+                        >
+                          <div onClick={() => handleActionOpen(i)}>
+                            <Action
+                              isOpen={isActionOpen === i}
+                              onClose={handleActionClose}
+                              product={item}
+                            />
+                          </div>
                         </td>
                       </tr>
                     ))}

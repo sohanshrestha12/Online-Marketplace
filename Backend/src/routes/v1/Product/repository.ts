@@ -107,3 +107,14 @@ export const filterProducts = async (
   }
   return ProductModel.find(query);
 };
+
+
+export const removeQuantity = async(productId:string,quantity:number) =>{
+
+  const product = await ProductModel.findByIdAndUpdate(
+    productId,
+    { $inc: { quantity: -quantity } }, 
+    { new: true } 
+  );
+  return product;
+};
