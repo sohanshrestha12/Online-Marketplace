@@ -9,10 +9,13 @@ import "react-quill/dist/quill.snow.css";
 import { Button } from "./ui/button";
 
 import { createProduct, getAllBrands, getAllCategories } from "@/api/Product";
-import { Field, Form, Formik, FormikHelpers } from "formik";
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import { IoIosClose } from "react-icons/io";
 import { Category } from "@/Types/Category";
 import { useProduct } from "@/contexts/ProductContext";
+import axios from "axios";
+import { toast } from "sonner";
+import AddProductValidationSchema from "@/Validation/AddProduct";
 
 const BasicInfo = () => {
   interface Option {
@@ -27,7 +30,6 @@ const BasicInfo = () => {
   }
   const [value, setValue] = useState("");
   const { addProduct } = useProduct();
-
 
   const [images, setImages] = useState<File[]>([]);
   const [imageShow, setImageShow] = useState<{ url: string }[]>([]);
@@ -77,7 +79,7 @@ const BasicInfo = () => {
     { resetForm }: FormikHelpers<FormValues>
   ) => {
     // console.log(images);
-    console.log(values);
+    console.log("form values", values);
     const formData = new FormData();
     Object.keys(values).forEach((key) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,9 +108,17 @@ const BasicInfo = () => {
     });
 
     formData.append("uploadType", "product");
-    const response = await createProduct(formData);
-    addProduct(response.data.data);
-    console.log(response);
+    try {
+      const response = await createProduct(formData);
+      addProduct(response.data.data);
+      toast.success("Product added Successfully");
+      console.log(response);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+      console.log(error);
+    }
     // for (const pair of formData.entries()) {
     //   // console.log(`${pair[0]}: ${pair[1]}`);
     //   if (pair[1] instanceof File) {
@@ -228,7 +238,11 @@ const BasicInfo = () => {
 
   return (
     <>
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={AddProductValidationSchema}
+      >
         {({ setFieldValue, values, isSubmitting }) => (
           <Form>
             <Card>
@@ -250,7 +264,10 @@ const BasicInfo = () => {
                       <span className="text-rose-500 text-lg">*</span>
                     </p>
                     <p className="text-xs mb-2">Upload between 3 to 8 images</p>
-                    <p className="text-xs mb-2">(Note: The first picture is used as cover picture of the Product.)</p>
+                    <p className="text-xs mb-2">
+                      (Note: The first picture is used as cover picture of the
+                      Product.)
+                    </p>
                     <AddImages
                       insertImage={insertImage}
                       insertImageUrl={insertImageUrl}
@@ -295,7 +312,14 @@ const BasicInfo = () => {
                         </span>
                       </label>
                     </div>
-                    <Field name="name" type="text" id="name" as={Input} />
+                    <div className="flex flex-col w-full">
+                      <Field name="name" type="text" id="name" as={Input} />
+                      <ErrorMessage
+                        name="name"
+                        component="div"
+                        className="ml-2 mt-1 text-red-500 text-xs"
+                      />
+                    </div>
                   </div>
                   <div className="flex mb-5">
                     <div>
@@ -321,6 +345,7 @@ const BasicInfo = () => {
                           values.brand = null;
                         }}
                       />
+
                       <Select
                         isDisabled={level1Category === null}
                         className="w-full"
@@ -332,14 +357,23 @@ const BasicInfo = () => {
                           values.brand = null;
                         }}
                       />
-                      <Select
-                        isDisabled={level2Category === null}
-                        className="w-full"
-                        name="category"
-                        value={values.category}
-                        options={level3CategoryOptions}
-                        onChange={(option) => setFieldValue("category", option)}
-                      />
+                      <div>
+                        <Select
+                          isDisabled={level2Category === null}
+                          className="w-full"
+                          name="category"
+                          value={values.category}
+                          options={level3CategoryOptions}
+                          onChange={(option) =>
+                            setFieldValue("category", option)
+                          }
+                        />
+                        <ErrorMessage
+                          name="category"
+                          component="div"
+                          className="ml-2 mt-1 text-red-500 text-xs"
+                        />
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -382,6 +416,11 @@ const BasicInfo = () => {
                               setFieldValue("brand", option)
                             }
                           />
+                          <ErrorMessage
+                            name="brand"
+                            component="div"
+                            className="ml-2 mt-1 text-red-500 text-xs"
+                          />
                         </div>
                         <div className="flex-1">
                           <label htmlFor="colorFamily">
@@ -419,6 +458,11 @@ const BasicInfo = () => {
                               </div>
                             )}
                           />
+                          <ErrorMessage
+                            name="colorFamily"
+                            component="div"
+                            className="ml-2 mt-1 text-red-500 text-xs"
+                          />
                         </div>
                       </div>
                       <div className="flex gap-4 flex-wrap">
@@ -435,6 +479,11 @@ const BasicInfo = () => {
                             placeholder="In Nepali Rs."
                             as={Input}
                           />
+                          <ErrorMessage
+                            name="price"
+                            component="div"
+                            className="ml-2 mt-1 text-red-500 text-xs"
+                          />
                         </div>
                         <div className="flex-1">
                           <label htmlFor="quantity">
@@ -444,6 +493,11 @@ const BasicInfo = () => {
                             </span>
                           </label>
                           <Field type="number" name="quantity" as={Input} />
+                          <ErrorMessage
+                            name="quantity"
+                            component="div"
+                            className="ml-2 mt-1 text-red-500 text-xs"
+                          />
                         </div>
                       </div>
                       <div className="flex gap-4 flex-col flex-wrap">
@@ -477,6 +531,7 @@ const BasicInfo = () => {
                               Add Size
                             </Button>
                           </div>
+                         
                         </div>
                         {size && (
                           <div className="flex items-center gap-2">

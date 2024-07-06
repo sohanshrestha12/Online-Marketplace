@@ -17,3 +17,7 @@ export const getCurrentUser = () => {
 export const logout = () => {
   return MarketUrl.post("/auth/logout");
 };
+
+export const verifyUser = (id: string, code: string) => {
+  return MarketUrl.post(`/users/verifyOtp/${id}/${code}`);
+};

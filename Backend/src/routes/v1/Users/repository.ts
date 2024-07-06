@@ -1,4 +1,5 @@
 import { User, UserDocument, UserModel } from "./model";
+import { SellerUser } from "./types";
 
 type UserWithoutPassword = Omit<UserDocument, "password">;
 
@@ -26,3 +27,20 @@ export const updateImage = async(userId:string,file:string)=>{
   user.profileImage = file;
   return user.save();
 }
+export const updateUserVerification = (
+  id: string
+): Promise<UserDocument | null> => {
+  return UserModel.findOneAndUpdate(
+    { _id: id },
+    { isVerified: true ,role:"SELLER"},
+    { new: true }
+  ).select("-password");
+};
+export const sellerRegistration = async(body:SellerUser):Promise<UserDocument | undefined>=>{
+  const user = await UserModel.findById(body.id);
+  if (!user) return;
+  user.address = body.address;
+  user.businessName = body.businessName;
+  user.phNumber = body.phNumber;
+  return user.save();
+};

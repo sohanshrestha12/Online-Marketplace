@@ -11,6 +11,10 @@ export interface User {
   role?: string;
   googleId?:string;
   profileImage?:string;
+  address?:string;
+  businessName?:string;
+  phNumber?:string;
+  isVerified?:boolean;
 }
 
 export const userPrivateFields = ['password','__v','createdAt','updatedAt'];
@@ -52,7 +56,29 @@ const userSchema = new mongoose.Schema<UserDocument>(
       type:String,
       required:false,
       default:'users/default.jpeg',
+    },
+    address: {
+      type: String,
+      required: false,
+      unique: false,
+    },
+    phNumber: {
+      type: Number,
+      required: false,
+      unique: true,
+    },
+    businessName:{
+      type:String,
+      required:false,
+      unique:false
+    },
+    isVerified:{
+      type:Boolean,
+      required:false,
+      unique:false,
+      default:false,
     }
+
   },
   {
     timestamps: true,

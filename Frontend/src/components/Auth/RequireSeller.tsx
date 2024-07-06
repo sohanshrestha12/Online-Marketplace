@@ -6,7 +6,7 @@ interface RequireAuthProps {
   children: ReactNode;
 }
 
-const RequireUser= ({ children }: RequireAuthProps) => {
+const RequireSeller= ({ children }: RequireAuthProps) => {
   const auth = useAuth();
   if (!auth.user || !(auth.user.role === 'SELLER')) {
     return <Navigate to="/" />;
@@ -14,4 +14,4 @@ const RequireUser= ({ children }: RequireAuthProps) => {
   return children;
 };
 
-export default RequireUser;
+export default RequireSeller;

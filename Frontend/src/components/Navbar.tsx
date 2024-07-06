@@ -159,9 +159,15 @@ const Navbar = () => {
             <Link className="no-underline text-black" to="/">
               Help & Support
             </Link>
-            <Link className="no-underline text-black" to="/seller">
-              Become a seller
-            </Link>
+            {user?.role === "SELLER" ? (
+              <Link className="no-underline text-black" to="/profile">
+                Manage Profile
+              </Link>
+            ) : (
+              <Link className="no-underline text-black" to="/seller">
+                Become a seller
+              </Link>
+            )}
           </li>
         </ul>
       </div>

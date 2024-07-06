@@ -6,6 +6,9 @@ import upload from "../../../Middleware/multerConfig";
 const UserRouter = Router();
 
 UserRouter.route("/").post(UserController.createUser);  
+UserRouter.route("/sellerRegistration").post(UserController.sellerRegistration);  
+UserRouter.route("/verifyOtp/:id/:code").post(UserController.verifyOtp);
+
 UserRouter.route("/getCurrentUser").get(
   requireUser,
   UserController.getCurrentUser

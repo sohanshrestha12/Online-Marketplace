@@ -1,21 +1,22 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
-import Home from "./pages/Home";
-import Seller from "./components/Seller";
-import Login from "./pages/Login";
-import ProductDetails from "./pages/ProductDetails";
-import SignUp from "./pages/SignUp";
-import ProductLists from "./pages/ProductLists";
-import Error from "./pages/Error";
-import AddToCart from "./pages/AddToCart";
-import SellerDashboardLayout from "./pages/SellerDashboardLayout";
-import AddProduct from "./pages/AddProduct";
-import Profile from "./pages/Profile";
-import MyOrder from "./pages/MyOrder";
-import ProfileLayout from "./pages/ProfileLayout";
 import RequireAuth from "./components/Auth/RequireAuth";
-import RequireUser from "./components/Auth/RequireUser";
+import RequireSeller from "./components/Auth/RequireSeller";
+import Seller from "./pages/Seller";
+import AddProduct from "./pages/AddProduct";
+import AddToCart from "./pages/AddToCart";
+import EmailVerification from "./pages/EmailVerification";
+import Error from "./pages/Error";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import MyOrder from "./pages/MyOrder";
 import MyProduct from "./pages/MyProduct";
+import ProductDetails from "./pages/ProductDetails";
+import ProductLists from "./pages/ProductLists";
+import Profile from "./pages/Profile";
+import ProfileLayout from "./pages/ProfileLayout";
+import SellerDashboardLayout from "./pages/SellerDashboardLayout";
+import SignUp from "./pages/SignUp";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
         element: <AddToCart />,
       },
       {
+        path:"EmailVerification",
+        element:<EmailVerification/>
+      },
+      {
         path: "profile",
         element: (
           <RequireAuth>
@@ -74,9 +79,9 @@ const router = createBrowserRouter([
   {
     path: "sellerDashboard",
     element: (
-      <RequireUser>
+      <RequireSeller>
         <SellerDashboardLayout />
-      </RequireUser>
+      </RequireSeller>
     ),
     children: [
       {

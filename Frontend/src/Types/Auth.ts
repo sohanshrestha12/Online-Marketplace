@@ -16,6 +16,13 @@ export interface User{
   role:string;
   profileImage?:string;
 }
+
+export interface SellerUser {
+  id?:string;
+  businessName: string;
+  address: string;
+  phNumber: string;
+}
 export interface AuthContextType {
   user: User | null;
   login: (user: User) => void;

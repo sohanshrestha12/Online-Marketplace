@@ -16,6 +16,8 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/multer": "^1.4.11",
     "@types/node": "^20.14.8",
+    "@types/nodemailer": "^6.4.15",
+    "@types/otp-generator": "^4.0.2",
     "typescript": "^5.5.2"
   },
   "dependencies": {
@@ -26,6 +28,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.3",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.14",
+    "otp-generator": "^4.0.1",
     "passport-google-oauth20": "^2.0.0"
   }
 }
