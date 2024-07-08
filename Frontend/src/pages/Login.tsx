@@ -64,12 +64,12 @@ const Login = () => {
         onSubmit={handleLogin}
       >
         {({ isSubmitting }) => (
-          <Form>
+          <Form className="text-black">
             <Card className="w-[450px] px-5 py-3">
               <div className="flex flex-col h-full">
                 <div className="flex flex-col items-center">
-                  <h2 className="text-lg font-semibold">GrandBazaar</h2>
-                  <h3 className="text-sm">
+                  <h2 className="text-lg text-black font-semibold">GrandBazaar</h2>
+                  <h3 className="text-sm text-black">
                     Welcome to GrandBazaar! Please login.
                   </h3>
                 </div>
@@ -102,7 +102,7 @@ const Login = () => {
                   Log in with Google
                 </Button>
 
-                <div className="flex flex-col gap-2 mt-5 items-center text-sm">
+                <div className="flex flex-col gap-2 mt-5 items-center text-black text-sm">
                   <p>
                     Don't have an account?
                     <Link to={"/signUp"} className="text-blue-500">

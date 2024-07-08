@@ -15,6 +15,8 @@ export interface User {
   businessName?:string;
   phNumber?:string;
   isVerified?:boolean;
+  gender?:string;
+  birthday?:string;
 }
 
 export const userPrivateFields = ['password','__v','createdAt','updatedAt'];
@@ -71,6 +73,16 @@ const userSchema = new mongoose.Schema<UserDocument>(
       type:String,
       required:false,
       unique:false
+    },
+    gender:{
+      type:String,
+      require:false,
+      unique:false,
+    },
+    birthday:{
+      type:String,
+      require:false,
+      unique:false,
     },
     isVerified:{
       type:Boolean,

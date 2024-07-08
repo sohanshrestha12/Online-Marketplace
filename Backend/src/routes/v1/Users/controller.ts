@@ -3,7 +3,7 @@ import CustomError from "../../../utils/Error";
 import { successResponse } from "../../../utils/HttpResponse";
 import { User } from "./model";
 import UserService from "./services";
-import { SellerUser } from "./types";
+import { SellerUser, UserProfile } from "./types";
 import { findUserOtp } from "../Otp/repository";
 
 const UserController = {
@@ -102,6 +102,21 @@ const UserController = {
       next(error);
     }
   },
+  async profileUpdate(req:Request<unknown,unknown,UserProfile>,res:Response,next:NextFunction){
+    try {
+      const body = req.body;
+      const userId = res.locals.user._id;
+       const response = await UserService.profileUpdate(body,userId);
+       return successResponse({
+         response: res,
+         message: "User Profile Updated Successfully",
+         data: response,
+         status: 200,
+       });
+    } catch (error) {
+      next(error);
+    }
+  }
 };
 
 export default UserController;

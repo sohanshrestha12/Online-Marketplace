@@ -1,5 +1,5 @@
 import { User, UserDocument, UserModel } from "./model";
-import { SellerUser } from "./types";
+import { SellerUser, UserProfile } from "./types";
 
 type UserWithoutPassword = Omit<UserDocument, "password">;
 
@@ -42,5 +42,18 @@ export const sellerRegistration = async(body:SellerUser):Promise<UserDocument | 
   user.address = body.address;
   user.businessName = body.businessName;
   user.phNumber = body.phNumber;
+  return user.save();
+};
+
+export const profileUpdate=async(body:UserProfile,userId:string):Promise<UserDocument | undefined> => {
+  const user = await UserModel.findById(userId);
+  if(!user) return;
+  user.birthday = body.birthday;
+  user.gender = body.gender;
+  user.username = body.username;
+  user.email = body.email;
+  user.businessName =body.businessName? body.businessName:"";
+  user.address = body.address?body.address:"";
+  user.phNumber = body.phNumber?body.phNumber:"";
   return user.save();
 };

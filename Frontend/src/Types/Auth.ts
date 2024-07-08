@@ -15,6 +15,11 @@ export interface User{
   email:string;
   role:string;
   profileImage?:string;
+  birthday?:string;
+  gender?:string; 
+  businessName?:string;
+  address:string;
+  phNumber:string;
 }
 
 export interface SellerUser {

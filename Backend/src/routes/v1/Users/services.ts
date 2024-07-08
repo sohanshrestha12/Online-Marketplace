@@ -1,8 +1,8 @@
 import { generateOtp, sendVerificationEmail } from "../../../utils/OtpVerification";
 import CustomError from "../../../utils/Error";
 import { User } from "./model";
-import { createUserRepo, getUserById, sellerRegistration, updateImage, updateUserVerification } from "./repository";
-import { SellerUser } from "./types";
+import { createUserRepo, getUserById, profileUpdate, sellerRegistration, updateImage, updateUserVerification } from "./repository";
+import { SellerUser, UserProfile } from "./types";
 import { deleteOtp, storeUserOtp } from "../Otp/repository";
 
 const UserService = {
@@ -41,6 +41,10 @@ const UserService = {
     const otpDetails = await storeUserOtp(otp, user._id.toString());
     return { user, otpDetails };
   },
+  async profileUpdate(body:UserProfile,userId:string){
+    this.getUserById(userId);
+    return profileUpdate(body,userId);
+  }
 };
 
 export default UserService;

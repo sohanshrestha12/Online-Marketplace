@@ -66,8 +66,8 @@ const SignUp = () => {
             <Card className="w-[450px] px-5 py-3">
               <div className="flex flex-col h-full">
                 <div className="flex flex-col items-center">
-                  <h2 className="text-lg font-semibold">GrandBazaar</h2>
-                  <h3 className="text-sm">
+                  <h2 className="text-lg font-semibold text-black">GrandBazaar</h2>
+                  <h3 className="text-sm text-black">
                     Welcome to GrandBazaar! Please SignUp.
                   </h3>
                 </div>
@@ -102,7 +102,7 @@ const SignUp = () => {
                   </Button>
                 </div>
 
-                <div className="flex flex-col gap-2 mt-5 items-center text-sm">
+                <div className="flex flex-col gap-2 mt-5 items-center text-sm text-black">
                   <p>
                     Already have an account?
                     <Link to={"/login"} className="text-blue-500">

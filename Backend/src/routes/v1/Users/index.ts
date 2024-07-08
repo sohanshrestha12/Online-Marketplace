@@ -19,6 +19,7 @@ UserRouter.post(
   requireUser,
   UserController.updateImage
 );
+UserRouter.route('/profileUpdate').post(UserController.profileUpdate);
 
 
 
