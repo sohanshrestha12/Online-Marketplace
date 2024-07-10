@@ -6,11 +6,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useProduct } from "@/contexts/ProductContext";
 import { useEffect, useState } from "react";
 import { FetchProduct } from "./ProductDetails";
-import { deleteProduct } from "@/api/Product";
+import { deleteMultiple, deleteProduct } from "@/api/Product";
 import { toast } from "sonner";
 
 const MyProduct = () => {
-  const { dashboardProducts, fetchDashboardProducts,deleteProductState } = useProduct();
+  const { dashboardProducts, fetchDashboardProducts,deleteProductState,deleteMultipleProductState } = useProduct();
   const { user } = useAuth();
   const [isActionOpen, setActionOpen] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState<FetchProduct[]>([]);
@@ -67,12 +67,27 @@ const MyProduct = () => {
     console.log(selectedRows);
   }, [selectedRows]);
 
+
+  const handleMultipleDelete = async() =>{
+    const ids = selectedRows
+      .filter((item) => item._id !== undefined)
+      .map((item) => item._id as string);
+
+      if(ids.length <= 0){
+        return;
+      }
+    
+    const response = await deleteMultiple(ids);
+    deleteMultipleProductState(selectedRows);
+    console.log(response);
+  }
   return (
     <div className="w-full p-4 overflow-x-hidden">
       <Card>
         <CardTitle className="bg-gray-50 px-2 py-3 border-b text-md font-semibold">
           My Products
         </CardTitle>
+        <Button onClick={handleMultipleDelete}>Delete</Button>
         <div className="flex flex-col">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">

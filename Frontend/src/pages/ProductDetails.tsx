@@ -31,6 +31,7 @@ export interface FetchFilterProduct{
   product:FetchProduct[],
   totalPage:number,
   totalProduct:number,
+  limit:number,
 }
 
 const ProductDetails = () => {

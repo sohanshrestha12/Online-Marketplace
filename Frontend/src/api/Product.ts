@@ -41,6 +41,10 @@ export const deleteProduct = (id:string)=>{
   return MarketUrl.delete(`/product/${id}`);
 };
 
+export const deleteMultiple = (ids:string[]) =>{
+  return MarketUrl.post(`product/deleteMultiple`, ids);
+};
+
 export const fetchProductsByFilter = (
   category?: string,
   brands?: string[],

@@ -30,4 +30,5 @@ export interface ProductReturn {
   totalProduct: number;
   page: number;
   totalPage: number;
+  limit:number;
 }

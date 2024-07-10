@@ -133,7 +133,28 @@ const ProductController = {
   ) {
     try {
       const { id } = req.params;
-      const result = await ProductService.deleteProduct(id);
+      const userId = res.locals.user._id;
+      const result = await ProductService.deleteProduct(id,userId);
+
+      return successResponse({
+        response: res,
+        message: "Successfully deleted the product",
+        data: result,
+        status: 200,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  async deleteMultipleProduct(
+    req: Request<unknown,unknown,string[]>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const ids = req.body;
+      const userId = res.locals.user._id;
+      const result = await ProductService.deleteMultipleProduct(ids,userId);
 
       return successResponse({
         response: res,

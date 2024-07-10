@@ -67,6 +67,7 @@ export const getAllProducts = async (
     totalProduct,
     page: parseInt(page),
     totalPage: Math.ceil(totalProduct / pageSize),
+    limit:pageSize,
   };
 };
 export const getProductById = async (id: string): Promise<Product | null> => {
@@ -108,17 +109,29 @@ export const filterProducts = async (
   return ProductModel.find(query);
 };
 
-
-export const removeQuantity = async(productId:string,quantity:number) =>{
-
+export const removeQuantity = async (productId: string, quantity: number) => {
   const product = await ProductModel.findByIdAndUpdate(
     productId,
-    { $inc: { quantity: -quantity } }, 
-    { new: true } 
+    { $inc: { quantity: -quantity } },
+    { new: true }
   );
   return product;
 };
 
-export const deleleteProduct = async(id:string)=>{
-  return ProductModel.findByIdAndDelete(id);
+export const deleleteProduct = async (id: string,userId:string) => {
+  const product = await ProductModel.findOne({ _id: id, userId: userId });
+  if (!product) {
+    throw new CustomError(
+      "You do not have permission to delete this product or it does not exist.",
+      403
+    );
+  }
+  return ProductModel.findOneAndDelete({ _id: id, userId: userId });
+};
+
+export const deleteMultipleProducts = async (ids: string[],userId:string) => {
+  return ProductModel.deleteMany({
+    _id: { $in: ids },
+    createdBy: userId,
+  });
 };
