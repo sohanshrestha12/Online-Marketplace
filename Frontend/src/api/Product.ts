@@ -37,6 +37,10 @@ export const getProductById = (id: string) => {
   return MarketUrl.get(`/product/${id}`);
 };
 
+export const deleteProduct = (id:string)=>{
+  return MarketUrl.delete(`/product/${id}`);
+};
+
 export const fetchProductsByFilter = (
   category?: string,
   brands?: string[],

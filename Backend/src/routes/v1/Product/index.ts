@@ -10,6 +10,7 @@ ProductRouter.post("/",upload.array('images'),requireUser,checkUserRole('SELLER'
 ProductRouter.route("/").get(ProductController.getAllProducts);
 ProductRouter.route("/filterProducts").get(ProductController.filterProducts);
 ProductRouter.route("/:id").get(ProductController.getProductById);
+ProductRouter.route("/:id").delete(ProductController.deleteProduct);
 
 
 export default ProductRouter;

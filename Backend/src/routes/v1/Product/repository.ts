@@ -118,3 +118,7 @@ export const removeQuantity = async(productId:string,quantity:number) =>{
   );
   return product;
 };
+
+export const deleleteProduct = async(id:string)=>{
+  return ProductModel.findByIdAndDelete(id);
+};

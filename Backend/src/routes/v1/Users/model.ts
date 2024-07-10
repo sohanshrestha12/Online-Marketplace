@@ -68,6 +68,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
       type: Number,
       required: false,
       unique: true,
+      sparse:true,
     },
     businessName:{
       type:String,

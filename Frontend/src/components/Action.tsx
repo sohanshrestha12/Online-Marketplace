@@ -4,28 +4,59 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { FetchProduct } from "@/pages/ProductDetails";
+import { useEffect, useState } from "react";
 import { GoKebabHorizontal } from "react-icons/go";
 import Update from "./Update";
-import { FetchProduct } from "@/pages/ProductDetails";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "./ui/button";
 
 interface ActionProps {
   isOpen: boolean;
+  onOpen: () => void;
   onClose: () => void;
   product: FetchProduct;
+  handleDeleteRow: (item: FetchProduct) => void;
 }
-const Action = ({ isOpen, onClose, product }: ActionProps) => {
+const Action = ({
+  isOpen,
+  onOpen,
+  onClose,
+  product,
+  handleDeleteRow,
+}: ActionProps) => {
   const [isUpdateDialogOpen, setUpdateDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   const handleUpdateDialogOpen = () => {
     setUpdateDialogOpen(true);
+    onClose();
   };
   const handleUpdateDialogClose = () => {
     setUpdateDialogOpen(false);
+  };
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialogOpen(true);
     onClose();
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
   };
   return (
     <>
-      <DropdownMenu open={isOpen} onOpenChange={onClose}>
+      <DropdownMenu
+        open={isOpen}
+        onOpenChange={(open) => (open ? onOpen() : onClose())}
+      >
         <DropdownMenuTrigger>
           <GoKebabHorizontal />
         </DropdownMenuTrigger>
@@ -35,12 +66,42 @@ const Action = ({ isOpen, onClose, product }: ActionProps) => {
           <DropdownMenuItem onClick={handleUpdateDialogOpen}>
             Update
           </DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Team</DropdownMenuItem>
-          <DropdownMenuItem>Subscription</DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-red-500 w-full hover:!text-red-500"
+            onClick={handleDeleteDialogOpen}
+          >
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <Update isOpen={isUpdateDialogOpen} onClose={handleUpdateDialogClose} product={product}/>
+      <Dialog open={isDeleteDialogOpen} onOpenChange={handleDeleteDialogClose}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete your
+              product and remove your data from our servers.
+            </DialogDescription>
+            <DialogFooter className="mt-3">
+              <Button onClick={handleDeleteDialogClose}>Cancel</Button>
+              <Button
+                variant={"destructive"}
+                onClick={() => {
+                  handleDeleteRow(product);
+                  handleDeleteDialogClose();
+                }}
+              >
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+      <Update
+        isOpen={isUpdateDialogOpen}
+        onClose={handleUpdateDialogClose}
+        product={product}
+      />
     </>
   );
 };

@@ -8,14 +8,14 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Button } from "./ui/button";
 
-import { createProduct, getAllBrands, getAllCategories } from "@/api/Product";
-import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
-import { IoIosClose } from "react-icons/io";
 import { Category } from "@/Types/Category";
+import AddProductValidationSchema from "@/Validation/AddProduct";
+import { createProduct, getAllBrands, getAllCategories } from "@/api/Product";
 import { useProduct } from "@/contexts/ProductContext";
 import axios from "axios";
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
+import { IoIosClose } from "react-icons/io";
 import { toast } from "sonner";
-import AddProductValidationSchema from "@/Validation/AddProduct";
 
 const BasicInfo = () => {
   interface Option {
@@ -111,6 +111,8 @@ const BasicInfo = () => {
     try {
       const response = await createProduct(formData);
       addProduct(response.data.data);
+      //need to scroll top of the page.
+      window.scrollTo({top:0,behavior:"smooth"});
       toast.success("Product added Successfully");
       console.log(response);
     } catch (error) {

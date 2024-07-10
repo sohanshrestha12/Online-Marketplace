@@ -17,6 +17,7 @@ import Profile from "./pages/Profile";
 import ProfileLayout from "./pages/ProfileLayout";
 import SellerDashboardLayout from "./pages/SellerDashboardLayout";
 import SignUp from "./pages/SignUp";
+import Dashboard from "./pages/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
       </RequireSeller>
     ),
     children: [
+      {
+        index:true,
+        element: <Dashboard />,
+      },
       {
         path: "addProduct",
         element: <AddProduct />,

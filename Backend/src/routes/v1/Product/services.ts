@@ -1,7 +1,7 @@
 import CustomError from "../../../utils/Error";
 import { getCategoryBrand } from "../Brand/repository";
 import { Product } from "./model";
-import { createProduct, filterProducts, getAllProducts, getProductById } from "./repository";
+import { createProduct, deleleteProduct, filterProducts, getAllProducts, getProductById } from "./repository";
 import { ProductQuery, SearchQuery } from "./types";
 
 const ProductService = {
@@ -21,6 +21,10 @@ const ProductService = {
     const filter = await filterProducts(query);
     return { categoryBrand, filter };
   },
+  async deleteProduct(id:string){
+    this.getProductById(id);
+    return deleleteProduct(id);
+  }
 };
 
 

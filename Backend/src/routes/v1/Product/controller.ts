@@ -17,7 +17,7 @@ const ProductController = {
       const user = res.locals.user;
       if (!files) throw new CustomError("Image is required", 404);
       const filesPath = files.map((file) => file.path.replace("uploads\\", ""));
-      const product = await ProductService.createProduct(body, filesPath,user);
+      const product = await ProductService.createProduct(body, filesPath, user);
       return successResponse({
         response: res,
         message: "Product created successfully",
@@ -28,7 +28,11 @@ const ProductController = {
       next(error);
     }
   },
-  async getAllProducts(req: Request<unknown,unknown,unknown,ProductQuery>, res: Response, next: NextFunction) {
+  async getAllProducts(
+    req: Request<unknown, unknown, unknown, ProductQuery>,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const query = req.query;
       console.log(query);
@@ -69,7 +73,7 @@ const ProductController = {
   ) {
     try {
       let query: SearchQuery = {};
-      const { category, brand,colorFamily,minPrice,maxPrice } = req.query;
+      const { category, brand, colorFamily, minPrice, maxPrice } = req.query;
       if (category) {
         const normalizedCategory = (category as string)
           .replace(/[^a-zA-Z0-9]/g, "")
@@ -99,16 +103,16 @@ const ProductController = {
           query.colorFamily = colorFamily;
         }
       }
-       if (minPrice && maxPrice) {
-         query.price = {
-           $gte: parseFloat(minPrice),
-           $lte: parseFloat(maxPrice),
-         };
-       } else if (minPrice) {
-         query.price = { $gte: parseFloat(minPrice) };
-       } else if (maxPrice) {
-         query.price = { $lte: parseFloat(maxPrice) };
-       }
+      if (minPrice && maxPrice) {
+        query.price = {
+          $gte: parseFloat(minPrice),
+          $lte: parseFloat(maxPrice),
+        };
+      } else if (minPrice) {
+        query.price = { $gte: parseFloat(minPrice) };
+      } else if (maxPrice) {
+        query.price = { $lte: parseFloat(maxPrice) };
+      }
       const { categoryBrand, filter } = await ProductService.filterProducts(
         query
       );
@@ -116,6 +120,25 @@ const ProductController = {
         response: res,
         message: "Successfully retrieved the filtered product",
         data: { categoryBrand, filter },
+        status: 200,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  async deleteProduct(
+    req: Request<{ id: string }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      const result = await ProductService.deleteProduct(id);
+
+      return successResponse({
+        response: res,
+        message: "Successfully deleted the product",
+        data: result,
         status: 200,
       });
     } catch (error) {
