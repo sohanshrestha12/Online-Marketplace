@@ -1,4 +1,5 @@
 import { addToCart } from "@/api/Cart";
+import { CheckLikeStatus, DislikeProduct, LikeProduct } from "@/api/Like";
 import { getProductById } from "@/api/Product";
 import ProductCarousel from "@/components/ProductCarousel";
 import ProductDescription from "@/components/ProductDescription";
@@ -7,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
+import { IoMdHeart } from "react-icons/io";
 import ReactImageMagnify from "react-image-magnify";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -26,12 +28,12 @@ export interface FetchProduct {
   images: string[];
 }
 
-export interface FetchFilterProduct{
-  page:number,
-  product:FetchProduct[],
-  totalPage:number,
-  totalProduct:number,
-  limit:number,
+export interface FetchFilterProduct {
+  page: number;
+  product: FetchProduct[];
+  totalPage: number;
+  totalProduct: number;
+  limit: number;
 }
 
 const ProductDetails = () => {
@@ -42,8 +44,44 @@ const ProductDetails = () => {
   const [activeProduct, setActiveProduct] = useState<FetchProduct>();
   const [images, setImages] = useState<string[][]>([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const checkLikedStatus = async () => {
+      try {
+        if (!activeProduct || !activeProduct._id) return;
+        const response = await CheckLikeStatus(activeProduct._id);
+        setIsLiked(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    checkLikedStatus();
+  }, [activeProduct]);
+
+  const likeProduct = async () => {
+    try {
+      if (!activeProduct || !activeProduct._id) return;
+      await LikeProduct(activeProduct._id);
+      setIsLiked(true);
+      toast.success("Added to your favourites");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const dislikeProduct = async () => {
+    try {
+      if (!activeProduct || !activeProduct._id) return;
+      await DislikeProduct(activeProduct._id);
+      setIsLiked(false);
+      toast.success("Removed from your favourites");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const getProductFromId = async () => {
@@ -71,10 +109,10 @@ const ProductDetails = () => {
     setSelectedImageIndex(i);
   };
   const handleQuantity = (event: React.ChangeEvent<HTMLInputElement>) => {
-     const value = event.target.value.trim();
-     const maxQuantity =
-       activeProduct && activeProduct.quantity > 0 ? activeProduct.quantity : 1;
-    if(value === ""){
+    const value = event.target.value.trim();
+    const maxQuantity =
+      activeProduct && activeProduct.quantity > 0 ? activeProduct.quantity : 1;
+    if (value === "") {
       setQuantity("1");
     }
     const parsedValue = parseInt(value);
@@ -90,10 +128,12 @@ const ProductDetails = () => {
     }
   };
   const incrementQuantity = () => {
-    if(!activeProduct) return;
-    setQuantity((prev) => (
-      activeProduct.quantity > parseInt(quantity)? (parseInt(prev) + 1).toString() : prev
-    ));
+    if (!activeProduct) return;
+    setQuantity((prev) =>
+      activeProduct.quantity > parseInt(quantity)
+        ? (parseInt(prev) + 1).toString()
+        : prev
+    );
   };
   const decrementQuantity = () => {
     setQuantity((prev) =>
@@ -106,10 +146,13 @@ const ProductDetails = () => {
   const segments = activeProduct?.category.split("/");
   const lastSegment = segments && segments.pop();
 
-  const handleAddToCart = async(activeProduct:FetchProduct,quantity:string) => {
+  const handleAddToCart = async (
+    activeProduct: FetchProduct,
+    quantity: string
+  ) => {
     try {
-      if(!activeProduct || !activeProduct._id) return;
-      const response = await addToCart(activeProduct._id,parseInt(quantity));
+      if (!activeProduct || !activeProduct._id) return;
+       await addToCart(activeProduct._id, parseInt(quantity));
       setActiveProduct((prevProduct) => {
         if (!prevProduct) return prevProduct;
         const newQuantity = prevProduct.quantity - parseInt(quantity);
@@ -120,11 +163,10 @@ const ProductDetails = () => {
       });
       setQuantity("1");
       // setActiveProduct();
-      console.log(response);
-      toast.success('Added to the cart successfully');
+      toast.success("Added to the cart successfully");
     } catch (error) {
       console.log(error);
-      if(axios.isAxiosError(error)){
+      if (axios.isAxiosError(error)) {
         toast.error(error.response?.data.message);
       }
     }
@@ -190,7 +232,17 @@ const ProductDetails = () => {
               <span className="text-indigo-500">{activeProduct?.brand}</span>
             </h5>
           </div>
-          <CiHeart className="text-md hover:cursor-pointer" />
+          {isLiked ? (
+            <IoMdHeart
+              onClick={dislikeProduct}
+              className="text-md hover:cursor-pointer"
+            />
+          ) : (
+            <CiHeart
+              onClick={likeProduct}
+              className="text-md hover:cursor-pointer"
+            />
+          )}
         </div>
         <div className="h-[1px] z-0 bg-black opacity-15 my-3"></div>
         <div>
@@ -227,8 +279,11 @@ const ProductDetails = () => {
           <div className="flex gap-2">
             <div>
               <Button
-              disabled={activeProduct && activeProduct?.quantity <= 1 || parseInt(quantity) <=1}
-              variant={'outline'}
+                disabled={
+                  (activeProduct && activeProduct?.quantity <= 1) ||
+                  parseInt(quantity) <= 1
+                }
+                variant={"outline"}
                 onClick={decrementQuantity}
                 className="bg-gray-50 px-3 py-2 text-2xl hover:bg-gray-200 cursor-pointer"
               >
@@ -249,7 +304,11 @@ const ProductDetails = () => {
             <div>
               <Button
                 variant={"outline"}
-                disabled={activeProduct && activeProduct?.quantity <= 1 || activeProduct && parseInt(quantity) >= activeProduct.quantity}
+                disabled={
+                  (activeProduct && activeProduct?.quantity <= 1) ||
+                  (activeProduct &&
+                    parseInt(quantity) >= activeProduct.quantity)
+                }
                 onClick={incrementQuantity}
                 className="bg-gray-50 px-3 py-2 text-2xl hover:bg-gray-200 cursor-pointer"
               >
