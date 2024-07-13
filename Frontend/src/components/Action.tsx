@@ -5,7 +5,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FetchProduct } from "@/pages/ProductDetails";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GoKebabHorizontal } from "react-icons/go";
 import Update from "./Update";
 

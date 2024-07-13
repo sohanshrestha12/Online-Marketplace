@@ -18,8 +18,8 @@ const ProductCarousel = ({
   selectedImageIndex,
 }: ProductCarouselProps) => {
   return (
-    <Carousel className="p-2">
-      <CarouselContent className="px-3">
+    <Carousel className="p-2 w-[90%]">
+      <CarouselContent className="px-3 w-ful">
         {images.map((item, i) => (
           <CarouselItem
             key={i}

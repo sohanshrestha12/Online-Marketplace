@@ -10,14 +10,20 @@ import { deleteMultiple, deleteProduct } from "@/api/Product";
 import { toast } from "sonner";
 
 const MyProduct = () => {
-  const { dashboardProducts, fetchDashboardProducts,deleteProductState,deleteMultipleProductState } = useProduct();
+  const {
+    dashboardProducts,
+    fetchDashboardProducts,
+    deleteProductState,
+    deleteMultipleProductState,
+  } = useProduct();
   const { user } = useAuth();
   const [isActionOpen, setActionOpen] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState<FetchProduct[]>([]);
   const handleActionOpen = (index: number) => setActionOpen(index);
-  const handleActionClose = () => {setActionOpen(null);}
-  
-
+  const [selectAll, setSelectAll] = useState<boolean>(false);
+  const handleActionClose = () => {
+    setActionOpen(null);
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -57,6 +63,8 @@ const MyProduct = () => {
         await deleteProduct(item._id);
         deleteProductState(item._id);
         toast.success("Deleted Successfully");
+        if (user === null || !user._id) return;
+        fetchDashboardProducts(user._id);
       }
     } catch (error) {
       console.log(error);
@@ -67,36 +75,51 @@ const MyProduct = () => {
     console.log(selectedRows);
   }, [selectedRows]);
 
-
-  const handleMultipleDelete = async() =>{
+  const handleMultipleDelete = async () => {
     const ids = selectedRows
       .filter((item) => item._id !== undefined)
       .map((item) => item._id as string);
 
-      if(ids.length <= 0){
-        return;
-      }
-    
-    const response = await deleteMultiple(ids);
+    if (ids.length <= 0) {
+      return;
+    }
+
+    await deleteMultiple(ids);
     deleteMultipleProductState(selectedRows);
-    console.log(response);
-  }
+    setSelectAll(false);
+    toast.success(`${selectedRows.length} items deleted`);
+    if (user === null || !user._id) return;
+    fetchDashboardProducts(user._id);
+  };
+
+  const handleSelectAll = () => {
+    if (!dashboardProducts) return;
+    if (selectAll) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(dashboardProducts.product);
+    }
+    setSelectAll(!selectAll);
+  };
   return (
     <div className="w-full p-4 overflow-x-hidden">
       <Card>
         <CardTitle className="bg-gray-50 px-2 py-3 border-b text-md font-semibold">
           My Products
         </CardTitle>
-        <Button onClick={handleMultipleDelete}>Delete</Button>
+
         <div className="flex flex-col">
-          <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+          <div className="overflow-x-auto w-full">
+            <div className="inline-block min-w-full py-2">
               <div className="overflow-hidden">
-                <table className="min-w-full text-left text-sm font-light">
-                  <thead className="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600">
+                <table className="min-w-full text-left text-sm font-light overflow-x-scroll ">
+                  <thead className="border-b text-center bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600">
                     <tr>
                       <th scope="col" className="px-6 py-4">
-                        <Checkbox />
+                        <Checkbox
+                          onClick={handleSelectAll}
+                          checked={selectAll}
+                        />
                       </th>
                       <th scope="col" className="px-6 py-4">
                         SN
@@ -127,11 +150,16 @@ const MyProduct = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="text-center">
                     {dashboardProducts &&
                     dashboardProducts.product.length <= 0 ? (
                       <tr>
-                        <td colSpan={10} className="text-center py-5 font-semibold text-lg">You haven't added any products yet</td>
+                        <td
+                          colSpan={10}
+                          className="text-center py-5 font-semibold text-lg"
+                        >
+                          You haven't added any products yet
+                        </td>
                       </tr>
                     ) : (
                       dashboardProducts?.product.map((item, i) => (
@@ -173,13 +201,13 @@ const MyProduct = () => {
                             createdAt
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 font-medium ">
-                              <Action
-                                isOpen={isActionOpen === i}
-                                onOpen={()=>handleActionOpen(i)}
-                                onClose={handleActionClose}
-                                product={item}
-                                handleDeleteRow={handleDeleteRow}
-                              />
+                            <Action
+                              isOpen={isActionOpen === i}
+                              onOpen={() => handleActionOpen(i)}
+                              onClose={handleActionClose}
+                              product={item}
+                              handleDeleteRow={handleDeleteRow}
+                            />
                           </td>
                         </tr>
                       ))
@@ -189,36 +217,49 @@ const MyProduct = () => {
               </div>
             </div>
           </div>
-          <div className="flex gap-2 items-center justify-end px-2 py-3">
-            <div>
-              {dashboardProducts?.page && (
-                <div className="text-sm font-semibold text-slate-500">
-                  <span>{dashboardProducts.page}</span>
-                  <span> out of </span>
-                  <span>{dashboardProducts.totalPage}</span>
-                </div>
-              )}
+          <div className="flex gap-2 items-center justify-between px-2 py-3">
+            <div className="flex gap-3 items-center">
+              <p className="text-sm font-semibold text-slate-500">
+                Total items: {dashboardProducts?.totalProduct}
+              </p>
+                <Button
+                  onClick={handleMultipleDelete}
+                  disabled={selectedRows.length<1}
+                >
+                  Delete
+                </Button>
             </div>
-            <div>
-              <Button
-                onClick={handlePreviousPage}
-                disabled={
-                  dashboardProducts?.page !== undefined &&
-                  dashboardProducts.page <= 1
-                }
-              >
-                Previous
-              </Button>
-              <Button
-                onClick={handleNextPage}
-                className="ml-2"
-                disabled={
-                  dashboardProducts?.page !== undefined &&
-                  dashboardProducts.page >= dashboardProducts.totalPage
-                }
-              >
-                Next
-              </Button>
+            <div className="flex gap-2 items-center">
+              <div>
+                {dashboardProducts?.page && (
+                  <div className="text-sm font-semibold text-slate-500">
+                    <span>{dashboardProducts.page}</span>
+                    <span> out of </span>
+                    <span>{dashboardProducts.totalPage}</span>
+                  </div>
+                )}
+              </div>
+              <div>
+                <Button
+                  onClick={handlePreviousPage}
+                  disabled={
+                    dashboardProducts?.page !== undefined &&
+                    dashboardProducts.page <= 1
+                  }
+                >
+                  Previous
+                </Button>
+                <Button
+                  onClick={handleNextPage}
+                  className="ml-2"
+                  disabled={
+                    dashboardProducts?.page !== undefined &&
+                    dashboardProducts.page >= dashboardProducts.totalPage
+                  }
+                >
+                  Next
+                </Button>
+              </div>
             </div>
           </div>
         </div>

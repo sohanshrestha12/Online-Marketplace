@@ -119,14 +119,14 @@ export const removeQuantity = async (productId: string, quantity: number) => {
 };
 
 export const deleleteProduct = async (id: string,userId:string) => {
-  const product = await ProductModel.findOne({ _id: id, userId: userId });
+  const product = await ProductModel.findOne({ _id: id, createdBy: userId });
   if (!product) {
     throw new CustomError(
       "You do not have permission to delete this product or it does not exist.",
       403
     );
   }
-  return ProductModel.findOneAndDelete({ _id: id, userId: userId });
+  return ProductModel.findOneAndDelete({ _id: id, createdBy: userId });
 };
 
 export const deleteMultipleProducts = async (ids: string[],userId:string) => {
