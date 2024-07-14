@@ -28,17 +28,28 @@ const ProfileLayout = () => {
               <li
                 className={`px-3 py-2 hover:bg-slate-100 hover:border-l-2 hover:font-semibold hover:border-orange-500 transition-all ease ${
                   location.pathname === "/profile/myOrders"
-                    ? "bg-slate-100 border-l-2 border-orange-500"
+                    ? "bg-slate-100 font-semibold border-l-2 border-orange-500"
                     : ""
                 }`}
               >
                 My Order
               </li>
             </Link>
+            <Link to={"/profile/favourites"}>
+              <li
+                className={`px-3 py-2 hover:bg-slate-100 hover:border-l-2 hover:font-semibold hover:border-orange-500 transition-all ease ${
+                  location.pathname === "/profile/favourites"
+                    ? "bg-slate-100 font-semibold border-l-2 border-orange-500"
+                    : ""
+                }`}
+              >
+                Favourite products
+              </li>
+            </Link>
           </ul>
         </div>
         <div className="col-span-9">
-            <Outlet/>
+          <Outlet />
         </div>
       </div>
     </div>

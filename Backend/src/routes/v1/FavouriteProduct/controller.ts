@@ -3,6 +3,21 @@ import { successResponse } from "../../../utils/HttpResponse";
 import FavouriteProductService from "./service";
 
 const FavouriteProductController = {
+  async getAllUserFavourites(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = res.locals.user._id;
+      const result = await FavouriteProductService.getAllUserFavourites(userId);
+
+      return successResponse({
+        response: res,
+        message: "Retrieved all favourite product successfully",
+        data: result,
+        status: 200,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
   async getFavourite(
     req: Request<{ productId: string }>,
     res: Response,
@@ -31,7 +46,6 @@ const FavouriteProductController = {
     try {
       const { productId } = req.params;
       const userId = res.locals.user._id;
-      console.log(userId);
       const result = await FavouriteProductService.createFavourite(
         productId,
         userId
@@ -54,7 +68,6 @@ const FavouriteProductController = {
     try {
       const { productId } = req.params;
       const userId = res.locals.user._id;
-      console.log(userId);
       const result = await FavouriteProductService.deleteFavourite(
         productId,
         userId

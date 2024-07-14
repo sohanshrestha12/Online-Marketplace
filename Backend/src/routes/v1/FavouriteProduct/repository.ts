@@ -1,5 +1,8 @@
 import { FavouriteModel, FavouriteProductInterface } from "./model";
 
+export const getAllUserFavourites = async(userId:string):Promise<FavouriteProductInterface[]>=>{
+    return FavouriteModel.find({userId}).populate('productId');
+}
 export const createFavourite = async(productId:string,userId:string):Promise<FavouriteProductInterface>=>{
     const favouriteProduct = new FavouriteModel({userId,productId});
     return favouriteProduct.save();

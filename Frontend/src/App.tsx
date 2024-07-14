@@ -18,6 +18,7 @@ import ProfileLayout from "./pages/ProfileLayout";
 import SellerDashboardLayout from "./pages/SellerDashboardLayout";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
+import Favourites from "./components/Favourites";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
           {
             path: "myOrders",
             element: <MyOrder />,
+          },
+          {
+            path: "favourites",
+            element: <Favourites />,
           },
         ],
       },

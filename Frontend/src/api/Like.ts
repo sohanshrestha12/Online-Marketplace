@@ -10,4 +10,7 @@ export const DislikeProduct = (productId: string) => {
 export const CheckLikeStatus = (productId:string) =>{
     return MarketUrl.get(`favourite/${productId}`);
 }
+export const getAllUserFavourites = () => {
+  return MarketUrl.get('favourite');
+};
 

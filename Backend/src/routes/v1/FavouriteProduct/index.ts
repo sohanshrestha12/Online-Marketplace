@@ -4,6 +4,7 @@ import FavouriteProductController from "./controller";
 
 const FavouriteProductRouter = Router();
 
+FavouriteProductRouter.route("/").get(requireUser,FavouriteProductController.getAllUserFavourites);
 FavouriteProductRouter.route("/:productId").get(requireUser,FavouriteProductController.getFavourite);
 FavouriteProductRouter.route("/:productId").post(requireUser,FavouriteProductController.createFavourite);
 FavouriteProductRouter.route("/:productId").delete(requireUser,FavouriteProductController.deleteFavourite);

@@ -1,3 +1,5 @@
+import { FetchProduct } from "@/pages/ProductDetails";
+
 export interface Product {
   _id?:string;
   name: string;
@@ -11,4 +13,10 @@ export interface Product {
   rating?: number;
   videoUrl?:string;
   images: File[];
+}
+
+export interface FavProduct{
+  _id:string;
+  productId:FetchProduct;
+  userId:string;
 }

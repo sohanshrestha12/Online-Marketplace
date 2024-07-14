@@ -82,7 +82,9 @@ const Navbar = () => {
             </Link>
           </ToolTip>
           <ToolTip name={"Favourites"}>
-            <MdOutlineFavoriteBorder className="text-xl hover:cursor-pointer" />
+            <Link to={"/profile/favourites"}>
+              <MdOutlineFavoriteBorder className="text-xl hover:cursor-pointer" />
+            </Link>
           </ToolTip>
         </div>
         <div>
