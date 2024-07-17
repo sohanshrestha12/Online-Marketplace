@@ -8,9 +8,11 @@ import { ErrorMessage, Field, Form, Formik, FormikValues } from "formik";
 import { Input } from "./ui/input";
 import Select from "react-select";
 import { Category } from "@/Types/Category";
-import { getAllCategories } from "@/api/Product";
-import { getFirstWord, getLastWord, getMiddleWords } from "@/utils/Mapping/Category";
+import { getAllBrands, getAllCategories } from "@/api/Product";
+import { colorOptions } from "@/utils/Colors";
 
+import { getFirstWord, getLastWord, getMiddleWords } from "@/utils/Category";
+import { Brand } from "@/Types/Brand";
 
 interface UpdateProps {
   isOpen: boolean;
@@ -21,40 +23,74 @@ interface UpdateProps {
 const Update = ({ isOpen, onClose, product }: UpdateProps) => {
   const [images, setImages] = useState<File[]>([]);
   const [imageShow, setImageShow] = useState<{ url: string }[]>([]);
-    const [allCategory, setAllCategory] = useState<Category[]>([]);
-    const [level1Category, setLevel1Category] = useState<Option | null>(null);
-    const [level2Category, setLevel2Category] = useState<Option | null>(null);
+  const [allCategory, setAllCategory] = useState<Category[]>([]);
+  const [level1Category, setLevel1Category] = useState<Option | null>(null);
+  const [level2Category, setLevel2Category] = useState<Option | null>(null);
+  const [brands, setBrands] = useState<Brand[]>([]);
 
-    interface Option {
-      value: string;
-      label: string;
-      category?: string;
-      color?: string;
-    }
+  interface Option {
+    value: string;
+    label: string;
+    category?: string;
+    color?: string;
+  }
 
   const initialValues: FormikValues = {
     name: product.name,
-    category: { value: getLastWord(product.category), label: getLastWord(product.category) },
-    brand: null,
-    colorFamily: null,
+    category: {
+      value: getLastWord(product.category),
+      label: getLastWord(product.category),
+    },
+    brand: {
+      value: product.brand,
+      label: product.brand,
+      category: getFirstWord(product.category),
+    },
+    colorFamily: product.colorFamily.map((color:string)=> {
+      const colorOption = colorOptions.find(
+        (option) => option.value === color
+      );
+
+      if (colorOption) {
+        return {
+          value: colorOption.value,
+          label: colorOption.label,
+        };
+      }
+
+      return null;
+    }),
     price: "",
     quantity: "",
     description: "",
     video: "",
   };
 
-    useEffect(() => {
-      const fetchAllCategory = async () => {
-        try {
-          const response = await getAllCategories();
-          setAllCategory(response.data.data);
-          console.log(response);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      fetchAllCategory();
-    }, []);
+  useEffect(() => {
+    const fetchAllCategory = async () => {
+      try {
+        const response = await getAllCategories();
+        setAllCategory(response.data.data);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAllCategory();
+  }, []);
+
+  useEffect(() => {
+    const fetchAllBrands = async () => {
+      try {
+        const response = await getAllBrands();
+        setBrands(response.data.data);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAllBrands();
+  }, []);
 
   const handleSubmit = async (values: FormikValues) => {
     console.log(values);
@@ -68,9 +104,9 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
       setImageShow(initialImage);
     }
     const l1Selected = getFirstWord(product.category);
-    const l2Selected = getMiddleWords(product.category)
-    setLevel1Category({value:l1Selected,label:l1Selected});
-    setLevel2Category({value:l2Selected,label:l2Selected});
+    const l2Selected = getMiddleWords(product.category);
+    setLevel1Category({ value: l1Selected, label: l1Selected });
+    setLevel2Category({ value: l2Selected, label: l2Selected });
   }, [product]);
 
   const insertImage = (files: File[]) => {
@@ -86,30 +122,39 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
     setImageShow([...imgUrl]);
   };
 
+  const level1CategoryOptions: Option[] = allCategory
+    .filter((cat) => cat.level === 1)
+    .map((item) => ({
+      value: item.name,
+      label: item.name,
+    }));
+  const level2CategoryOptions: Option[] = allCategory
+    .filter((cat) => cat.level === 2 && cat.parent === level1Category?.value)
+    .map((item) => ({
+      value: item.name,
+      label: item.name,
+    }));
+  const level3CategoryOptions: Option[] = allCategory
+    .filter((cat) => cat.level === 3 && cat.parent === level2Category?.value)
+    .map((item) => ({
+      value: item.name,
+      label: item.name,
+}));
 
-   const level1CategoryOptions: Option[] = allCategory
-     .filter((cat) => cat.level === 1)
-     .map((item) => ({
-       value: item.name,
-       label: item.name,
-     }));
-   const level2CategoryOptions: Option[] = allCategory
-     .filter((cat) => cat.level === 2 && cat.parent === level1Category?.value)
-     .map((item) => ({
-       value: item.name,
-       label: item.name,
-     }));
-   const level3CategoryOptions: Option[] = allCategory
-     .filter((cat) => cat.level === 3 && cat.parent === level2Category?.value)
-     .map((item) => ({
-       value: item.name,
-       label: item.name,
-     }));
+  const brandOptions: Option[] = brands.map((item) => ({
+    value: item.name,
+    label: item.name,
+    category: item.category,
+  }));
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-80 max:w-full sm:w-full h-[100vh] overflow-y-scroll sm:max-w-[70rem]">
         <DialogTitle>Update</DialogTitle>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize={true}>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          enableReinitialize={true}
+        >
           {({ isSubmitting, setFieldValue, values }) => (
             <Form>
               <Card className="mb-4">
@@ -236,6 +281,92 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
                       />
                       <ErrorMessage
                         name="category"
+                        component="div"
+                        className="ml-2 mt-1 text-red-500 text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-3">
+                    <p className="font-semibold">
+                      Product Attributes{" "}
+                      <span className="text-rose-500 text-lg font-bold">*</span>
+                    </p>
+                    <p className="text-xs">
+                      Boost your item's searchability by filling-up the key
+                      Products Information marked with KEY. The more you fill
+                      up, the easier for buyers to find your products.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <div className="flex gap-4 flex-wrap">
+                    <div className="flex-1">
+                      <label htmlFor="brand">
+                        Brand{" "}
+                        <span className="text-lg text-rose-500 font-bold">
+                          *{" "}
+                        </span>
+                        <span className="text-xs">
+                          {values.category?.value
+                            ? ""
+                            : "Please select the category first"}
+                        </span>
+                      </label>
+                      <Select
+                        isDisabled={!values.category?.value}
+                        options={brandOptions.filter(
+                          (brand) => brand.category === values.category?.value
+                        )}
+                        name="brand"
+                        value={values.brand}
+                        onChange={(option) => setFieldValue("brand", option)}
+                      />
+                      <ErrorMessage
+                        name="brand"
+                        component="div"
+                        className="ml-2 mt-1 text-red-500 text-xs"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label htmlFor="colorFamily">
+                        Color Family{" "}
+                        <span className="text-lg text-rose-500 font-bold">
+                          *
+                        </span>
+                      </label>
+                      <Select
+                        isMulti
+                        options={colorOptions}
+                        name="colorFamily"
+                        value={values.colorFamily}
+                        onChange={(option) =>
+                          setFieldValue("colorFamily", option)
+                        }
+                        formatOptionLabel={(option) => (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <span
+                              className="rounded-sm"
+                              style={{
+                                display: "inline-block",
+                                width: 20,
+                                height: 10,
+                                backgroundColor: option.color || option.value,
+                                marginRight: 10,
+                              }}
+                            />
+                            <span className="capitalize">{option.label}</span>
+                          </div>
+                        )}
+                      />
+                      <ErrorMessage
+                        name="colorFamily"
                         component="div"
                         className="ml-2 mt-1 text-red-500 text-xs"
                       />

@@ -16,14 +16,15 @@ import axios from "axios";
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import { IoIosClose } from "react-icons/io";
 import { toast } from "sonner";
+import { colorOptions } from "@/utils/Colors";
 
+export interface Option {
+  value: string;
+  label: string;
+  category?: string;
+  color?: string;
+}
 const BasicInfo = () => {
-  interface Option {
-    value: string;
-    label: string;
-    category?: string;
-    color?: string;
-  }
   interface Brand {
     name: string;
     category: string;
@@ -203,40 +204,7 @@ const BasicInfo = () => {
       label: item.name,
     }));
 
-  const colorOptions: Option[] = [
-    { value: "red", label: "Red", color: "#FF0000" },
-    { value: "green", label: "Green", color: "#00FF00" },
-    { value: "blue", label: "Blue", color: "#0000FF" },
-    { value: "yellow", label: "Yellow", color: "#FFFF00" },
-    { value: "orange", label: "Orange", color: "#FFA500" },
-    { value: "purple", label: "Purple", color: "#800080" },
-    { value: "pink", label: "Pink", color: "#FFC0CB" },
-    { value: "brown", label: "Brown", color: "#A52A2A" },
-    { value: "black", label: "Black", color: "#000000" },
-    { value: "white", label: "White", color: "#FFFFFF" },
-    { value: "gray", label: "Gray", color: "#808080" },
 
-    // Metallic Colors
-    { value: "gold", label: "Gold", color: "#FFD700" },
-    { value: "silver", label: "Silver", color: "#C0C0C0" },
-    { value: "bronze", label: "Bronze", color: "#CD7F32" },
-
-    // Pastel Colors
-    { value: "lavender", label: "Lavender", color: "#E6E6FA" },
-    { value: "mint", label: "Mint", color: "#98FF98" },
-    { value: "peach", label: "Peach", color: "#FFDAB9" },
-
-    // Neon Colors
-    { value: "neonPink", label: "Neon Pink", color: "#FF1493" },
-    { value: "neonGreen", label: "Neon Green", color: "#39FF14" },
-    { value: "neonYellow", label: "Neon Yellow", color: "#FFFF00" },
-    { value: "neonOrange", label: "Neon Orange", color: "#FFA500" },
-
-    // Earthy Colors
-    { value: "earthBrown", label: "Earth Brown", color: "#8B4513" },
-    { value: "earthGreen", label: "Earth Green", color: "#556B2F" },
-    { value: "earthGray", label: "Earth Gray", color: "#A9A9A9" },
-  ];
 
   return (
     <>

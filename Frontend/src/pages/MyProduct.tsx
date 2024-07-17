@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { FetchProduct } from "./ProductDetails";
 import { deleteMultiple, deleteProduct } from "@/api/Product";
 import { toast } from "sonner";
-import { getLastWord } from "@/utils/Mapping/Category";
+import { getLastWord } from "@/utils/Category";
 
 const MyProduct = () => {
   const {
