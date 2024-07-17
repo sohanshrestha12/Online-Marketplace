@@ -64,7 +64,7 @@ export const colorOptions: Option[] = [
   { value: "#FF1493", label: "Neon Pink", color: "#FF1493" },
   { value: "#39FF14", label: "Neon Green", color: "#39FF14" },
   { value: "#FFFF00", label: "Neon Yellow", color: "#FFFF00" },
-  { value: "#FFA500", label: "Neon Orange", color: "#FFA500" },
+  { value: "#FFA510", label: "Neon Orange", color: "#FFA510" },
 
   // Earthy Colors
   { value: "#8B4513", label: "Earth Brown", color: "#8B4513" },

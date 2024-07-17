@@ -10,6 +10,8 @@ interface AddImagesProps {
   images: File[];
   imageShow: { url: string }[];
   changeImageUrl: (imgUrls: { url: string }[]) => void;
+  handleExistingImage?:(img:string[])=>void;
+  existingImage?:string[];
 }
 
 const AddImages = ({
@@ -19,6 +21,8 @@ const AddImages = ({
   images,
   imageShow,
   changeImageUrl,
+  handleExistingImage,
+  existingImage
 }: AddImagesProps) => {
   const imageHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
     // console.log(e.target.files);
@@ -53,6 +57,11 @@ const AddImages = ({
     const filterImageUrl = imageShow.filter((_,index)=> index !== i);
     changeImage(filterImage);
     changeImageUrl(filterImageUrl);
+    if(existingImage && handleExistingImage){
+      const filterExistingUrl = existingImage.filter((_,index)=>index !== i);
+      handleExistingImage(filterExistingUrl); 
+    }
+
   }
 
   return (

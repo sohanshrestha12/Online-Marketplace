@@ -80,7 +80,7 @@ const BasicInfo = () => {
     { resetForm }: FormikHelpers<FormValues>
   ) => {
     // console.log(images);
-    console.log("form values", values);
+    // console.log("form values", values);
     const formData = new FormData();
     Object.keys(values).forEach((key) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -497,11 +497,14 @@ const BasicInfo = () => {
                               as={Input}
                             />
 
-                            <Button type="button" onClick={handleAddSize}>
+                            <Button
+                              type="button"
+                              onClick={handleAddSize}
+                              className="bg-indigo-500 hover:bg-indigo-600"
+                            >
                               Add Size
                             </Button>
                           </div>
-                         
                         </div>
                         {size && (
                           <div className="flex items-center gap-2">

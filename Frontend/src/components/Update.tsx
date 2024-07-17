@@ -1,18 +1,21 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Card, CardTitle } from "./ui/card";
-import { FetchProduct } from "@/pages/ProductDetails";
-import { DialogTitle } from "@radix-ui/react-dialog";
-import AddImages from "./AddImages";
-import { useEffect, useState } from "react";
-import { ErrorMessage, Field, Form, Formik, FormikValues } from "formik";
-import { Input } from "./ui/input";
-import Select from "react-select";
 import { Category } from "@/Types/Category";
 import { getAllBrands, getAllCategories } from "@/api/Product";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { FetchProduct } from "@/pages/ProductDetails";
 import { colorOptions } from "@/utils/Colors";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { ErrorMessage, Field, Form, Formik, FormikValues } from "formik";
+import { useEffect, useState } from "react";
+import Select from "react-select";
+import AddImages from "./AddImages";
+import { Card, CardTitle } from "./ui/card";
+import { Input } from "./ui/input";
 
-import { getFirstWord, getLastWord, getMiddleWords } from "@/utils/Category";
 import { Brand } from "@/Types/Brand";
+import { getFirstWord, getLastWord, getMiddleWords } from "@/utils/Category";
+import { IoIosClose } from "react-icons/io";
+import ReactQuill from "react-quill";
+import { Button } from "./ui/button";
 
 interface UpdateProps {
   isOpen: boolean;
@@ -21,12 +24,16 @@ interface UpdateProps {
 }
 
 const Update = ({ isOpen, onClose, product }: UpdateProps) => {
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState<File[] >([]);
   const [imageShow, setImageShow] = useState<{ url: string }[]>([]);
   const [allCategory, setAllCategory] = useState<Category[]>([]);
   const [level1Category, setLevel1Category] = useState<Option | null>(null);
   const [level2Category, setLevel2Category] = useState<Option | null>(null);
   const [brands, setBrands] = useState<Brand[]>([]);
+  const [existingImage,setExistingImage] = useState<string[]>([]);
+  const [size, setSize] = useState<number[]>([]);
+  const [sizeInput, setSizeInput] = useState("");
+  const [value, setValue] = useState("");
 
   interface Option {
     value: string;
@@ -34,6 +41,21 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
     category?: string;
     color?: string;
   }
+
+
+  useEffect(()=>{
+    console.log('This is an existing image',existingImage);
+  },[existingImage]);
+
+  const handleAddSize = () => {
+    setSize([...size, parseInt(sizeInput.trim())]);
+    setSizeInput("");
+  };
+
+  const handleRemoveSize = (i: number) => {
+    const updatedSize = size.filter((_, index) => index !== i);
+    setSize(updatedSize);
+  };
 
   const initialValues: FormikValues = {
     name: product.name,
@@ -46,10 +68,8 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
       label: product.brand,
       category: getFirstWord(product.category),
     },
-    colorFamily: product.colorFamily.map((color:string)=> {
-      const colorOption = colorOptions.find(
-        (option) => option.value === color
-      );
+    colorFamily: product.colorFamily.map((color: string) => {
+      const colorOption = colorOptions.find((option) => option.value === color);
 
       if (colorOption) {
         return {
@@ -60,10 +80,10 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
 
       return null;
     }),
-    price: "",
-    quantity: "",
-    description: "",
-    video: "",
+    price: product.price,
+    quantity: product.quantity,
+    description: product.description,
+    video: product.videoUrl,
   };
 
   useEffect(() => {
@@ -93,7 +113,49 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
   }, []);
 
   const handleSubmit = async (values: FormikValues) => {
-    console.log(values);
+    console.log("This is update submit value", values);
+    const formData = new FormData();
+    Object.keys(values).forEach((key) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const value = (values as any)[key];
+
+      if (value !== null && value !== undefined) {
+        if (Array.isArray(value)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          value.forEach((item: any) => {
+            formData.append(key, item.value.toString());
+          });
+        } else if (typeof value === "object") {
+          formData.append(key, value.value);
+        } else {
+          formData.append(key, value.toString());
+        }
+      }
+    });
+    size.forEach((item) => {
+      formData.append("size", item.toString());
+    });
+
+    images.forEach((image) => {
+      formData.append("images", image);
+    });
+
+    existingImage.forEach((image)=>{
+      formData.append("existingImage",image);
+    })
+
+    formData.append("uploadType", "product");
+    for (const pair of formData.entries()) {
+      // console.log(`${pair[0]}: ${pair[1]}`);
+      if (pair[1] instanceof File) {
+        console.log(`${pair[0]}:`);
+        console.log(`  Name: ${pair[1].name}`);
+        console.log(`  Type: ${pair[1].type}`);
+        console.log(`  Size: ${pair[1].size} bytes`);
+      } else {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
+    }
   };
 
   useEffect(() => {
@@ -107,6 +169,9 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
     const l2Selected = getMiddleWords(product.category);
     setLevel1Category({ value: l1Selected, label: l1Selected });
     setLevel2Category({ value: l2Selected, label: l2Selected });
+    setSize(product.size);
+    setValue(product.description);
+    setExistingImage(product.images);
   }, [product]);
 
   const insertImage = (files: File[]) => {
@@ -121,6 +186,9 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
   const changeImageUrl = (imgUrl: { url: string }[]) => {
     setImageShow([...imgUrl]);
   };
+  const handleExistingImage = (img:string[]) =>{
+    setExistingImage([...img]);
+  }
 
   const level1CategoryOptions: Option[] = allCategory
     .filter((cat) => cat.level === 1)
@@ -139,7 +207,7 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
     .map((item) => ({
       value: item.name,
       label: item.name,
-}));
+    }));
 
   const brandOptions: Option[] = brands.map((item) => ({
     value: item.name,
@@ -148,7 +216,7 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
   }));
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-80 max:w-full sm:w-full h-[100vh] overflow-y-scroll sm:max-w-[70rem]">
+      <DialogContent className="w-80 max:w-full sm:w-full h-[100vh] overflow-y-scroll p-0 px-4 pt-4 sm:max-w-[65rem]">
         <DialogTitle>Update</DialogTitle>
         <Formik
           initialValues={initialValues}
@@ -156,7 +224,7 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
           enableReinitialize={true}
         >
           {({ isSubmitting, setFieldValue, values }) => (
-            <Form>
+            <Form className="relative">
               <Card className="mb-4">
                 <CardTitle className="bg-gray-50 px-2 py-3 border-b text-md font-semibold">
                   Basic Information
@@ -186,6 +254,8 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
                       images={images}
                       imageShow={imageShow}
                       changeImageUrl={changeImageUrl}
+                      handleExistingImage={handleExistingImage}
+                      existingImage = {existingImage}
                     />
                   </div>
                 </div>
@@ -372,8 +442,128 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
                       />
                     </div>
                   </div>
+                  <div className="flex gap-4 flex-wrap">
+                    <div className="flex-1">
+                      <label htmlFor="price">
+                        Price{" "}
+                        <span className="text-lg text-rose-500 font-bold">
+                          *
+                        </span>
+                      </label>
+                      <Field
+                        type="number"
+                        name="price"
+                        placeholder="In Nepali Rs."
+                        as={Input}
+                      />
+                      <ErrorMessage
+                        name="price"
+                        component="div"
+                        className="ml-2 mt-1 text-red-500 text-xs"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label htmlFor="quantity">
+                        Quantity{" "}
+                        <span className="text-lg text-rose-500 font-bold">
+                          *
+                        </span>
+                      </label>
+                      <Field type="number" name="quantity" as={Input} />
+                      <ErrorMessage
+                        name="quantity"
+                        component="div"
+                        className="ml-2 mt-1 text-red-500 text-xs"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-4 flex-col flex-wrap">
+                    <div className="flex-1">
+                      <label htmlFor="size">
+                        Size{" "}
+                        <span className="text-lg text-rose-500 font-bold">
+                          *
+                        </span>
+                      </label>
+                      <div className="flex gap-4">
+                        <Field
+                          type="number"
+                          placeholder="In cm"
+                          value={sizeInput}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setSizeInput(e.target.value)
+                          }
+                          onKeyDown={(
+                            e: React.KeyboardEvent<HTMLInputElement>
+                          ) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleAddSize();
+                            }
+                          }}
+                          as={Input}
+                        />
+
+                        <Button
+                          type="button"
+                          onClick={handleAddSize}
+                          className="bg-indigo-500 hover:bg-indigo-600"
+                        >
+                          Add Size
+                        </Button>
+                      </div>
+                    </div>
+                    {size && (
+                      <div className="flex items-center gap-2">
+                        <label>Sizes: </label>
+                        <ul className="flex gap-2">
+                          {size.map((item, i) => (
+                            <div key={i}>
+                              <div className="relative group">
+                                <li className="py-1 px-3 bg-indigo-200 rounded">
+                                  {item}
+                                </li>
+                                <IoIosClose
+                                  onClick={() => handleRemoveSize(i)}
+                                  className="absolute p-1 bg-indigo-400 rounded-full invisible opacity-30 transition-all group-hover:!visible group-hover:!opacity-100 hover:cursor-pointer text-white text-xl -top-2 -right-1"
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </Card>
+              <Card className="text-sm px-3 py-3 mb-4">
+                <p className=" font-semibold">
+                  Detailed Description{" "}
+                  <span className="text-lg font-bold text-rose-500">*</span>{" "}
+                </p>
+                <p className="text-xs mb-4">
+                  Having long description helps to build trust by providing more
+                  key information in text form.
+                </p>
+                <ReactQuill
+                  theme="snow"
+                  value={value}
+                  onChange={(content) => {
+                    setValue(content);
+                    setFieldValue("description", content);
+                  }}
+                  className="h-auto !min-h-[70px] mb-[25px]"
+                />
+              </Card>
+              <div className="flex justify-end px-[50px] w-[full] py-3  bg-white sticky bottom-0 right-0">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-indigo-500 hover:bg-indigo-600"
+                >
+                  {isSubmitting ? "Updating..." : "Update"}
+                </Button>
+              </div>
             </Form>
           )}
         </Formik>
