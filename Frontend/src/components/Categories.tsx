@@ -41,7 +41,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
                     alt="404 categories"
                   />
                 </div>
-                {item.name}
+                <p className="text-center">{item.name}</p>
               </div>
             </div>
           ))}

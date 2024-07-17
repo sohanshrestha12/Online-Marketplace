@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { FetchProduct } from "./ProductDetails";
 import { deleteMultiple, deleteProduct } from "@/api/Product";
 import { toast } from "sonner";
+import { getLastWord } from "@/utils/Mapping/Category";
 
 const MyProduct = () => {
   const {
@@ -183,7 +184,7 @@ const MyProduct = () => {
                             {item.name}
                           </td>
                           <td className="whitespace-nowrap font-medium  px-6 py-4">
-                            {item.category}
+                            {getLastWord(item.category)}
                           </td>
                           <td className="whitespace-nowrap font-medium  px-6 py-4">
                             {item.brand}

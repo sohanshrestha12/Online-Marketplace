@@ -57,17 +57,35 @@ export const getAllProducts = async (
 
   const totalProductDocs = ProductModel.countDocuments(conditions);
 
-  const [product, totalProduct] = await Promise.all([
+  const [productList, totalProduct] = await Promise.all([
     productDocuments,
     totalProductDocs,
   ]);
+   const product = await Promise.all(
+     productList.map(async (product) => {
+       const c3 = await CategoryModel.findOne({
+         name: product.category,
+       }).lean();
+       const c2 = await CategoryModel.findOne({ name: c3?.parent }).lean();
+       const c1 = await CategoryModel.findOne({ name: c2?.parent }).lean();
+
+       const categoryString = [c1?.name, c2?.name, c3?.name]
+         .filter(Boolean)
+         .join("/");
+
+       return {
+         ...product,
+         category: categoryString,
+       };
+     })
+   );
 
   return {
     product,
     totalProduct,
     page: parseInt(page),
     totalPage: Math.ceil(totalProduct / pageSize),
-    limit:pageSize,
+    limit: pageSize,
   };
 };
 export const getProductById = async (id: string): Promise<Product | null> => {
