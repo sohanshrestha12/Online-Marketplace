@@ -1,12 +1,15 @@
 import CustomError from "../../../utils/Error";
 import { getCategoryBrand } from "../Brand/repository";
 import { Product } from "./model";
-import { createProduct, deleleteProduct, deleteMultipleProducts, filterProducts, getAllProducts, getProductById } from "./repository";
-import { ProductQuery, SearchQuery } from "./types";
+import { createProduct, deleleteProduct, deleteMultipleProducts, filterProducts, getAllProducts, getProductById, updateProduct } from "./repository";
+import { ProductQuery, SearchQuery, updateProducts } from "./types";
 
 const ProductService = {
   async createProduct(body: Product, files: string[],user:string) {
     return createProduct(body, files,user);
+  },
+  async updateProduct(body: updateProducts, files: string[],user:string) {
+    return updateProduct(body, files,user);
   },
   async getAllProducts(query:ProductQuery) {
     return getAllProducts(query);

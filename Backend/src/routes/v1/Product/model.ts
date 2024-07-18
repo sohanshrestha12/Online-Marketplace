@@ -9,7 +9,7 @@ export interface Product {
   brand?: string;
   price: number;
   colorFamily: string[];
-  size: number;
+  size: number[];
   quantity: number;
   rating?: number;
   videoUrl?: string;

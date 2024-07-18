@@ -15,6 +15,7 @@ interface ProductContextValue {
   dashboardProducts: FetchFilterProduct | undefined;
   deleteProductState: (productId: string) => void;
   deleteMultipleProductState: (products: FetchProduct[]) => void;
+  updateProductState: (updatedProduct: FetchProduct, fullCategory:string) => void;
 }
 interface ProductProviderProps {
   children: ReactNode;
@@ -27,13 +28,17 @@ const ProductContext = createContext<ProductContextValue>({
   dashboardProducts: undefined,
   deleteProductState: () => {},
   deleteMultipleProductState: () => {},
+  updateProductState:()=>{}
 });
 
 export const ProductProvider = ({ children }: ProductProviderProps) => {
   const [products, setProducts] = useState<FetchProduct[]>([]);
   const [dashboardProducts, setDashboardProducts] = useState<
-    FetchFilterProduct | undefined
+  FetchFilterProduct | undefined
   >(undefined);
+  useEffect(()=>{
+    console.log("This is the changing dashboard product",dashboardProducts);
+  },[dashboardProducts])
 
   const addProduct = (product: FetchProduct) => {
     setProducts((prevProduct) => [product, ...prevProduct]);
@@ -52,6 +57,16 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
       };
     });
   };
+
+  const updateProductState = (updatedProduct:FetchProduct,fullCategory:string) =>{
+    if(!dashboardProducts) return;
+    updatedProduct.category = fullCategory;
+     const updatedProducts = dashboardProducts.product.map((product) =>
+       product._id === updatedProduct._id ? updatedProduct : product
+     );
+     
+     setDashboardProducts({ ...dashboardProducts, product: updatedProducts });
+  }
 
   const deleteMultipleProductState = (products: FetchProduct[]) => {
     setDashboardProducts((prevState) => {
@@ -105,6 +120,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
         dashboardProducts,
         deleteProductState,
         deleteMultipleProductState,
+        updateProductState,
       }}
     >
       {children}

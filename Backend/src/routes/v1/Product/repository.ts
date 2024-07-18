@@ -2,8 +2,14 @@ import mongoose, { FilterQuery, SortOrder } from "mongoose";
 import CustomError from "../../../utils/Error";
 import { CategoryModel } from "../Category/model";
 import { Product, ProductModel } from "./model";
-import { ProductQuery, ProductReturn, SearchQuery } from "./types";
+import {
+  ProductQuery,
+  ProductReturn,
+  SearchQuery,
+  updateProducts,
+} from "./types";
 import { isInteger } from "../../../utils";
+import ProductService from "./services";
 
 export const createProduct = (
   body: Product,
@@ -61,24 +67,24 @@ export const getAllProducts = async (
     productDocuments,
     totalProductDocs,
   ]);
-   const product = await Promise.all(
-     productList.map(async (product) => {
-       const c3 = await CategoryModel.findOne({
-         name: product.category,
-       }).lean();
-       const c2 = await CategoryModel.findOne({ name: c3?.parent }).lean();
-       const c1 = await CategoryModel.findOne({ name: c2?.parent }).lean();
+  const product = await Promise.all(
+    productList.map(async (product) => {
+      const c3 = await CategoryModel.findOne({
+        name: product.category,
+      }).lean();
+      const c2 = await CategoryModel.findOne({ name: c3?.parent }).lean();
+      const c1 = await CategoryModel.findOne({ name: c2?.parent }).lean();
 
-       const categoryString = [c1?.name, c2?.name, c3?.name]
-         .filter(Boolean)
-         .join("/");
+      const categoryString = [c1?.name, c2?.name, c3?.name]
+        .filter(Boolean)
+        .join("/");
 
-       return {
-         ...product,
-         category: categoryString,
-       };
-     })
-   );
+      return {
+        ...product,
+        category: categoryString,
+      };
+    })
+  );
 
   return {
     product,
@@ -87,6 +93,40 @@ export const getAllProducts = async (
     totalPage: Math.ceil(totalProduct / pageSize),
     limit: pageSize,
   };
+};
+
+export const updateProduct = async (
+  body: updateProducts,
+  files: string[],
+  user: string
+) => {
+  if (!body || !files || !user) {
+    throw new CustomError("Invalid request parameters", 400);
+  }
+  await ProductService.getProductById(body.id);
+  const existingImages = Array.isArray(body.existingImage)
+    ? body.existingImage
+    : body.existingImage
+    ? [body.existingImage]
+    : [];
+  const mergedImages = [...existingImages,...files];
+  console.log('files',files);
+  console.log('existing Image',body.existingImage);
+  console.log("Merged Image",mergedImages);
+  const c3 = await CategoryModel.findOne({ name: body.category }).lean();
+  const c2 = await CategoryModel.findOne({ name: c3?.parent }).lean();
+  const c1 = await CategoryModel.findOne({ name: c2?.parent }).lean();
+   const categoryString = [c1?.name, c2?.name, c3?.name]
+     .filter(Boolean)
+     .join("/");
+  body.images = mergedImages;
+
+  const updatedProduct =await ProductModel.findByIdAndUpdate(
+    body.id,
+    { ...body, createdBy: user },
+    { new: true }
+  );
+  return {updatedProduct,categoryString}
 };
 export const getProductById = async (id: string): Promise<Product | null> => {
   const product = await ProductModel.findById(id);
@@ -136,7 +176,7 @@ export const removeQuantity = async (productId: string, quantity: number) => {
   return product;
 };
 
-export const deleleteProduct = async (id: string,userId:string) => {
+export const deleleteProduct = async (id: string, userId: string) => {
   const product = await ProductModel.findOne({ _id: id, createdBy: userId });
   if (!product) {
     throw new CustomError(
@@ -147,7 +187,7 @@ export const deleleteProduct = async (id: string,userId:string) => {
   return ProductModel.findOneAndDelete({ _id: id, createdBy: userId });
 };
 
-export const deleteMultipleProducts = async (ids: string[],userId:string) => {
+export const deleteMultipleProducts = async (ids: string[], userId: string) => {
   return ProductModel.deleteMany({
     _id: { $in: ids },
     createdBy: userId,

@@ -8,6 +8,13 @@ export const createProduct = (product: FormData) => {
   });
 };
 
+export const updateProduct = (product:FormData)=>{
+  return MarketUrl.patch("/product",product,{
+    headers:{"Content-Type":"multipart/form-data"},
+  })
+}
+
+
 export const getAllCategories = () => {
   return MarketUrl.get("/category");
 };

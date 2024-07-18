@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { Product } from "./model";
 import CustomError from "../../../utils/Error";
 import { successResponse } from "../../../utils/HttpResponse";
+import { Product } from "./model";
 import ProductService from "./services";
-import { ProductQuery, SearchQuery } from "./types";
+import { ProductQuery, SearchQuery, updateProducts } from "./types";
 
 const ProductController = {
   async createProduct(
@@ -15,7 +15,7 @@ const ProductController = {
       const body = req.body;
       const files = req.files as Express.Multer.File[];
       const user = res.locals.user;
-      if (!files) throw new CustomError("Image is required", 404);
+      if (!files) throw new CustomError("Image is required", 400);
       const filesPath = files.map((file) => file.path.replace("uploads\\", ""));
       const product = await ProductService.createProduct(body, filesPath, user);
       return successResponse({
@@ -23,6 +23,35 @@ const ProductController = {
         message: "Product created successfully",
         data: product,
         status: 201,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  async updateProduct(
+    req: Request<unknown, unknown, updateProducts>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+
+      const body = req.body;
+      const files = req.files as Express.Multer.File[];
+      const user = res.locals.user;
+
+
+      if (!files && !body.existingImage) {
+        throw new CustomError("Image is Required", 400);
+      }
+      const filesPath = files.map((file) => file.path.replace("uploads\\", ""));
+
+      const product = await ProductService.updateProduct(body, filesPath, user);
+
+      return successResponse({
+        response: res,
+        message: "Product updated successfully",
+        data: product,
+        status: 200,
       });
     } catch (error) {
       next(error);
@@ -134,7 +163,7 @@ const ProductController = {
     try {
       const { id } = req.params;
       const userId = res.locals.user._id;
-      const result = await ProductService.deleteProduct(id,userId);
+      const result = await ProductService.deleteProduct(id, userId);
 
       return successResponse({
         response: res,
@@ -147,14 +176,14 @@ const ProductController = {
     }
   },
   async deleteMultipleProduct(
-    req: Request<unknown,unknown,string[]>,
+    req: Request<unknown, unknown, string[]>,
     res: Response,
     next: NextFunction
   ) {
     try {
       const ids = req.body;
       const userId = res.locals.user._id;
-      const result = await ProductService.deleteMultipleProduct(ids,userId);
+      const result = await ProductService.deleteMultipleProduct(ids, userId);
 
       return successResponse({
         response: res,

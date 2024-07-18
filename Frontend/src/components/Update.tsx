@@ -1,5 +1,5 @@
 import { Category } from "@/Types/Category";
-import { getAllBrands, getAllCategories } from "@/api/Product";
+import { getAllBrands, getAllCategories, updateProduct } from "@/api/Product";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { FetchProduct } from "@/pages/ProductDetails";
 import { colorOptions } from "@/utils/Colors";
@@ -16,6 +16,7 @@ import { getFirstWord, getLastWord, getMiddleWords } from "@/utils/Category";
 import { IoIosClose } from "react-icons/io";
 import ReactQuill from "react-quill";
 import { Button } from "./ui/button";
+import { useProduct } from "@/contexts/ProductContext";
 
 interface UpdateProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
   const [size, setSize] = useState<number[]>([]);
   const [sizeInput, setSizeInput] = useState("");
   const [value, setValue] = useState("");
+  const {updateProductState} = useProduct();
 
   interface Option {
     value: string;
@@ -41,11 +43,6 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
     category?: string;
     color?: string;
   }
-
-
-  useEffect(()=>{
-    console.log('This is an existing image',existingImage);
-  },[existingImage]);
 
   const handleAddSize = () => {
     setSize([...size, parseInt(sizeInput.trim())]);
@@ -58,6 +55,7 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
   };
 
   const initialValues: FormikValues = {
+    id:product._id,
     name: product.name,
     category: {
       value: getLastWord(product.category),
@@ -70,14 +68,12 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
     },
     colorFamily: product.colorFamily.map((color: string) => {
       const colorOption = colorOptions.find((option) => option.value === color);
-
       if (colorOption) {
         return {
           value: colorOption.value,
           label: colorOption.label,
         };
       }
-
       return null;
     }),
     price: product.price,
@@ -91,7 +87,6 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
       try {
         const response = await getAllCategories();
         setAllCategory(response.data.data);
-        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -104,7 +99,6 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
       try {
         const response = await getAllBrands();
         setBrands(response.data.data);
-        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -113,7 +107,6 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
   }, []);
 
   const handleSubmit = async (values: FormikValues) => {
-    console.log("This is update submit value", values);
     const formData = new FormData();
     Object.keys(values).forEach((key) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -142,20 +135,32 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
 
     existingImage.forEach((image)=>{
       formData.append("existingImage",image);
-    })
+    });
 
     formData.append("uploadType", "product");
-    for (const pair of formData.entries()) {
-      // console.log(`${pair[0]}: ${pair[1]}`);
-      if (pair[1] instanceof File) {
-        console.log(`${pair[0]}:`);
-        console.log(`  Name: ${pair[1].name}`);
-        console.log(`  Type: ${pair[1].type}`);
-        console.log(`  Size: ${pair[1].size} bytes`);
-      } else {
-        console.log(`${pair[0]}: ${pair[1]}`);
-      }
+
+
+    try {
+      const response = await updateProduct(formData);
+      updateProductState(response.data.data.updatedProduct,response.data.data.categoryString);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
+    // for (const pair of formData.entries()) {
+    //   // console.log(`${pair[0]}: ${pair[1]}`);
+    //   if (pair[1] instanceof File) {
+    //     console.log(`${pair[0]}:`);
+    //     console.log(`  Name: ${pair[1].name}`);
+    //     console.log(`  Type: ${pair[1].type}`);
+    //     console.log(`  Size: ${pair[1].size} bytes`);
+    //   } else {
+    //     console.log(`${pair[0]}: ${pair[1]}`);
+    //   }
+    // }
+    setImages([]);
+    setImageShow([]);
+
   };
 
   useEffect(() => {
@@ -225,6 +230,7 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
         >
           {({ isSubmitting, setFieldValue, values }) => (
             <Form className="relative">
+              <Field name="id" as={Input} hidden disabled />
               <Card className="mb-4">
                 <CardTitle className="bg-gray-50 px-2 py-3 border-b text-md font-semibold">
                   Basic Information

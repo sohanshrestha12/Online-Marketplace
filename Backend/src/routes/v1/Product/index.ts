@@ -7,6 +7,7 @@ import checkUserRole from "../../../Middleware/checkUsersRole";
 const ProductRouter = Router();
 
 ProductRouter.post("/",upload.array('images'),requireUser,checkUserRole('SELLER'),ProductController.createProduct);
+ProductRouter.patch("/",upload.array('images'),requireUser,checkUserRole('SELLER'),ProductController.updateProduct);
 ProductRouter.route("/").get(ProductController.getAllProducts);
 ProductRouter.route("/filterProducts").get(ProductController.filterProducts);
 ProductRouter.route("/:id").get(ProductController.getProductById);

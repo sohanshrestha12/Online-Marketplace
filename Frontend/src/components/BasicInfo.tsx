@@ -546,7 +546,7 @@ const BasicInfo = () => {
                       setValue(content);
                       setFieldValue("description", content);
                     }}
-                    className="h-[70px] mb-[25px]"
+                    className="h-auto mb-[25px]"
                   />
                   ;
                 </Card>

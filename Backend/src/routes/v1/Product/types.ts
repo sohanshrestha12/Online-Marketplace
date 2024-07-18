@@ -15,9 +15,8 @@ export interface SearchQuery {
   price?: { $gte?: number; $lte?: number };
 }
 
-
 export interface ProductQuery {
-  createdBy?:string,
+  createdBy?: string;
   page?: string;
   limit?: string;
   sort?: string;
@@ -30,5 +29,22 @@ export interface ProductReturn {
   totalProduct: number;
   page: number;
   totalPage: number;
-  limit:number;
+  limit: number;
+}
+
+export interface updateProducts {
+  id: string;
+  createdAt?: string;
+  name: string;
+  description: string;
+  category: string;
+  brand?: string;
+  price: number;
+  colorFamily: string[];
+  size: number;
+  quantity: number;
+  rating?: number;
+  videoUrl?: string;
+  images?: string[] | File[];
+  existingImage?:string[];
 }
