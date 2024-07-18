@@ -36,7 +36,7 @@ export const getAllProducts = (params: {
       page,
       limit,
       category,
-      createdBy
+      createdBy,
     }
   });
 };

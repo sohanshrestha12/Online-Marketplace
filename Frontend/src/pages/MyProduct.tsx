@@ -9,6 +9,8 @@ import { FetchProduct } from "./ProductDetails";
 import { deleteMultiple, deleteProduct } from "@/api/Product";
 import { toast } from "sonner";
 import { getLastWord } from "@/utils/Category";
+import MyProductFilters from "@/components/MyProductFilters";
+import { FormikValues } from "formik";
 
 const MyProduct = () => {
   const {
@@ -22,20 +24,21 @@ const MyProduct = () => {
   const [selectedRows, setSelectedRows] = useState<FetchProduct[]>([]);
   const handleActionOpen = (index: number) => setActionOpen(index);
   const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [filter,setFilter] = useState<string>("");
   const handleActionClose = () => {
     setActionOpen(null);
   };
 
   useEffect(() => {
     if (!user) return;
-    fetchDashboardProducts(user._id);
-  }, [user]);
+    fetchDashboardProducts(user._id,undefined,filter);
+  }, [user,filter]);
 
   const handleNextPage = () => {
     if (!dashboardProducts) return;
     if (!user) return;
     if (dashboardProducts?.page < dashboardProducts?.totalPage) {
-      fetchDashboardProducts(user._id, dashboardProducts?.page + 1);
+      fetchDashboardProducts(user._id, dashboardProducts?.page + 1,filter);
     }
   };
 
@@ -43,7 +46,7 @@ const MyProduct = () => {
     if (!dashboardProducts) return;
     if (!user) return;
     if (dashboardProducts?.page > 1) {
-      fetchDashboardProducts(user._id, dashboardProducts?.page - 1);
+      fetchDashboardProducts(user._id, dashboardProducts?.page - 1,filter);
     }
   };
 
@@ -102,13 +105,18 @@ const MyProduct = () => {
     }
     setSelectAll(!selectAll);
   };
+
+  const handleSearch=(values:FormikValues)=>{
+    setFilter(values.search);
+
+  };
   return (
     <div className="w-full p-4 overflow-x-hidden">
       <Card>
         <CardTitle className="bg-gray-50 px-2 py-3 border-b text-md font-semibold">
           My Products
         </CardTitle>
-
+        <MyProductFilters handleSearch={handleSearch} />
         <div className="flex flex-col">
           <div className="overflow-x-auto w-full">
             <div className="inline-block min-w-full py-2">
@@ -159,7 +167,7 @@ const MyProduct = () => {
                           colSpan={10}
                           className="text-center py-5 font-semibold text-lg"
                         >
-                          You haven't added any products yet
+                          No Product Available
                         </td>
                       </tr>
                     ) : (

@@ -81,7 +81,7 @@ const ProductLists = () => {
     minPrice?: string,
     maxPrice?: string
   ) => {
-    console.log("from",category,checkedBrands,selectedColors,minPrice,maxPrice)
+    // console.log("from",category,checkedBrands,selectedColors,minPrice,maxPrice)
     setLoading(true);
     try {
       const response = await fetchProductsByFilter(

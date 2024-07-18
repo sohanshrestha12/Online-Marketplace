@@ -11,7 +11,7 @@ import {
 interface ProductContextValue {
   products: FetchProduct[];
   addProduct: (product: FetchProduct) => void;
-  fetchDashboardProducts: (userId: string, page?: number) => void;
+  fetchDashboardProducts: (userId: string, page?: number,category?:string) => void;
   dashboardProducts: FetchFilterProduct | undefined;
   deleteProductState: (productId: string) => void;
   deleteMultipleProductState: (products: FetchProduct[]) => void;
@@ -88,10 +88,10 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
       };
     });
   };
-  const fetchDashboardProducts = async (userId: string, page?: number) => {
+  const fetchDashboardProducts = async (userId: string, page?: number,category?:string) => {
     try {
       setDashboardProducts(undefined);
-      const response = await getAllProducts({ createdBy: userId, page: page });
+      const response = await getAllProducts({ createdBy: userId, page: page,category:category });
       console.log("dashboard products", response);
       setDashboardProducts(response.data.data);
     } catch (error) {

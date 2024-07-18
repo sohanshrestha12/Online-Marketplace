@@ -548,7 +548,6 @@ const BasicInfo = () => {
                     }}
                     className="h-auto mb-[25px]"
                   />
-                  ;
                 </Card>
               </div>
               <div className="flex justify-end mb-3 mr-3">
