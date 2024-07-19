@@ -1,6 +1,7 @@
 import { addToCart } from "@/api/Cart";
 import { CheckLikeStatus, DislikeProduct, LikeProduct } from "@/api/Like";
 import { getProductById } from "@/api/Product";
+import Comment from "@/components/Comment";
 import ProductCarousel from "@/components/ProductCarousel";
 import ProductDescription from "@/components/ProductDescription";
 import { Button } from "@/components/ui/button";
@@ -152,7 +153,7 @@ const ProductDetails = () => {
   ) => {
     try {
       if (!activeProduct || !activeProduct._id) return;
-       await addToCart(activeProduct._id, parseInt(quantity));
+      await addToCart(activeProduct._id, parseInt(quantity));
       setActiveProduct((prevProduct) => {
         if (!prevProduct) return prevProduct;
         const newQuantity = prevProduct.quantity - parseInt(quantity);
@@ -344,6 +345,12 @@ const ProductDetails = () => {
       {activeProduct && (
         <div className="col-span-12 mt-5 py-2">
           <ProductDescription activeProduct={activeProduct} />
+        </div>
+      )}
+
+      {activeProduct && activeProduct._id && (
+        <div className="col-span-12 mt-4">
+          <Comment productId={activeProduct._id} />
         </div>
       )}
     </div>

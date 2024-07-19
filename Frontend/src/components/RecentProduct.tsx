@@ -14,7 +14,7 @@ const RecentProduct = () => {
             to={`/productDetails/${item._id}`}
           >
             <div>
-              <div className="flex justify-center flex-col items-center w-full ">
+              <div className="flex  flex-col w-full h-[280px]">
                 <div className="w-[150px] h-[180px] ">
                   <img
                     className="w-full h-full object-contain"
@@ -22,7 +22,14 @@ const RecentProduct = () => {
                     alt="404 categories"
                   />
                 </div>
-                <p className="capitalize">{item.name}</p>
+                <div className="h-[40px] flex overflow-hidden">
+                  <p className="capitalize text-sm font-semibold line-clamp-2">
+                    {item.name}
+                  </p>
+                </div>
+                <p className="text-lg font-semibold text-[#f85606]">
+                  RS.{item.price}
+                </p>
               </div>
             </div>
           </Link>

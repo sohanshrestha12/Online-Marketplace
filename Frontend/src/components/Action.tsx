@@ -82,7 +82,7 @@ const Action = ({
               This action cannot be undone. This will permanently delete your
               product and remove your data from our servers.
             </DialogDescription>
-            <DialogFooter className="mt-3">
+            <DialogFooter className="mt-3 flex !justify-center w-full">
               <Button onClick={handleDeleteDialogClose}>Cancel</Button>
               <Button
                 variant={"destructive"}
