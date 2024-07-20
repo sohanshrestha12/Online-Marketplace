@@ -6,6 +6,7 @@ import CategoryRouter from "./Category";
 import BrandRouter from "./Brand";
 import CartRouter from "./Cart";
 import FavouriteProductRouter from "./FavouriteProduct";
+import CommentsRouter from "./Comment";
 
 const routes = Router();
 
@@ -16,6 +17,8 @@ routes.use("/category", CategoryRouter);
 routes.use("/brand", BrandRouter);
 routes.use("/cart", CartRouter);
 routes.use("/favourite", FavouriteProductRouter);
+routes.use("/product/:productId/comment", CommentsRouter);
+
 
 
 export default routes;

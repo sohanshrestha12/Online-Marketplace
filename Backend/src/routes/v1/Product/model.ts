@@ -1,8 +1,9 @@
 import mongoose, { Types } from "mongoose";
+import { Comment } from "../Comment/model";
 
 export interface Product {
   _id?: string;
-  createdAt?:string;
+  createdAt?: string;
   name: string;
   description: string;
   category: string;
@@ -14,7 +15,8 @@ export interface Product {
   rating?: number;
   videoUrl?: string;
   images?: string[] | File[];
-  createdBy:Types.ObjectId;
+  createdBy: Types.ObjectId;
+  comments?: Comment[];
 }
 
 const productSchema = new mongoose.Schema<Product>(
@@ -44,40 +46,53 @@ const productSchema = new mongoose.Schema<Product>(
       required: false,
       unique: false,
     },
-    colorFamily: [{
-      type: String,
-      required: [true, "Color is Required"],
-      unique: false,
-    }],
+    colorFamily: [
+      {
+        type: String,
+        required: [true, "Color is Required"],
+        unique: false,
+      },
+    ],
     price: {
       type: Number,
-      required: [true,"Price is Required"],
-      unique:false,
+      required: [true, "Price is Required"],
+      unique: false,
     },
     quantity: {
       type: Number,
-      required: [true,"Quantity is Required"],
-      unique:false,
+      required: [true, "Quantity is Required"],
+      unique: false,
     },
-    size: [{
-      type: Number,
-      required: [true,"Size is Required"],
-      unique:false,
-    }],
+    size: [
+      {
+        type: Number,
+        required: [true, "Size is Required"],
+        unique: false,
+      },
+    ],
     rating: {
       type: Number,
       required: false,
-      unique:false,
+      unique: false,
     },
-    images:[{
-        type:String,
-        required:[true,"Image is Required"],
-        unique:false
-    }],
-    createdBy:{
-      type:mongoose.Schema.Types.ObjectId,
-      ref:"User",
-      required:[true,'User Id is required.'],
+    images: [
+      {
+        type: String,
+        required: [true, "Image is Required"],
+        unique: false,
+      },
+    ],
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+        required: false,
+      },
+    ],
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "User Id is required."],
     },
   },
   {

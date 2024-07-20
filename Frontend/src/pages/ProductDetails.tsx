@@ -6,6 +6,7 @@ import ProductCarousel from "@/components/ProductCarousel";
 import ProductDescription from "@/components/ProductDescription";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Profile } from "@/Types/User";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
@@ -13,6 +14,12 @@ import { IoMdHeart } from "react-icons/io";
 import ReactImageMagnify from "react-image-magnify";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+
+interface comment {
+  _id: string;
+  content: string;
+  user: Profile;
+}
 
 export interface FetchProduct {
   _id?: string;
@@ -27,6 +34,7 @@ export interface FetchProduct {
   rating?: number;
   videoUrl?: string;
   images: string[];
+  comments?:comment[];
 }
 
 export interface FetchFilterProduct {
@@ -91,7 +99,7 @@ const ProductDetails = () => {
           return null;
         }
         const product = await getProductById(id);
-        console.log(product);
+        console.log('active product',product);
         if (product) {
           setActiveProduct(product.data.data);
           setImages([product.data.data.images || []]);
@@ -350,7 +358,7 @@ const ProductDetails = () => {
 
       {activeProduct && activeProduct._id && (
         <div className="col-span-12 mt-4">
-          <Comment productId={activeProduct._id} />
+          <Comment product={activeProduct} />
         </div>
       )}
     </div>

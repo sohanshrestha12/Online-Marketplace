@@ -109,27 +109,30 @@ export const updateProduct = async (
     : body.existingImage
     ? [body.existingImage]
     : [];
-  const mergedImages = [...existingImages,...files];
-  console.log('files',files);
-  console.log('existing Image',body.existingImage);
-  console.log("Merged Image",mergedImages);
+  const mergedImages = [...existingImages, ...files];
+  console.log("files", files);
+  console.log("existing Image", body.existingImage);
+  console.log("Merged Image", mergedImages);
   const c3 = await CategoryModel.findOne({ name: body.category }).lean();
   const c2 = await CategoryModel.findOne({ name: c3?.parent }).lean();
   const c1 = await CategoryModel.findOne({ name: c2?.parent }).lean();
-   const categoryString = [c1?.name, c2?.name, c3?.name]
-     .filter(Boolean)
-     .join("/");
+  const categoryString = [c1?.name, c2?.name, c3?.name]
+    .filter(Boolean)
+    .join("/");
   body.images = mergedImages;
 
-  const updatedProduct =await ProductModel.findByIdAndUpdate(
+  const updatedProduct = await ProductModel.findByIdAndUpdate(
     body.id,
     { ...body, createdBy: user },
     { new: true }
   );
-  return {updatedProduct,categoryString}
+  return { updatedProduct, categoryString };
 };
 export const getProductById = async (id: string): Promise<Product | null> => {
-  const product = await ProductModel.findById(id);
+  const product = await ProductModel.findById(id).populate({
+    path: "comments",
+    populate: { path: "user", select: "-password" },
+  });
   if (!product) {
     throw new CustomError("Invalid id", 404);
   }
@@ -140,6 +143,10 @@ export const getProductById = async (id: string): Promise<Product | null> => {
   const categoryString = [c1?.name, c2?.name, c3?.name]
     .filter(Boolean)
     .join("/");
+
+  const reversedComments = product.comments
+    ? product.comments.slice().reverse()
+    : [];
 
   const modifiedProduct: Product = {
     _id: product._id,
@@ -152,6 +159,7 @@ export const getProductById = async (id: string): Promise<Product | null> => {
     quantity: product.quantity,
     size: product.size,
     images: product.images,
+    comments: reversedComments,
     createdAt: product.createdAt,
     createdBy: product.createdBy,
   };
@@ -192,4 +200,16 @@ export const deleteMultipleProducts = async (ids: string[], userId: string) => {
     _id: { $in: ids },
     createdBy: userId,
   });
+};
+
+export const addCommentToProduct = (productId: string, commentId: string) => {
+  return ProductModel.findByIdAndUpdate(
+    productId,
+    {
+      $push: {
+        comments: new mongoose.Types.ObjectId(commentId),
+      },
+    },
+    { new: true }
+  );
 };

@@ -1,5 +1,6 @@
 import { FetchProduct } from "@/pages/ProductDetails";
 
+
 export interface Product {
   _id?:string;
   name: string;
