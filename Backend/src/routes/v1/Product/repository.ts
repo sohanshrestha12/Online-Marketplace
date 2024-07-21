@@ -10,6 +10,7 @@ import {
 } from "./types";
 import { isInteger } from "../../../utils";
 import ProductService from "./services";
+import { Comment } from "../Comment/model";
 
 export const createProduct = (
   body: Product,
@@ -143,9 +144,9 @@ export const getProductById = async (id: string): Promise<Product | null> => {
   const categoryString = [c1?.name, c2?.name, c3?.name]
     .filter(Boolean)
     .join("/");
-
-  const reversedComments = product.comments
-    ? product.comments.slice().reverse()
+const comments = product.comments as Comment[];
+  const reversedComments = comments
+    ? comments.slice().reverse()
     : [];
 
   const modifiedProduct: Product = {
@@ -202,7 +203,8 @@ export const deleteMultipleProducts = async (ids: string[], userId: string) => {
   });
 };
 
-export const addCommentToProduct = (productId: string, commentId: string) => {
+export const addCommentToProduct = async(productId: string, commentId: string) => {
+  await getProductById(productId);
   return ProductModel.findByIdAndUpdate(
     productId,
     {
@@ -213,3 +215,17 @@ export const addCommentToProduct = (productId: string, commentId: string) => {
     { new: true }
   );
 };
+
+export const addRatingToProduct = async(productId:string,ratingId:string) =>{
+  await getProductById(productId);
+  return ProductModel.findByIdAndUpdate(
+    productId,
+    {
+      $push:{
+        rating: new mongoose.Types.ObjectId(ratingId),
+      },
+    },{
+      new:true,
+    }
+  )
+}

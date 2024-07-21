@@ -1,5 +1,6 @@
 import mongoose, { Types } from "mongoose";
 import { Comment } from "../Comment/model";
+import { RatingModel } from "../Rating/model";
 
 export interface Product {
   _id?: string;
@@ -12,11 +13,11 @@ export interface Product {
   colorFamily: string[];
   size: number[];
   quantity: number;
-  rating?: number;
+  rating?: Types.ObjectId[] | RatingModel[];
   videoUrl?: string;
   images?: string[] | File[];
   createdBy: Types.ObjectId;
-  comments?: Comment[];
+  comments?: Comment[] | Types.ObjectId[];
 }
 
 const productSchema = new mongoose.Schema<Product>(
@@ -70,11 +71,12 @@ const productSchema = new mongoose.Schema<Product>(
         unique: false,
       },
     ],
-    rating: {
-      type: Number,
+    rating:[{
+      type: mongoose.Schema.Types.ObjectId,
       required: false,
+      ref: "Rating",
       unique: false,
-    },
+    }],
     images: [
       {
         type: String,
