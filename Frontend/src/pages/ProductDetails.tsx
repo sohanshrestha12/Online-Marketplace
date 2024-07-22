@@ -8,6 +8,8 @@ import ProductDescription from "@/components/ProductDescription";
 import ToolTip from "@/components/ToolTip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useProduct } from "@/contexts/ProductContext";
+import { useSocket } from "@/contexts/SocketContext";
 import { Profile } from "@/Types/User";
 import axios from "axios";
 import { Field, Form, Formik, FormikHelpers, FormikValues } from "formik";
@@ -64,32 +66,38 @@ const ProductDetails = () => {
   const [images, setImages] = useState<string[][]>([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [showChat, setShowChat] = useState<boolean>(false);
-  // const [privateMessage, setPrivateMessage] = useState<string[]>([]);
-  // const [roomId, setRoomId] = useState<string>("");
+  const [privateMessage, setPrivateMessage] = useState<string[]>([]);
+  const [roomId, setRoomId] = useState<string>("");
+  const { showChat, toggleChat } = useProduct();
+
+  const {socket} = useSocket();
 
   const [loading, setLoading] = useState<boolean>(true);
-  // useEffect(() => {
-  //   const socket = getSocket();
-  //   if (socket) {
-  //     if (activeProduct && activeProduct.createdBy && user) {
-  //       if (activeProduct.createdBy._id !== user._id) {
-  //         setRoomId(
-  //           `${activeProduct._id}-${activeProduct.createdBy._id}-${user._id}`
-  //         );
-  //         socket.emit("joinPrivateRoom", roomId);
-  //       }
-  //     }
-  //     socket.on("receivedMessage", (message) => {
-  //       console.log("listening on the new message", message);
-  //       setPrivateMessage((prevMessages) => [...prevMessages, message]);
-  //     });
-  //   }
-  // }, [activeProduct, activeProduct?._id, user]);
+  useEffect(() => {
+    if (socket) {
+      if (activeProduct && activeProduct.createdBy && user) {
+        if (activeProduct.createdBy._id !== user._id) {
+          setRoomId(
+            `${activeProduct._id}-${activeProduct.createdBy._id}-${user._id}`
+          );
+          socket.emit("joinPrivateRoom", roomId);
+        }
+      }
+      socket.on("receivedMessage", (message) => {
+        console.log("listening on the new message", message);
+        setPrivateMessage((prevMessages) => [...prevMessages, message]);
+      });
 
-  // useEffect(() => {
-  //   console.log("private Message", privateMessage);
-  // }, [privateMessage]);
+      return ()=>{
+        socket.off('joinPrivateRoom');
+        socket.off('receivedMessage');
+      }
+    }
+  }, [activeProduct, activeProduct?._id, user,socket]);
+
+  useEffect(() => {
+    console.log("private Message", privateMessage);
+  }, [privateMessage]);
 
   const initialValue: FormikValues = {
     message: "",
@@ -99,14 +107,13 @@ const ProductDetails = () => {
     values: FormikValues,
     { resetForm }: FormikHelpers<FormikValues>
   ) => {
-    // const Socket = getSocket();
-    // if (user) {
-    //   Socket.emit("sendMessage", {
-    //     roomId: roomId,
-    //     senderId: user?._id,
-    //     message: values.message,
-    //   });
-    // }
+    if (user && socket) {
+      socket.emit("sendMessage", {
+        roomId: roomId,
+        senderId: user?._id,
+        message: values.message,
+      });
+    }
     resetForm();
   };
 
@@ -433,7 +440,7 @@ const ProductDetails = () => {
         </div>
         {activeProduct?.createdBy?._id !== user?._id && (
           <div className="flex gap-3 col-span-6 mt-5">
-            <Button type="button" onClick={() => setShowChat(!showChat)}>
+            <Button type="button" onClick={toggleChat}>
               Contact with Seller
             </Button>
           </div>
@@ -465,7 +472,7 @@ const ProductDetails = () => {
             </div>
             <div
               className="p-2 hover:cursor-pointer group"
-              onClick={() => setShowChat(!showChat)}
+              onClick={toggleChat}
             >
               <IoClose className="text-white text-xl -mt-6 -mr-3 transition-all group-hover:!text-gray-200" />
             </div>

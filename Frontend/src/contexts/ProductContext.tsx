@@ -11,11 +11,20 @@ import {
 interface ProductContextValue {
   products: FetchProduct[];
   addProduct: (product: FetchProduct) => void;
-  fetchDashboardProducts: (userId: string, page?: number,category?:string) => void;
+  fetchDashboardProducts: (
+    userId: string,
+    page?: number,
+    category?: string
+  ) => void;
   dashboardProducts: FetchFilterProduct | undefined;
   deleteProductState: (productId: string) => void;
   deleteMultipleProductState: (products: FetchProduct[]) => void;
-  updateProductState: (updatedProduct: FetchProduct, fullCategory:string) => void;
+  updateProductState: (
+    updatedProduct: FetchProduct,
+    fullCategory: string
+  ) => void;
+  toggleChat: () => void;
+  showChat: boolean;
 }
 interface ProductProviderProps {
   children: ReactNode;
@@ -28,17 +37,24 @@ const ProductContext = createContext<ProductContextValue>({
   dashboardProducts: undefined,
   deleteProductState: () => {},
   deleteMultipleProductState: () => {},
-  updateProductState:()=>{}
+  updateProductState:()=>{},
+  toggleChat:()=>{},
+  showChat:false,
 });
 
 export const ProductProvider = ({ children }: ProductProviderProps) => {
   const [products, setProducts] = useState<FetchProduct[]>([]);
+  const [showChat, setShowChat] = useState<boolean>(false);
   const [dashboardProducts, setDashboardProducts] = useState<
   FetchFilterProduct | undefined
   >(undefined);
   useEffect(()=>{
     console.log("This is the changing dashboard product",dashboardProducts);
-  },[dashboardProducts])
+  },[dashboardProducts]);
+
+  const toggleChat = () => {
+    setShowChat(!showChat);
+  };
 
   const addProduct = (product: FetchProduct) => {
     setProducts((prevProduct) => [product, ...prevProduct]);
@@ -121,6 +137,8 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
         deleteProductState,
         deleteMultipleProductState,
         updateProductState,
+        toggleChat,
+        showChat,
       }}
     >
       {children}

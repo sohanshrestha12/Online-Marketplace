@@ -8,10 +8,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useSocket } from "@/contexts/SocketContext";
 import { Field, Form, Formik } from "formik";
+import { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { LuShoppingCart } from "react-icons/lu";
-import { MdOutlineFavoriteBorder } from "react-icons/md";
+import {
+  MdOutlineFavoriteBorder,
+  MdOutlineNotificationsNone,
+} from "react-icons/md";
 import { RiSearchLine } from "react-icons/ri";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -27,34 +32,36 @@ const Navbar = () => {
   const navigate = useNavigate();
   const auth = useAuth();
   const { user } = useAuth();
+  const { socket } = useSocket();
+  const[showNotification,setShowNotification] = useState<boolean>(false);
 
-  // const [notifications, setNotifications] = useState<
-  //   { senderId: string; message: string }[]
-  // >([]);
-  // useEffect(() => {
-  //   if(user?.role === "SELLER"){
-  //     const accessToken = Cookies.get("accessToken");
-  //     if (accessToken) connectSocket(accessToken);
-  //     const socket = getSocket();
 
-  //     if (socket) {
-  //       socket.emit('joinSellerRoom',(user._id));
-  //       socket.on("messageNotification", (notification) => {
-  //         console.log("Received notification", notification);
-  //         setNotifications((prev) => [...prev, notification]);
-  //         // Show a toast notification or a custom notification
-  //         toast.success(`New message from user ${notification.senderId}`);
-  //       });
-  
-  //       return () => {
-  //         socket.off("messageNotification");
-  //       };
-  //     }
-  //   }
-  // }, [user]);
-  // useEffect(()=>{
-  //   console.log(notifications);
-  // },[notifications])
+  const [notifications, setNotifications] = useState<
+    { senderId: string; message: string }[]
+  >([]);
+  useEffect(() => {
+    if (user?.role === "SELLER") {
+      if (socket) {
+        socket.emit("joinSellerRoom", user._id);
+        socket.on("messageNotification", (notification) => {
+          console.log("Received notification", notification);
+          setNotifications((prev) => [...prev, notification]);
+          toast.success(
+            `New message from user ${
+              notification.senderId + " " + notification.message
+            }`
+          );
+        });
+
+        return () => {
+          socket.off("messageNotification");
+        };
+      }
+    }
+  }, [user, socket]);
+  useEffect(() => {
+    console.log(notifications);
+  }, [notifications]);
 
   const handleSearch = (values: { search: string }) => {
     navigate(`/productLists?category=${values.search}`);
@@ -69,6 +76,9 @@ const Navbar = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+  const handleNotificationClick=()=>{
+
   };
 
   return (
@@ -103,7 +113,7 @@ const Navbar = () => {
             </Formik>
           </div>
         </div>
-        <div className="flex gap-4 mr-5">
+        <div className="flex items-center relative  gap-4 mr-5">
           <ToolTip name={"Add to cart"}>
             <Link to={"/AddToCart"}>
               <LuShoppingCart className="text-xl hover:cursor-pointer" />
@@ -114,6 +124,24 @@ const Navbar = () => {
               <MdOutlineFavoriteBorder className="text-xl hover:cursor-pointer" />
             </Link>
           </ToolTip>
+          {user?.role === "SELLER" && (
+            <ToolTip name={"Notifications"} >
+              <MdOutlineNotificationsNone onClick={()=>{setShowNotification(!showNotification)}} className="text-xl hover:cursor-pointer font-semibold" />
+            </ToolTip>
+          )}
+          {showNotification && 
+            <div className="h-[400px] py-2 px-3 absolute top-9 z-20 -right-30 w-[350px] bg-white shadow">
+              <h3 className="text-xl font-semibold">Notifications</h3>
+              <div>
+                {notifications.map((n,i)=>(
+                  <div key={i} onClick={handleNotificationClick} className="border-b-2 hover:cursor-pointer mb-2">
+                    <p>{n.senderId}</p>
+                    <p>{n.message}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          }
         </div>
         <div>
           {user ? (
