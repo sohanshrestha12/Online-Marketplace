@@ -5,13 +5,16 @@ import { useAuth } from "@/components/Auth/ProtectedRoutes";
 import Comment from "@/components/Comment";
 import ProductCarousel from "@/components/ProductCarousel";
 import ProductDescription from "@/components/ProductDescription";
+import ToolTip from "@/components/ToolTip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Profile } from "@/Types/User";
 import axios from "axios";
+import { Field, Form, Formik, FormikHelpers, FormikValues } from "formik";
 import React, { useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import { IoMdHeart } from "react-icons/io";
+import { IoClose, IoSend } from "react-icons/io5";
 import ReactImageMagnify from "react-image-magnify";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -21,10 +24,10 @@ interface comment {
   content: string;
   user: Profile;
 }
-export interface rating{
-  _id?:string,
-  user:string,
-  rating:number,
+export interface rating {
+  _id?: string;
+  user: string;
+  rating: number;
 }
 export interface FetchProduct {
   _id?: string;
@@ -34,12 +37,13 @@ export interface FetchProduct {
   brand: string;
   price: number;
   colorFamily: string[];
+  createdBy?: Profile;
   size: number[];
   quantity: number;
   rating?: rating[];
   videoUrl?: string;
   images: string[];
-  comments?:comment[];
+  comments?: comment[];
 }
 
 export interface FetchFilterProduct {
@@ -53,15 +57,58 @@ export interface FetchFilterProduct {
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   const [quantity, setQuantity] = useState<string>("1");
   const [activeProduct, setActiveProduct] = useState<FetchProduct>();
   const [images, setImages] = useState<string[][]>([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [showChat, setShowChat] = useState<boolean>(false);
+  // const [privateMessage, setPrivateMessage] = useState<string[]>([]);
+  // const [roomId, setRoomId] = useState<string>("");
 
   const [loading, setLoading] = useState<boolean>(true);
+  // useEffect(() => {
+  //   const socket = getSocket();
+  //   if (socket) {
+  //     if (activeProduct && activeProduct.createdBy && user) {
+  //       if (activeProduct.createdBy._id !== user._id) {
+  //         setRoomId(
+  //           `${activeProduct._id}-${activeProduct.createdBy._id}-${user._id}`
+  //         );
+  //         socket.emit("joinPrivateRoom", roomId);
+  //       }
+  //     }
+  //     socket.on("receivedMessage", (message) => {
+  //       console.log("listening on the new message", message);
+  //       setPrivateMessage((prevMessages) => [...prevMessages, message]);
+  //     });
+  //   }
+  // }, [activeProduct, activeProduct?._id, user]);
+
+  // useEffect(() => {
+  //   console.log("private Message", privateMessage);
+  // }, [privateMessage]);
+
+  const initialValue: FormikValues = {
+    message: "",
+  };
+
+  const handleMessageSubmit = (
+    values: FormikValues,
+    { resetForm }: FormikHelpers<FormikValues>
+  ) => {
+    // const Socket = getSocket();
+    // if (user) {
+    //   Socket.emit("sendMessage", {
+    //     roomId: roomId,
+    //     senderId: user?._id,
+    //     message: values.message,
+    //   });
+    // }
+    resetForm();
+  };
 
   useEffect(() => {
     const checkLikedStatus = async () => {
@@ -75,33 +122,33 @@ const ProductDetails = () => {
     };
     checkLikedStatus();
   }, [activeProduct]);
-const updateRating = (rating: rating) => {
-  setActiveProduct((prev) => {
-    if (!prev) return prev;
-    const existingRatingIndex = prev.rating?.findIndex(
-      (item) => item.user === user?._id
-    );
+  const updateRating = (rating: rating) => {
+    setActiveProduct((prev) => {
+      if (!prev) return prev;
+      const existingRatingIndex = prev.rating?.findIndex(
+        (item) => item.user === user?._id
+      );
 
-    if (
-      existingRatingIndex !== undefined &&
-      existingRatingIndex !== -1 &&
-      prev.rating
-    ) {
-      // Update the existing rating
-      const updatedRatings = [...prev.rating];
-      updatedRatings[existingRatingIndex] = rating;
-      return {
-        ...prev,
-        rating: updatedRatings,
-      };
-    } else {
-      return {
-        ...prev,
-        rating: prev.rating ? [...prev.rating, rating] : [rating],
-      };
-    }
-  });
-};
+      if (
+        existingRatingIndex !== undefined &&
+        existingRatingIndex !== -1 &&
+        prev.rating
+      ) {
+        // Update the existing rating
+        const updatedRatings = [...prev.rating];
+        updatedRatings[existingRatingIndex] = rating;
+        return {
+          ...prev,
+          rating: updatedRatings,
+        };
+      } else {
+        return {
+          ...prev,
+          rating: prev.rating ? [...prev.rating, rating] : [rating],
+        };
+      }
+    });
+  };
 
   const likeProduct = async () => {
     try {
@@ -132,7 +179,7 @@ const updateRating = (rating: rating) => {
           return null;
         }
         const product = await getProductById(id);
-        console.log('active product',product);
+        console.log("active product", product);
         if (product) {
           setActiveProduct(product.data.data);
           setImages([product.data.data.images || []]);
@@ -376,12 +423,21 @@ const updateRating = (rating: rating) => {
           </Button>
         </div>
       </div>
-      <div className="flex gap-3 col-span-6 mt-5">
-        <ProductCarousel
-          images={images[0]}
-          handleClick={handleImgClick}
-          selectedImageIndex={selectedImageIndex}
-        />
+      <div className="gap-3 grid grid-cols-12 col-span-12 mt-5">
+        <div className="col-span-6">
+          <ProductCarousel
+            images={images[0]}
+            handleClick={handleImgClick}
+            selectedImageIndex={selectedImageIndex}
+          />
+        </div>
+        {activeProduct?.createdBy?._id !== user?._id && (
+          <div className="flex gap-3 col-span-6 mt-5">
+            <Button type="button" onClick={() => setShowChat(!showChat)}>
+              Contact with Seller
+            </Button>
+          </div>
+        )}
       </div>
       {activeProduct && (
         <div className="col-span-12 mt-5 py-2">
@@ -392,6 +448,48 @@ const updateRating = (rating: rating) => {
       {activeProduct && activeProduct._id && (
         <div className="col-span-12 mt-4">
           <Comment product={activeProduct} updateRating={updateRating} />
+        </div>
+      )}
+      {showChat && (
+        <div className="h-[450px] w-[380px] flex flex-col fixed bottom-0 right-10 shadow z-10 bg-white">
+          <div className="p-3 flex gap-2 items-center  justify-between bg-blue-600 rounded">
+            <div className="flex gap-3 items-center">
+              <img
+                src={`http://localhost:5100/${activeProduct?.createdBy?.profileImage}`}
+                className="rounded-full object-contain h-[40px] w-[40px]"
+                alt="404 profile not found"
+              />
+              <h5 className="text-lg font-semibold capitalize text-white">
+                {activeProduct?.createdBy?.username}
+              </h5>
+            </div>
+            <div
+              className="p-2 hover:cursor-pointer group"
+              onClick={() => setShowChat(!showChat)}
+            >
+              <IoClose className="text-white text-xl -mt-6 -mr-3 transition-all group-hover:!text-gray-200" />
+            </div>
+          </div>
+          <div className="flex-1 h-full">Content</div>
+          <div className="h-fit mb-2 flex items-center bg-gray-100 text-black">
+            <Formik initialValues={initialValue} onSubmit={handleMessageSubmit}>
+              <Form className="relative w-full">
+                <Field
+                  className="focus-visible:outline-none focus-visible:ring-offset-transparent focus-visible:ring-none focus:border-none focus-visible:ring-offset-0 focus-visible:box-shadow-none focus-visible:border-none "
+                  placeholder="Enter your message"
+                  name="message"
+                  as={Input}
+                />
+                <div className="absolute flex items-center top-[50%] transform -translate-y-[50%] right-3">
+                  <button type="submit" className="p-0 m-0 flex items-center">
+                    <ToolTip name="Send">
+                      <IoSend className="text-lg" />
+                    </ToolTip>
+                  </button>
+                </div>
+              </Form>
+            </Formik>
+          </div>
         </div>
       )}
     </div>

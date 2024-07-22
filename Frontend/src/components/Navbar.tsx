@@ -26,6 +26,35 @@ const initialValues = {
 const Navbar = () => {
   const navigate = useNavigate();
   const auth = useAuth();
+  const { user } = useAuth();
+
+  // const [notifications, setNotifications] = useState<
+  //   { senderId: string; message: string }[]
+  // >([]);
+  // useEffect(() => {
+  //   if(user?.role === "SELLER"){
+  //     const accessToken = Cookies.get("accessToken");
+  //     if (accessToken) connectSocket(accessToken);
+  //     const socket = getSocket();
+
+  //     if (socket) {
+  //       socket.emit('joinSellerRoom',(user._id));
+  //       socket.on("messageNotification", (notification) => {
+  //         console.log("Received notification", notification);
+  //         setNotifications((prev) => [...prev, notification]);
+  //         // Show a toast notification or a custom notification
+  //         toast.success(`New message from user ${notification.senderId}`);
+  //       });
+  
+  //       return () => {
+  //         socket.off("messageNotification");
+  //       };
+  //     }
+  //   }
+  // }, [user]);
+  // useEffect(()=>{
+  //   console.log(notifications);
+  // },[notifications])
 
   const handleSearch = (values: { search: string }) => {
     navigate(`/productLists?category=${values.search}`);
@@ -42,7 +71,6 @@ const Navbar = () => {
     }
   };
 
-  const { user } = useAuth();
   return (
     <nav className="flex flex-col gap-3 max-w-screen-2xl pt-3 pb-3">
       <div className="flex gap-5 items-center">

@@ -1,16 +1,15 @@
-import { connectSocket, getSocket } from "@/utils/Socket";
+import { createComment } from "@/api/Product";
+import { useSocket } from "@/contexts/SocketContext";
+import { FetchProduct, rating } from "@/pages/ProductDetails";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { IoSend } from "react-icons/io5";
+import { useAuth } from "./Auth/ProtectedRoutes";
+import RatingBars from "./RatingBars";
+import Ratings from "./Ratings";
+import RatingStars from "./RatingsStar";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
-import { useAuth } from "./Auth/ProtectedRoutes";
-import { FetchProduct, rating } from "@/pages/ProductDetails";
-import { createComment } from "@/api/Product";
-import Ratings from "./Ratings";
-import RatingBars from "./RatingBars";
-import RatingStars from "./RatingsStar";
 
 interface CommentProps {
   product: FetchProduct;
@@ -41,22 +40,33 @@ const Comment = ({ product, updateRating }: CommentProps) => {
   const [commentValue, setCommentValue] = useState<string>("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [averageRating, setAverageRating] = useState<number>(0);
+  const {socket}= useSocket();
 
   useEffect(() => {
-    const accessToken = Cookies.get("accessToken");
-    if (accessToken) connectSocket(accessToken);
-    const socket = getSocket();
     if (socket) {
+      console.log('send the comment')
       socket.emit("joinProduct", product._id);
-      socket.on("newComment", (commentData) => {
-        setComments((prevComment) => [commentData, ...prevComment]);
-      });
-      return () => {
-        socket.off("newComment");
-        socket.disconnect();
-      };
+      socket.on(
+        "newComment",
+        (commentData: {
+          userId: string;
+          user: string;
+          comment: string;
+          productId: string;
+          profile: string;
+        }) => {
+          setComments((prevComment) => [commentData, ...prevComment]);
+        }
+      );
+      return ()=>{
+        socket.off('newComment');
+      }
     }
-  }, [product._id]);
+  }, [product._id,socket]);
+
+  useEffect(()=>{
+    console.log('This is comment value',comments);
+  },[comments]);
   useEffect(() => {
     if (product.rating && product.rating.length > 0) {
       const totalRating = product.rating.reduce((sum, r) => sum + r.rating, 0);
@@ -76,7 +86,6 @@ const Comment = ({ product, updateRating }: CommentProps) => {
         content: commentValue,
       });
       console.log("Comment", response);
-      const socket = getSocket();
       if (socket) {
         socket.emit("newComment", {
           comment: commentValue.trim(),

@@ -53,19 +53,40 @@ import { verifyJwt } from "./src/utils/Jwt";
       const { comment, productId } = data;
       console.log(`New comment for product ${productId}`, comment);
       const commentData = {
-        userId:(socket as any).decoded._id,
+        userId: (socket as any).decoded._id,
         user: (socket as any).decoded.username,
-        profile:(socket as any).decoded.profileImage,
+        profile: (socket as any).decoded.profileImage,
         comment,
         productId,
       };
+      console.log(commentData);
       // socket.to(`product_${productId}`).emit("newComment", commentData); //i will not see my own msg
-      io.to(`product_${productId}`).emit("newComment", commentData); 
+      io.to(`product_${productId}`).emit("newComment", commentData);
     });
 
     socket.on("joinProduct", (productId) => {
       socket.join(`product_${productId}`);
       console.log("client joined to product", productId);
+    });
+
+    //for personal messages:
+    socket.on("joinPrivateRoom", (roomId) => {
+      console.log("The room id is: ", roomId);
+      socket.join(roomId);
+    });
+    socket.on('joinSellerRoom',(sellerId)=>{
+      console.log('seller joined',sellerId);
+      socket.join(sellerId);
+    })
+
+    socket.on("sendMessage", ({ roomId, senderId, message }) => {
+      console.log('received msg',message);
+      io.to(roomId).emit("receivedMessage", message);
+
+      //send notification to seller
+      const [sellerId] = roomId.split('-').slice(1,2);
+      console.log(sellerId);
+      socket.to(sellerId).emit('messageNotification',{senderId,message});
     });
 
     socket.on("disconnect", () => {

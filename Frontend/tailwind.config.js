@@ -48,5 +48,10 @@ module.exports = {
       },
     },
   },
+  variants: {
+    extend: {
+      textColor: ["group-hover"], 
+    },
+  },
   plugins: [require("tailwindcss-animate")],
 };

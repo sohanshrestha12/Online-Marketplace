@@ -135,6 +135,8 @@ export const getProductById = async (id: string): Promise<Product | null> => {
     populate: { path: "user", select: "-password" },
   }).populate({
     path:"rating" 
+  }).populate({
+    path:"createdBy"
   });
   if (!product) {
     throw new CustomError("Invalid id", 404);
