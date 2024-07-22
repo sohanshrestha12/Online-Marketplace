@@ -6,20 +6,30 @@ import { IoSend } from "react-icons/io5";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { useAuth } from "./Auth/ProtectedRoutes";
-import { FetchProduct } from "@/pages/ProductDetails";
+import { FetchProduct, rating } from "@/pages/ProductDetails";
 import { createComment } from "@/api/Product";
 import Ratings from "./Ratings";
+import RatingBars from "./RatingBars";
+import RatingStars from "./RatingsStar";
 
 interface CommentProps {
   product: FetchProduct;
+  updateRating: (rating: rating) => void;
 }
 
-const Comment = ({ product }: CommentProps) => {
+const Comment = ({ product, updateRating }: CommentProps) => {
   const [comments, setComments] = useState<
-    { user: string; comment: string; productId: string; profile: string }[]
+    {
+      userId: string;
+      user: string;
+      comment: string;
+      productId: string;
+      profile: string;
+    }[]
   >(
     product && product.comments
       ? product.comments.map((comm) => ({
+          userId: comm.user._id,
           user: comm.user.username,
           comment: comm.content,
           productId: product._id!,
@@ -30,9 +40,8 @@ const Comment = ({ product }: CommentProps) => {
   const { user } = useAuth();
   const [commentValue, setCommentValue] = useState<string>("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
-  useEffect(() => {
-    console.log(comments);
-  }, [comments]);
+  const [averageRating, setAverageRating] = useState<number>(0);
+
   useEffect(() => {
     const accessToken = Cookies.get("accessToken");
     if (accessToken) connectSocket(accessToken);
@@ -48,6 +57,15 @@ const Comment = ({ product }: CommentProps) => {
       };
     }
   }, [product._id]);
+  useEffect(() => {
+    if (product.rating && product.rating.length > 0) {
+      const totalRating = product.rating.reduce((sum, r) => sum + r.rating, 0);
+      const avgRating = totalRating / product.rating.length;
+      setAverageRating(avgRating);
+    } else {
+      setAverageRating(0);
+    }
+  }, [product.rating, user]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -83,9 +101,12 @@ const Comment = ({ product }: CommentProps) => {
         <div className="flex py-3 h-fit gap-3 border-b-[1px] mb-3">
           <div>
             <h6 className="mb-2">All ratings</h6>
-            <p className="text-2xl font-semibold">3.9</p>
+            <p className="text-2xl font-semibold">
+              {averageRating ? averageRating.toFixed(1) : "No ratings yet"}
+            </p>
           </div>
-          <Ratings />
+          <RatingBars product={product} />
+          <Ratings product={product} updateRating={updateRating} />
         </div>
       </div>
       <p>
@@ -143,6 +164,7 @@ const Comment = ({ product }: CommentProps) => {
                   <div>
                     <p className="capitalize text-sm font-semibold">
                       {item.user}
+                      {product.rating?.some((r) => r.user === item.userId)?<RatingStars rating={product.rating.find(r=>r.user === item.userId)?.rating ?? 0} />:0}
                     </p>
                     <p className="break-all break-words ml-2 px-2  line-clamp-2">
                       {item.comment}

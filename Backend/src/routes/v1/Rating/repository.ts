@@ -8,3 +8,4 @@ export const addRating =async(userId:string,body:ratingBody):Promise<RatingModel
         {upsert:true,new:true},
     )
 }
+

@@ -133,6 +133,8 @@ export const getProductById = async (id: string): Promise<Product | null> => {
   const product = await ProductModel.findById(id).populate({
     path: "comments",
     populate: { path: "user", select: "-password" },
+  }).populate({
+    path:"rating" 
   });
   if (!product) {
     throw new CustomError("Invalid id", 404);
@@ -163,6 +165,7 @@ const comments = product.comments as Comment[];
     comments: reversedComments,
     createdAt: product.createdAt,
     createdBy: product.createdBy,
+    rating:product.rating,
   };
   return modifiedProduct;
 };
@@ -217,7 +220,15 @@ export const addCommentToProduct = async(productId: string, commentId: string) =
 };
 
 export const addRatingToProduct = async(productId:string,ratingId:string) =>{
-  await getProductById(productId);
+ const product = await getProductById(productId);
+   if (!product) {
+     throw new CustomError("Product not found",404);
+   }
+   if (product.rating?.some((r) => r._id.equals(ratingId))) {
+     return product;
+   }
+ 
+
   return ProductModel.findByIdAndUpdate(
     productId,
     {

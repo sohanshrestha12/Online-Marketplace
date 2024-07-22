@@ -53,6 +53,7 @@ import { verifyJwt } from "./src/utils/Jwt";
       const { comment, productId } = data;
       console.log(`New comment for product ${productId}`, comment);
       const commentData = {
+        userId:(socket as any).decoded._id,
         user: (socket as any).decoded.username,
         profile:(socket as any).decoded.profileImage,
         comment,

@@ -1,6 +1,5 @@
 import mongoose, { Types } from "mongoose";
 import { Comment } from "../Comment/model";
-import { RatingModel } from "../Rating/model";
 
 export interface Product {
   _id?: string;
@@ -13,7 +12,7 @@ export interface Product {
   colorFamily: string[];
   size: number[];
   quantity: number;
-  rating?: Types.ObjectId[] | RatingModel[];
+  rating?: Types.ObjectId[] ;
   videoUrl?: string;
   images?: string[] | File[];
   createdBy: Types.ObjectId;

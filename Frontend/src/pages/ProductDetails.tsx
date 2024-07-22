@@ -1,6 +1,7 @@
 import { addToCart } from "@/api/Cart";
 import { CheckLikeStatus, DislikeProduct, LikeProduct } from "@/api/Like";
 import { getProductById } from "@/api/Product";
+import { useAuth } from "@/components/Auth/ProtectedRoutes";
 import Comment from "@/components/Comment";
 import ProductCarousel from "@/components/ProductCarousel";
 import ProductDescription from "@/components/ProductDescription";
@@ -20,7 +21,11 @@ interface comment {
   content: string;
   user: Profile;
 }
-
+export interface rating{
+  _id?:string,
+  user:string,
+  rating:number,
+}
 export interface FetchProduct {
   _id?: string;
   name: string;
@@ -31,7 +36,7 @@ export interface FetchProduct {
   colorFamily: string[];
   size: number[];
   quantity: number;
-  rating?: number;
+  rating?: rating[];
   videoUrl?: string;
   images: string[];
   comments?:comment[];
@@ -48,6 +53,7 @@ export interface FetchFilterProduct {
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const {user} = useAuth();
 
   const [quantity, setQuantity] = useState<string>("1");
   const [activeProduct, setActiveProduct] = useState<FetchProduct>();
@@ -69,6 +75,33 @@ const ProductDetails = () => {
     };
     checkLikedStatus();
   }, [activeProduct]);
+const updateRating = (rating: rating) => {
+  setActiveProduct((prev) => {
+    if (!prev) return prev;
+    const existingRatingIndex = prev.rating?.findIndex(
+      (item) => item.user === user?._id
+    );
+
+    if (
+      existingRatingIndex !== undefined &&
+      existingRatingIndex !== -1 &&
+      prev.rating
+    ) {
+      // Update the existing rating
+      const updatedRatings = [...prev.rating];
+      updatedRatings[existingRatingIndex] = rating;
+      return {
+        ...prev,
+        rating: updatedRatings,
+      };
+    } else {
+      return {
+        ...prev,
+        rating: prev.rating ? [...prev.rating, rating] : [rating],
+      };
+    }
+  });
+};
 
   const likeProduct = async () => {
     try {
@@ -358,7 +391,7 @@ const ProductDetails = () => {
 
       {activeProduct && activeProduct._id && (
         <div className="col-span-12 mt-4">
-          <Comment product={activeProduct} />
+          <Comment product={activeProduct} updateRating={updateRating} />
         </div>
       )}
     </div>
