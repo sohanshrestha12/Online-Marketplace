@@ -8,6 +8,7 @@ import RatingStars from "./RatingsStar";
 import { Button } from "./ui/button";
 import { PurchaseProduct } from "@/api/Product";
 import { purchaseProduct } from "@/Types/Product";
+import { useNavigate } from "react-router-dom";
 
 interface BuyNowDialogProps {
   isOpen: boolean;
@@ -31,6 +32,7 @@ const BuyNowDialog = ({
   const [averageRating, setAverageRating] = useState<number>(0);
   const { user } = useAuth();
   const [isLoading,setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (
@@ -64,7 +66,7 @@ const BuyNowDialog = ({
     try {
       const purchaseResponse = await PurchaseProduct(purchaseData);
       updateActiveProductQuantity(purchaseResponse?.data.data.updateQuantity);
-      console.log(purchaseResponse);
+      navigate('/profile/myOrders');
       toast.success('Congratulations Product Purchased Successfully!');
     } catch (error) {
       if(axios.isAxiosError(error)){

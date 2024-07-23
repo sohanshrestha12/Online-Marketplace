@@ -67,6 +67,10 @@ export const PurchaseProduct = (body:purchaseProduct)=>{
   return MarketUrl.post('/purchase',body);
 }
 
+export const getPurchasedProduct = ({page=1}:{page?:number}={})=>{
+  return MarketUrl.get('/purchase',{params:{page}});
+}
+
 export const fetchProductsByFilter = (
   category?: string,
   brands?: string[],
