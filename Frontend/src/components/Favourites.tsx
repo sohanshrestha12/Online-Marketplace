@@ -26,7 +26,7 @@ const Favourites = () => {
           {favourites.map((item) => (
             <Link to={`/productDetails/${item.productId._id}`}>
               <div
-                className=" w-[260px] hover:cursor-pointer hover:scale-105 transition-all"
+                className=" w-[260px] h-[420px] hover:cursor-pointer hover:scale-105 transition-all"
                 style={{ boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px" }}
               >
                 <div className="w-full h-[250px]">
@@ -37,7 +37,7 @@ const Favourites = () => {
                   />
                 </div>
                 <div className="flex justify-between mt-2 px-3">
-                  <div>
+                  <div className="h-[70px]">
                     <h3 className="capitalize font-semibold break-words line-clamp-2 ">
                       {item.productId.name}
                     </h3>

@@ -132,7 +132,7 @@ const Profile = () => {
                   width="200"
                 />
                 <label htmlFor="profileImage">
-                  <FiEdit className="text-3xl py-1 px-2 text-white bg-indigo-300 rounded-full invisible group-hover:!visible absolute hover:cursor-pointer -top-2 -right-2" />
+                  <FiEdit className="text-3xl py-1 hover:bg-indigo-400 px-2 text-white bg-indigo-300 rounded-full invisible group-hover:!visible absolute hover:cursor-pointer -top-2 -right-2" />
                 </label>
               </div>
               <input
