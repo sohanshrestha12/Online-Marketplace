@@ -26,19 +26,19 @@ const Favourites = () => {
           {favourites.map((item) => (
             <Link to={`/productDetails/${item.productId._id}`}>
               <div
-                className="w-fit hover:cursor-pointer hover:scale-105 transition-all"
+                className=" w-[260px] hover:cursor-pointer hover:scale-105 transition-all"
                 style={{ boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px" }}
               >
-                <div className="w-[250px] h-[250px]">
+                <div className="w-full h-[250px]">
                   <img
-                    className="w-fill h-full object-fill"
+                    className="w-full h-full object-fill"
                     src={`http://localhost:5100/${item.productId.images[0]}`}
                     alt=""
                   />
                 </div>
                 <div className="flex justify-between mt-2 px-3">
                   <div>
-                    <h3 className="capitalize font-semibold">
+                    <h3 className="capitalize font-semibold break-words line-clamp-2 ">
                       {item.productId.name}
                     </h3>
                     <p className="text-sm text-gray-400 font-semibold">

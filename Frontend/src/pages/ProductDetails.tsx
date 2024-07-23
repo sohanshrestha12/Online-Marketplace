@@ -6,6 +6,7 @@ import BuyNowDialog from "@/components/BuyNowDialog";
 import Comment from "@/components/Comment";
 import ProductCarousel from "@/components/ProductCarousel";
 import ProductDescription from "@/components/ProductDescription";
+import RatingStars from "@/components/RatingsStar";
 import ToolTip from "@/components/ToolTip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,13 +72,13 @@ const ProductDetails = () => {
   const [roomId, setRoomId] = useState<string>("");
   const { showChat, toggleChat } = useProduct();
   const [isBuyNowDialogOpen, setBuyNowDialogOpen] = useState(false);
-  const [selectedColor,setSelectedColor] = useState<number>(-1);
-  const [selectedSize,setSelectedSize] = useState<number>(-1);
+  const [selectedColor, setSelectedColor] = useState<number>(-1);
+  const [selectedSize, setSelectedSize] = useState<number>(-1);
+  const [averageRating, setAverageRating] = useState<number>(0);
 
   const { socket } = useSocket();
 
   const [loading, setLoading] = useState<boolean>(true);
-
 
   const handleBuyNowDialogOpen = () => {
     setBuyNowDialogOpen(true);
@@ -86,13 +87,13 @@ const ProductDetails = () => {
     setBuyNowDialogOpen(false);
   };
 
-  const handleSelectColor =(index:number) =>{
+  const handleSelectColor = (index: number) => {
     setSelectedColor(index);
-  }
+  };
 
-  const handleSelectSize = (index:number)=>{
+  const handleSelectSize = (index: number) => {
     setSelectedSize(index);
-  }
+  };
   useEffect(() => {
     if (socket) {
       if (activeProduct && activeProduct.createdBy && user) {
@@ -114,6 +115,19 @@ const ProductDetails = () => {
       };
     }
   }, [activeProduct, activeProduct?._id, user, socket]);
+  useEffect(() => {
+    if (!activeProduct) return;
+    if (activeProduct.rating && activeProduct.rating.length > 0) {
+      const totalRating = activeProduct.rating.reduce(
+        (sum, r) => sum + r.rating,
+        0
+      );
+      const avgRating = totalRating / activeProduct.rating.length;
+      setAverageRating(avgRating);
+    } else {
+      setAverageRating(0);
+    }
+  }, [activeProduct, activeProduct && activeProduct.rating, user]);
 
   useEffect(() => {
     console.log("private Message", privateMessage);
@@ -176,7 +190,7 @@ const ProductDetails = () => {
       }
     });
   };
-  const updateActiveProductQuantity = (updatedActiveProduct:FetchProduct)=>{
+  const updateActiveProductQuantity = (updatedActiveProduct: FetchProduct) => {
     // setActiveProduct((prevProduct)=>
     //   prevProduct?._id == updatedActiveProduct._id?{...prevProduct,quantity:updatedActiveProduct.quantity}:prevProduct
     // )
@@ -186,7 +200,7 @@ const ProductDetails = () => {
       }
       return prevProduct;
     });
-  }
+  };
 
   const likeProduct = async () => {
     try {
@@ -298,7 +312,6 @@ const ProductDetails = () => {
       }
     }
   };
- 
 
   return (
     <div className="grid grid-cols-12">
@@ -351,9 +364,11 @@ const ProductDetails = () => {
         <h2 className="font-bold text-2xl capitalize">{activeProduct?.name}</h2>
         <div className="flex justify-between mb-3">
           <div>
-            <h5 className="text-sm">
+            <h5 className="text-sm flex gap-1 items-center">
               Ratings:{" "}
-              <span className="text-indigo-500 capitalize">no ratings</span>
+              <span className="text-indigo-500 capitalize">
+                <RatingStars rating={averageRating} />
+              </span>
             </h5>
             <h5 className="text-sm">
               Brand:{" "}
@@ -363,12 +378,12 @@ const ProductDetails = () => {
           {isLiked ? (
             <IoMdHeart
               onClick={dislikeProduct}
-              className="text-md hover:cursor-pointer"
+              className="text-xl hover:cursor-pointer"
             />
           ) : (
             <CiHeart
               onClick={likeProduct}
-              className="text-md hover:cursor-pointer"
+              className="text-xl hover:cursor-pointer"
             />
           )}
         </div>
@@ -458,10 +473,13 @@ const ProductDetails = () => {
         <div className="flex gap-2 mt-5">
           <Button
             onClick={handleBuyNowDialogOpen}
-            disabled={activeProduct && activeProduct.quantity < 1 }
+            disabled={activeProduct && activeProduct.quantity < 1}
             className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-[#f85606] hover:bg-[#f85606] text-white py-2"
           >
-            Buy Now {activeProduct && activeProduct.quantity < 1 ?"(Currently out of stock.)":""}
+            Buy Now{" "}
+            {activeProduct && activeProduct.quantity < 1
+              ? "(Currently out of stock.)"
+              : ""}
           </Button>
           <Button
             disabled={activeProduct && activeProduct?.quantity <= 0}
