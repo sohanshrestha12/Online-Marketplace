@@ -20,6 +20,20 @@ const MyOrder = () => {
     getAllPurchaseProducts();
   }, []);
 
+  const handlePreviousPage = async()=>{
+    if (!purchasedProduct) return;
+    if (purchasedProduct.page >1) {
+      try {
+        const response = await getPurchasedProduct({
+          page: purchasedProduct.page - 1,
+        });
+        setPurchasedProduct(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
   const handleNextPage = async () => {
     if (!purchasedProduct) return;
     if (purchasedProduct.page < purchasedProduct.totalPage) {
@@ -27,7 +41,6 @@ const MyOrder = () => {
         const response = await getPurchasedProduct({
           page: purchasedProduct.page + 1,
         });
-        console.log('The next response',response)
         setPurchasedProduct(response.data.data);
       } catch (error) {
         console.log(error);
@@ -113,8 +126,8 @@ const MyOrder = () => {
         </div>
       </div>
       <div className="flex justify-end gap-2">
-        <Button>Previous</Button>
-        <Button onClick={handleNextPage}>Next</Button>
+        <Button onClick={handlePreviousPage} disabled={purchasedProduct && purchasedProduct.page !== undefined && purchasedProduct.page <=1}>Previous</Button>
+        <Button onClick={handleNextPage} disabled={purchasedProduct && purchasedProduct.page !== undefined && purchasedProduct?.page >= purchasedProduct?.totalPage}>Next</Button>
       </div>
     </div>
   );
