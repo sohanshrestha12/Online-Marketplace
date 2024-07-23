@@ -2,6 +2,7 @@ import { addToCart } from "@/api/Cart";
 import { CheckLikeStatus, DislikeProduct, LikeProduct } from "@/api/Like";
 import { getProductById } from "@/api/Product";
 import { useAuth } from "@/components/Auth/ProtectedRoutes";
+import BuyNowDialog from "@/components/BuyNowDialog";
 import Comment from "@/components/Comment";
 import ProductCarousel from "@/components/ProductCarousel";
 import ProductDescription from "@/components/ProductDescription";
@@ -69,10 +70,28 @@ const ProductDetails = () => {
   const [privateMessage, setPrivateMessage] = useState<string[]>([]);
   const [roomId, setRoomId] = useState<string>("");
   const { showChat, toggleChat } = useProduct();
+  const [isBuyNowDialogOpen, setBuyNowDialogOpen] = useState(false);
+  const [selectedColor,setSelectedColor] = useState<number>(-1);
+  const [selectedSize,setSelectedSize] = useState<number>(-1);
 
-  const {socket} = useSocket();
+  const { socket } = useSocket();
 
   const [loading, setLoading] = useState<boolean>(true);
+
+  const handleBuyNowDialogOpen = () => {
+    setBuyNowDialogOpen(true);
+  };
+  const handleBuyNowDialogClose = () => {
+    setBuyNowDialogOpen(false);
+  };
+
+  const handleSelectColor =(index:number) =>{
+    setSelectedColor(index);
+  }
+
+  const handleSelectSize = (index:number)=>{
+    setSelectedSize(index);
+  }
   useEffect(() => {
     if (socket) {
       if (activeProduct && activeProduct.createdBy && user) {
@@ -88,12 +107,12 @@ const ProductDetails = () => {
         setPrivateMessage((prevMessages) => [...prevMessages, message]);
       });
 
-      return ()=>{
-        socket.off('joinPrivateRoom');
-        socket.off('receivedMessage');
-      }
+      return () => {
+        socket.off("joinPrivateRoom");
+        socket.off("receivedMessage");
+      };
     }
-  }, [activeProduct, activeProduct?._id, user,socket]);
+  }, [activeProduct, activeProduct?._id, user, socket]);
 
   useEffect(() => {
     console.log("private Message", privateMessage);
@@ -267,6 +286,7 @@ const ProductDetails = () => {
       }
     }
   };
+ 
 
   return (
     <div className="grid grid-cols-12">
@@ -352,9 +372,14 @@ const ProductDetails = () => {
           {activeProduct?.colorFamily.map((color, i) => (
             <div
               key={i}
-              style={{ background: `${color}` }}
-              className="h-[30px] w-[30px] rounded"
-            ></div>
+              onClick={()=>handleSelectColor(i)}
+              className={`hover:border-[1px] border-black rounded px-[2px] py-[1px] hover:cursor-pointer h-[35px] w-[35px] flex justify-center items-center ${selectedColor === i? 'border-[1px]' : ''}`}
+            >
+              <div
+                style={{ background: `${color}` }}
+                className="h-[30px] w-[30px] rounded"
+              ></div>
+            </div>
           ))}
         </div>
         <div className="flex items-center gap-3 mb-4">
@@ -363,7 +388,8 @@ const ProductDetails = () => {
             {activeProduct?.size.map((item, i) => (
               <div
                 key={i}
-                className="py-2 px-3 rounded hover:bg-black hover:text-white hover:cursor-pointer bg-gray-50"
+                onClick={()=>handleSelectSize(i)}
+                className={`py-2 px-3 rounded hover:bg-black hover:text-white hover:cursor-pointer bg-gray-50 ${selectedSize === i?'bg-black text-white':''}`}
               >
                 <span>{item}</span>
               </div>
@@ -414,9 +440,12 @@ const ProductDetails = () => {
           </div>
         </div>
         <div className="flex gap-2 mt-5">
-          <div className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-[#f85606] text-white py-2">
+          <Button
+            onClick={handleBuyNowDialogOpen}
+            className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-[#f85606] hover:bg-[#f85606] text-white py-2"
+          >
             Buy Now
-          </div>
+          </Button>
           <Button
             disabled={activeProduct && activeProduct?.quantity <= 0}
             onClick={() => {
@@ -499,6 +528,14 @@ const ProductDetails = () => {
           </div>
         </div>
       )}
+      <BuyNowDialog
+        activeProduct={activeProduct}
+        isOpen={isBuyNowDialogOpen}
+        onClose={handleBuyNowDialogClose}
+        selectedColor={selectedColor}
+        selectedSize={selectedSize}
+        quantity={quantity}
+      />
     </div>
   );
 };
