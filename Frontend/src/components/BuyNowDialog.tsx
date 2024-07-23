@@ -1,9 +1,13 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { FetchProduct } from "@/pages/ProductDetails";
-import RatingStars from "./RatingsStar";
+import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useAuth } from "./Auth/ProtectedRoutes";
+import RatingStars from "./RatingsStar";
 import { Button } from "./ui/button";
+import { PurchaseProduct } from "@/api/Product";
+import { purchaseProduct } from "@/Types/Product";
 
 interface BuyNowDialogProps {
   isOpen: boolean;
@@ -12,6 +16,7 @@ interface BuyNowDialogProps {
   selectedColor: number;
   selectedSize: number;
   quantity: string;
+  updateActiveProductQuantity:(activeProduct:FetchProduct)=>void;
 }
 
 const BuyNowDialog = ({
@@ -21,9 +26,11 @@ const BuyNowDialog = ({
   selectedColor,
   selectedSize,
   quantity,
+  updateActiveProductQuantity,
 }: BuyNowDialogProps) => {
   const [averageRating, setAverageRating] = useState<number>(0);
   const { user } = useAuth();
+  const [isLoading,setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (
@@ -44,16 +51,29 @@ const BuyNowDialog = ({
   const totalQuantity = parseInt(quantity, 10) || 0;
   const totalPrice = activeProduct ? activeProduct.price * totalQuantity : 0;
 
-  const handleBuyProduct = () => {
-    const purchaseData = {
-      productId: activeProduct && activeProduct._id,
-      userId: user && user._id,
-      selectedColor: activeProduct && activeProduct.colorFamily[selectedColor],
-      selectedSize: activeProduct && activeProduct.size[selectedSize],
+  const handleBuyProduct = async() => {
+    setLoading(true);
+    const purchaseData:purchaseProduct = {
+      productId: activeProduct!._id!,
+      userId: user!._id,
+      selectedColor:  activeProduct!.colorFamily[selectedColor],
+      selectedSize: activeProduct!.size[selectedSize],
       quantity: totalQuantity,
       totalPrice: totalPrice,
     };
-    console.log(purchaseData);
+    try {
+      const purchaseResponse = await PurchaseProduct(purchaseData);
+      updateActiveProductQuantity(purchaseResponse?.data.data.updateQuantity);
+      console.log(purchaseResponse);
+      toast.success('Congratulations Product Purchased Successfully!');
+    } catch (error) {
+      if(axios.isAxiosError(error)){
+        toast.error(error.response?.data.message);
+      }
+      console.log(error);
+    }finally{
+      setLoading(false);
+    }
   };
 
   return (
@@ -102,8 +122,13 @@ const BuyNowDialog = ({
                 </span>
               </p>
               <div className="mt-5 flex gap-2">
-                <Button onClick={handleBuyProduct} variant={"orange"} className="flex-1">
-                  Buy Product ({quantity})
+                <Button
+                  disabled={isLoading}
+                  onClick={handleBuyProduct}
+                  variant={"orange"}
+                  className="flex-1"
+                >
+                  {isLoading ? "Processing..." : `Buy Product (${quantity})`}
                 </Button>
                 <Button onClick={onClose} className="flex-1">
                   Cancel

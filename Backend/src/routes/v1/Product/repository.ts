@@ -1,16 +1,16 @@
 import mongoose, { FilterQuery, SortOrder } from "mongoose";
+import { isInteger } from "../../../utils";
 import CustomError from "../../../utils/Error";
 import { CategoryModel } from "../Category/model";
+import { Comment } from "../Comment/model";
 import { Product, ProductModel } from "./model";
+import ProductService from "./services";
 import {
   ProductQuery,
   ProductReturn,
   SearchQuery,
   updateProducts,
 } from "./types";
-import { isInteger } from "../../../utils";
-import ProductService from "./services";
-import { Comment } from "../Comment/model";
 
 export const createProduct = (
   body: Product,
@@ -241,4 +241,13 @@ export const addRatingToProduct = async(productId:string,ratingId:string) =>{
       new:true,
     }
   )
+
+}
+export const updateQuantityProduct=async(productId:string,quantity:number)=>{
+  const product = await ProductModel.findById(productId);
+  if(!product) throw new CustomError("Product not found!!!",404);
+  if(product.quantity < quantity) throw new CustomError("Insufficient product quantity",400);
+  product.quantity -=quantity;
+  return product.save();
+
 }

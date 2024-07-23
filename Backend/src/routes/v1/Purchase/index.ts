@@ -4,7 +4,7 @@ import PurchaseProductController from "./controller";
 
 const PurchaseProductRouter = Router();
 
-PurchaseProductRouter.route("/").get(requireUser,PurchaseProductController.addPurchaseProduct);
+PurchaseProductRouter.route("/").post(requireUser,PurchaseProductController.addPurchaseProduct);
 
 
 export default PurchaseProductRouter;

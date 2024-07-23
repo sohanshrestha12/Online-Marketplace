@@ -78,6 +78,7 @@ const ProductDetails = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
+
   const handleBuyNowDialogOpen = () => {
     setBuyNowDialogOpen(true);
   };
@@ -175,6 +176,17 @@ const ProductDetails = () => {
       }
     });
   };
+  const updateActiveProductQuantity = (updatedActiveProduct:FetchProduct)=>{
+    // setActiveProduct((prevProduct)=>
+    //   prevProduct?._id == updatedActiveProduct._id?{...prevProduct,quantity:updatedActiveProduct.quantity}:prevProduct
+    // )
+    setActiveProduct((prevProduct) => {
+      if (prevProduct && prevProduct._id === updatedActiveProduct._id) {
+        return { ...prevProduct, quantity: updatedActiveProduct.quantity };
+      }
+      return prevProduct;
+    });
+  }
 
   const likeProduct = async () => {
     try {
@@ -372,8 +384,10 @@ const ProductDetails = () => {
           {activeProduct?.colorFamily.map((color, i) => (
             <div
               key={i}
-              onClick={()=>handleSelectColor(i)}
-              className={`hover:border-[1px] border-black rounded px-[2px] py-[1px] hover:cursor-pointer h-[35px] w-[35px] flex justify-center items-center ${selectedColor === i? 'border-[1px]' : ''}`}
+              onClick={() => handleSelectColor(i)}
+              className={`hover:border-[1px] border-black rounded px-[2px] py-[1px] hover:cursor-pointer h-[35px] w-[35px] flex justify-center items-center ${
+                selectedColor === i ? "border-[1px]" : ""
+              }`}
             >
               <div
                 style={{ background: `${color}` }}
@@ -388,8 +402,10 @@ const ProductDetails = () => {
             {activeProduct?.size.map((item, i) => (
               <div
                 key={i}
-                onClick={()=>handleSelectSize(i)}
-                className={`py-2 px-3 rounded hover:bg-black hover:text-white hover:cursor-pointer bg-gray-50 ${selectedSize === i?'bg-black text-white':''}`}
+                onClick={() => handleSelectSize(i)}
+                className={`py-2 px-3 rounded hover:bg-black hover:text-white hover:cursor-pointer bg-gray-50 ${
+                  selectedSize === i ? "bg-black text-white" : ""
+                }`}
               >
                 <span>{item}</span>
               </div>
@@ -442,9 +458,10 @@ const ProductDetails = () => {
         <div className="flex gap-2 mt-5">
           <Button
             onClick={handleBuyNowDialogOpen}
+            disabled={activeProduct && activeProduct.quantity < 1 }
             className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-[#f85606] hover:bg-[#f85606] text-white py-2"
           >
-            Buy Now
+            Buy Now {activeProduct && activeProduct.quantity < 1 ?"(Currently out of stock.)":""}
           </Button>
           <Button
             disabled={activeProduct && activeProduct?.quantity <= 0}
@@ -535,6 +552,7 @@ const ProductDetails = () => {
         selectedColor={selectedColor}
         selectedSize={selectedSize}
         quantity={quantity}
+        updateActiveProductQuantity={updateActiveProductQuantity}
       />
     </div>
   );

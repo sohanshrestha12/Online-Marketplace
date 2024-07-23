@@ -1,7 +1,8 @@
 import { MarketUrl } from "@/config/Axios";
-import "../config/AxiosInterceptor";
 import { Comment } from "@/Types/Comment";
+import { purchaseProduct } from "@/Types/Product";
 import { Rating } from "@/Types/Rating";
+import "../config/AxiosInterceptor";
 
 
 export const createProduct = (product: FormData) => {
@@ -60,6 +61,10 @@ export const createComment = (productId:string,data:Comment) =>{
 
 export const createRating = (productId:string,data:Rating)=>{
   return MarketUrl.post(`product/${productId}/rating`,data);
+}
+
+export const PurchaseProduct = (body:purchaseProduct)=>{
+  return MarketUrl.post('/purchase',body);
 }
 
 export const fetchProductsByFilter = (

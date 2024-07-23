@@ -21,3 +21,12 @@ export interface FavProduct{
   productId:FetchProduct;
   userId:string;
 }
+
+export interface purchaseProduct {
+  productId: string;
+  userId: string;
+  selectedColor: string;
+  selectedSize: number;
+  quantity: number;
+  totalPrice: number;
+}
