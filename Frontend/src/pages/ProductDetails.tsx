@@ -292,8 +292,8 @@ const ProductDetails = () => {
     quantity: string
   ) => {
     try {
-      if (!activeProduct || !activeProduct._id) return;
-      await addToCart(activeProduct._id, parseInt(quantity));
+      if (!activeProduct || !activeProduct._id || selectedColor === -1 || selectedSize === -1) return;
+      await addToCart(activeProduct._id, parseInt(quantity),activeProduct.colorFamily[selectedColor],activeProduct.size[selectedSize]);
       setActiveProduct((prevProduct) => {
         if (!prevProduct) return prevProduct;
         const newQuantity = prevProduct.quantity - parseInt(quantity);

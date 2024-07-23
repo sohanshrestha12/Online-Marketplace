@@ -1,18 +1,40 @@
 import { getCartItems } from "@/api/Cart";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react";
-import { FetchProduct } from "./ProductDetails";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { FetchProduct } from "./ProductDetails";
 
 const AddToCart = () => {
-  const [selectedItems, setSelectedItems] = useState<FetchProduct[]>([]);
+  interface CartItems {
+    userId: string;
+    productId: FetchProduct;
+    quantity: number;
+    selectedColor: string;
+    selectedSize: number;
+  }
+  const [selectedItems, setSelectedItems] = useState<CartItems[]>([]);
   const navigate = useNavigate();
-  const handleCheckbox = (item: FetchProduct) => {
+  const handleCheckbox = (item: CartItems) => {
     setSelectedItems((prevSelectedItems) => {
-      if (prevSelectedItems.some((i) => i._id === item._id)) {
-        return prevSelectedItems.filter((i) => i._id !== item._id);
+      if (
+        prevSelectedItems.some(
+          (i) =>
+            i.productId._id === item.productId._id &&
+            i.selectedColor === item.selectedColor &&
+            i.selectedSize === item.selectedSize
+        )
+      ) {
+        return prevSelectedItems.filter(
+          (i) =>
+            !(
+              i.productId._id === item.productId._id &&
+              i.selectedColor === item.selectedColor &&
+              i.selectedSize === item.selectedSize
+            )
+        );
       } else {
         return [...prevSelectedItems, item];
       }
@@ -22,11 +44,7 @@ const AddToCart = () => {
     console.log(selectedItems);
   }, [selectedItems]);
 
-  interface CartItems {
-    userId: string;
-    productId: FetchProduct;
-    quantity: number;
-  }
+  
   const [cartItems, setCartItems] = useState<CartItems[]>([]);
 
   useEffect(() => {
@@ -34,7 +52,7 @@ const AddToCart = () => {
       try {
         const response = await getCartItems();
         setCartItems(response.data.data);
-        console.log(response);
+        console.log('cart items',response);
       } catch (error) {
         console.log(error);
       }
@@ -44,49 +62,72 @@ const AddToCart = () => {
 
   return (
     <div className="grid gap-4 grid-cols-12">
-      <div className="col-span-8 flex flex-col gap-1">
-        {cartItems.map((item, i) => (
-          <div key={i} className="flex flex-col gap-1 py-1 ">
-            <div className="flex gap-4 hover:bg-gray-50 py-3 px-2 rounded ">
-              <Checkbox
-                onCheckedChange={() => handleCheckbox(item.productId)}
-              />
-              <div className="grid grid-cols-12 gap-3 w-full">
-                <div className="col-span-2">
-                  <img
-                    src={`http://localhost:5100/${item.productId.images[0]}`}
-                    className="w-[80px] h-[80px] object-contain"
-                    alt="404 product"
-                  />
-                </div>
-                <div className="col-span-6">
-                  <p
-                    className="text-md capitalize hover:cursor-pointer font-semibold"
-                    onClick={() => {
-                      navigate(`/productDetails/${item.productId._id}`);
-                    }}
-                  >
-                    {item.productId.name}
-                  </p>
-                </div>
-                <div className="col-span-2">
-                  <p className="text-lg font-semibold text-[#f85606]">
-                    RS.{item.productId.price}
-                  </p>
-                </div>
-                <div className="col-span-2">
-                  <p className="text-md font-semibold">
-                    <span className="text-gray-500">Qty: </span>
-                    {item.productId.quantity}
-                  </p>
+      <div className="col-span-7 flex flex-col gap-1">
+        {cartItems.length >= 1 ? (
+          cartItems.map((item, i) => (
+            <div key={i} className="flex flex-col gap-1 -ml-[50px] py-1 ">
+              <div className={`flex gap-4 hover:bg-gray-50 pb-3 px-2 rounded ${i === 0?"":"mt-2"} `}>
+                <Checkbox
+                  onCheckedChange={() => handleCheckbox(item)}
+                />
+                <div className="grid grid-cols-12 gap-3 w-full">
+                  <div className="col-span-2 rounded-sm">
+                    <img
+                      src={`http://localhost:5100/${item.productId.images[0]}`}
+                      className="w-full h-full rounded-sm object-contain"
+                      alt="404 product"
+                    />
+                  </div>
+                  <div className="col-span-6">
+                    <p
+                      className="text-md capitalize hover:cursor-pointer font-semibold break-words line-clamp-2"
+                      onClick={() => {
+                        navigate(`/productDetails/${item.productId._id}`);
+                      }}
+                    >
+                      {item.productId.name}
+                    </p>
+                    <div className="flex gap-3">
+                      <p className="font-semibold flex gap-1 items-center text-sm mt-[10px]">
+                        Color:{" "}
+                        <span
+                          style={{
+                            backgroundColor: item.selectedColor,
+                            height: "13px",
+                            width: "13px",
+                            display: "flex",
+                            borderRadius: "50%",
+                          }}
+                        ></span>
+                      </p>
+                      <p className=" font-semibold flex gap-1 items-center text-sm mt-[10px]">
+                        Size:{" " } <Badge>{item.selectedSize + " "}cm</Badge>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-lg font-semibold text-[#f85606]">
+                      RS.{item.productId.price}
+                    </p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-md font-semibold">
+                      <span className="text-gray-500">Qty: </span>
+                      {item.quantity}
+                    </p>
+                  </div>
                 </div>
               </div>
+              <hr className="opacity-30" />
             </div>
-            <hr className="opacity-30" />
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="flex justify-center items-center">
+            No Items in Cart Yet
+          </p>
+        )}
       </div>
-      <div className="col-span-4">
+      <div className="col-span-5">
         <Card>
           <h3 className="text-center font-semibold font-xl px-3 py-4 bg-gray-100 border-b">
             Cart
@@ -100,7 +141,7 @@ const AddToCart = () => {
               <p>
                 Rs.{" "}
                 {selectedItems
-                  .reduce((total, item) => total + item.price, 0)
+                  .reduce((total, item) => total + item.productId.price, 0)
                   .toFixed(2)}
               </p>
             </div>
@@ -110,7 +151,7 @@ const AddToCart = () => {
                 <p>
                   Rs.{" "}
                   {selectedItems
-                    .reduce((total, item) => total + item.price, 0)
+                    .reduce((total, item) => total + item.productId.price, 0)
                     .toFixed(2)}
                 </p>
               }

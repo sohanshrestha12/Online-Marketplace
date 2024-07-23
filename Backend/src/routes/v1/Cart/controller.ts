@@ -26,6 +26,7 @@ const CartController = {
     try {
       const userId = res.locals.user._id;
       const body = req.body;
+      console.log(body)
       const result = await CartService.addToCart(userId, body);
       return successResponse({
         response: res,

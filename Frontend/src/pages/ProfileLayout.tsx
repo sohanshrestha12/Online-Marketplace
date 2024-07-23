@@ -46,6 +46,17 @@ const ProfileLayout = () => {
                 Favourite products
               </li>
             </Link>
+            <Link to={"/profile/cart"}>
+              <li
+                className={`px-3 py-2 hover:bg-slate-100 hover:border-l-2 hover:font-semibold hover:border-orange-500 transition-all ease ${
+                  location.pathname === "/profile/cart"
+                    ? "bg-slate-100 font-semibold border-l-2 border-orange-500"
+                    : ""
+                }`}
+              >
+                My Cart
+              </li>
+            </Link>
           </ul>
         </div>
         <div className="col-span-9">

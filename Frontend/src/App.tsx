@@ -51,12 +51,8 @@ const router = createBrowserRouter([
         element: <ProductLists />,
       },
       {
-        path: "AddToCart",
-        element: <AddToCart />,
-      },
-      {
-        path:"EmailVerification",
-        element:<EmailVerification/>
+        path: "EmailVerification",
+        element: <EmailVerification />,
       },
       {
         path: "profile",
@@ -69,6 +65,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Profile />,
+          },
+          {
+            path: "cart",
+            element: <AddToCart />,
           },
           {
             path: "myOrders",
@@ -91,7 +91,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        index:true,
+        index: true,
         element: <Dashboard />,
       },
       {
@@ -100,7 +100,7 @@ const router = createBrowserRouter([
       },
       {
         path: "myProduct",
-        element: <MyProduct/>,
+        element: <MyProduct />,
       },
     ],
   },

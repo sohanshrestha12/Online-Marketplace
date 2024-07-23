@@ -8,9 +8,9 @@ export const getCartProducts = async (userId: string): Promise<Cart[]> => {
 };
 
 export const addToCart = async (uid: string, body: CartType): Promise<Cart> => {
-  const { quantity, productId } = body;
+  const { quantity, productId,selectedSize,selectedColor } = body;
 
-  const cartItem = await CartModel.findOne({ userId:uid, productId });
+  const cartItem = await CartModel.findOne({ userId:uid, productId, selectedColor,selectedSize });
   const product = await getProductById(productId);
   if(!product) throw new CustomError("No available product",400);
   if (product) {
@@ -22,7 +22,7 @@ export const addToCart = async (uid: string, body: CartType): Promise<Cart> => {
     await removeQuantity(productId,quantity);
     return cartItem.save();
   } else {
-    const newCartItem = new CartModel({ userId:uid, productId, quantity });
+    const newCartItem = new CartModel({ userId:uid, productId, quantity,selectedColor,selectedSize });
     await removeQuantity(productId,quantity);
     return newCartItem.save();
   }

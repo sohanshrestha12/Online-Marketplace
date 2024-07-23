@@ -4,6 +4,8 @@ export interface Cart {
   userId?: Types.ObjectId,
   productId:Types.ObjectId,
   quantity: number
+  selectedColor:string,
+  selectedSize:number,
 }
 
 const CartSchema = new mongoose.Schema<Cart>(
@@ -26,6 +28,16 @@ const CartSchema = new mongoose.Schema<Cart>(
         unique:false,
         default:1,
     },
+    selectedColor:{
+      type:String,
+      required:true,
+      unique:false
+    },
+    selectedSize:{
+      type:Number,
+      required:true,
+      unique:false
+    }
   },
   {
     timestamps: true,

@@ -114,8 +114,8 @@ const Navbar = () => {
           </div>
         </div>
         <div className="flex items-center relative  gap-4 mr-5">
-          <ToolTip name={"Add to cart"}>
-            <Link to={"/AddToCart"}>
+          <ToolTip name={"My Cart"}>
+            <Link to={"/profile/cart"}>
               <LuShoppingCart className="text-xl hover:cursor-pointer" />
             </Link>
           </ToolTip>
