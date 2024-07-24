@@ -4,21 +4,19 @@ import { getProductById } from "@/api/Product";
 import { useAuth } from "@/components/Auth/ProtectedRoutes";
 import BuyNowDialog from "@/components/BuyNowDialog";
 import Comment from "@/components/Comment";
+import PersonalChat from "@/components/PersonalChat";
 import ProductCarousel from "@/components/ProductCarousel";
 import ProductDescription from "@/components/ProductDescription";
 import RatingStars from "@/components/RatingsStar";
-import ToolTip from "@/components/ToolTip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useProduct } from "@/contexts/ProductContext";
 import { useSocket } from "@/contexts/SocketContext";
 import { Profile } from "@/Types/User";
 import axios from "axios";
-import { Field, Form, Formik, FormikHelpers, FormikValues } from "formik";
 import React, { useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import { IoMdHeart } from "react-icons/io";
-import { IoClose, IoSend } from "react-icons/io5";
 import ReactImageMagnify from "react-image-magnify";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -68,9 +66,8 @@ const ProductDetails = () => {
   const [images, setImages] = useState<string[][]>([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [privateMessage, setPrivateMessage] = useState<string[]>([]);
   const [roomId, setRoomId] = useState<string>("");
-  const { showChat, toggleChat } = useProduct();
+  const { showChat, toggleChat,handleMessageSubmit } = useProduct();
   const [isBuyNowDialogOpen, setBuyNowDialogOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState<number>(-1);
   const [selectedSize, setSelectedSize] = useState<number>(-1);
@@ -94,6 +91,7 @@ const ProductDetails = () => {
   const handleSelectSize = (index: number) => {
     setSelectedSize(index);
   };
+
   useEffect(() => {
     if (socket) {
       if (activeProduct && activeProduct.createdBy && user) {
@@ -101,20 +99,17 @@ const ProductDetails = () => {
           setRoomId(
             `${activeProduct._id}-${activeProduct.createdBy._id}-${user._id}`
           );
-          socket.emit("joinPrivateRoom", roomId);
+          if(roomId){
+            socket.emit("joinPrivateRoom", roomId);
+          }
         }
       }
-      socket.on("receivedMessage", (message) => {
-        console.log("listening on the new message", message);
-        setPrivateMessage((prevMessages) => [...prevMessages, message]);
-      });
-
+    
       return () => {
         socket.off("joinPrivateRoom");
-        socket.off("receivedMessage");
       };
     }
-  }, [activeProduct, activeProduct?._id, user, socket]);
+  }, [activeProduct, activeProduct?._id, user, socket,roomId]);
   useEffect(() => {
     if (!activeProduct) return;
     if (activeProduct.rating && activeProduct.rating.length > 0) {
@@ -129,27 +124,8 @@ const ProductDetails = () => {
     }
   }, [activeProduct, activeProduct && activeProduct.rating, user]);
 
-  useEffect(() => {
-    console.log("private Message", privateMessage);
-  }, [privateMessage]);
 
-  const initialValue: FormikValues = {
-    message: "",
-  };
 
-  const handleMessageSubmit = (
-    values: FormikValues,
-    { resetForm }: FormikHelpers<FormikValues>
-  ) => {
-    if (user && socket) {
-      socket.emit("sendMessage", {
-        roomId: roomId,
-        senderId: user?._id,
-        message: values.message,
-      });
-    }
-    resetForm();
-  };
 
   useEffect(() => {
     const checkLikedStatus = async () => {
@@ -521,48 +497,50 @@ const ProductDetails = () => {
           <Comment product={activeProduct} updateRating={updateRating} />
         </div>
       )}
-      {showChat && (
-        <div className="h-[450px] w-[380px] flex flex-col fixed bottom-0 right-10 shadow z-10 bg-white">
-          <div className="p-3 flex gap-2 items-center  justify-between bg-blue-600 rounded">
-            <div className="flex gap-3 items-center">
-              <img
-                src={`http://localhost:5100/${activeProduct?.createdBy?.profileImage}`}
-                className="rounded-full object-contain h-[40px] w-[40px]"
-                alt="404 profile not found"
-              />
-              <h5 className="text-lg font-semibold capitalize text-white">
-                {activeProduct?.createdBy?.username}
-              </h5>
-            </div>
-            <div
-              className="p-2 hover:cursor-pointer group"
-              onClick={toggleChat}
-            >
-              <IoClose className="text-white text-xl -mt-6 -mr-3 transition-all group-hover:!text-gray-200" />
-            </div>
-          </div>
-          <div className="flex-1 h-full">Content</div>
-          <div className="h-fit mb-2 flex items-center bg-gray-100 text-black">
-            <Formik initialValues={initialValue} onSubmit={handleMessageSubmit}>
-              <Form className="relative w-full">
-                <Field
-                  className="focus-visible:outline-none focus-visible:ring-offset-transparent focus-visible:ring-none focus:border-none focus-visible:ring-offset-0 focus-visible:box-shadow-none focus-visible:border-none "
-                  placeholder="Enter your message"
-                  name="message"
-                  as={Input}
-                />
-                <div className="absolute flex items-center top-[50%] transform -translate-y-[50%] right-3">
-                  <button type="submit" className="p-0 m-0 flex items-center">
-                    <ToolTip name="Send">
-                      <IoSend className="text-lg" />
-                    </ToolTip>
-                  </button>
-                </div>
-              </Form>
-            </Formik>
-          </div>
-        </div>
-      )}
+      {showChat && <PersonalChat activeProduct={activeProduct!} toggleChat={toggleChat} socket={socket!} roomId={roomId} user={user!} handleMessageSubmit={handleMessageSubmit}/>
+      //  (
+      //   <div className="h-[450px] w-[380px] rounded-t-md flex flex-col fixed bottom-0 right-10 shadow z-10 bg-white" >
+      //     <div className="p-3 flex gap-2 items-center  justify-between bg-blue-600 rounded">
+      //       <div className="flex gap-3 items-center">
+      //         <img
+      //           src={`http://localhost:5100/${activeProduct?.createdBy?.profileImage}`}
+      //           className="rounded-full object-contain h-[40px] w-[40px]"
+      //           alt="404 profile not found"
+      //         />
+      //         <h5 className="text-lg font-semibold capitalize text-white">
+      //           {activeProduct?.createdBy?.username}
+      //         </h5>
+      //       </div>
+      //       <div
+      //         className="p-2 hover:cursor-pointer group"
+      //         onClick={toggleChat}
+      //       >
+      //         <IoClose className="text-white text-xl -mt-6 -mr-3 transition-all group-hover:!text-gray-200" />
+      //       </div>
+      //     </div>
+      //     <div className="flex-1 h-full">Content</div>
+      //     <div className="h-fit mb-2 flex items-center bg-gray-100 text-black">
+      //       <Formik initialValues={initialValue} onSubmit={handleMessageSubmit}>
+      //         <Form className="relative w-full">
+      //           <Field
+      //             className="focus-visible:outline-none focus-visible:ring-offset-transparent focus-visible:ring-none focus:border-none focus-visible:ring-offset-0 focus-visible:box-shadow-none focus-visible:border-none "
+      //             placeholder="Enter your message"
+      //             name="message"
+      //             as={Input}
+      //           />
+      //           <div className="absolute flex items-center top-[50%] transform -translate-y-[50%] right-3">
+      //             <button type="submit" className="p-0 m-0 flex items-center">
+      //               <ToolTip name="Send">
+      //                 <IoSend className="text-lg" />
+      //               </ToolTip>
+      //             </button>
+      //           </div>
+      //         </Form>
+      //       </Formik>
+      //     </div>
+      //   </div>
+      // )
+      }
       <BuyNowDialog
         activeProduct={activeProduct}
         isOpen={isBuyNowDialogOpen}

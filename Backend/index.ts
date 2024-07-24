@@ -79,14 +79,17 @@ import { verifyJwt } from "./src/utils/Jwt";
       socket.join(sellerId);
     })
 
-    socket.on("sendMessage", ({ roomId, senderId, message }) => {
-      console.log('received msg',message);
-      io.to(roomId).emit("receivedMessage", message);
+    socket.on("sendMessage", ({ roomId, senderId, message,senderDetails }) => {
+      io.to(roomId).emit("receivedMessage", {message,senderDetails});
+      console.log(`Emitting message to room ${roomId}`, {
+        message,
+        senderDetails,
+      });
 
-      //send notification to seller
-      const [sellerId] = roomId.split('-').slice(1,2);
-      console.log(sellerId);
-      socket.to(sellerId).emit('messageNotification',{senderId,message});
+      const[productId,sellerId] = roomId.split("-")
+      if(sellerId !== senderId){
+        socket.to(sellerId).emit('messageNotification',{senderId,message,senderDetails,productId});
+      }
     });
 
     socket.on("disconnect", () => {

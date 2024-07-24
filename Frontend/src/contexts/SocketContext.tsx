@@ -1,4 +1,3 @@
-import { useAuth } from "@/components/Auth/ProtectedRoutes";
 import Cookies from "js-cookie";
 import {
   createContext,
@@ -21,7 +20,6 @@ const SocketContext = createContext<ProductContextValue>({
 
 export const SocketProvider = ({ children }: SocketProviderProps) => {
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
-  const {user} = useAuth();
   useEffect(() => {
     const accessToken = Cookies.get("accessToken");
     if (accessToken) {
@@ -47,7 +45,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     return () => {
       socket?.disconnect();
     };
-  }, [user]);
+  }, []);
   return (
     <SocketContext.Provider value={{ socket }}>
       {children}

@@ -1,5 +1,7 @@
 import { getAllProducts } from "@/api/Product";
 import { FetchFilterProduct, FetchProduct } from "@/pages/ProductDetails";
+import { User } from "@/Types/Auth";
+import { FormikHelpers, FormikValues } from "formik";
 import {
   ReactNode,
   createContext,
@@ -7,6 +9,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { Socket } from "socket.io-client";
 
 interface ProductContextValue {
   products: FetchProduct[];
@@ -25,6 +28,13 @@ interface ProductContextValue {
   ) => void;
   toggleChat: () => void;
   showChat: boolean;
+  handleMessageSubmit:(
+    values: FormikValues,
+    helpers: FormikHelpers<FormikValues>,
+    socket:Socket,
+    user:User,
+    roomId:string,
+  ) => void;
 }
 interface ProductProviderProps {
   children: ReactNode;
@@ -37,14 +47,16 @@ const ProductContext = createContext<ProductContextValue>({
   dashboardProducts: undefined,
   deleteProductState: () => {},
   deleteMultipleProductState: () => {},
-  updateProductState:()=>{},
-  toggleChat:()=>{},
-  showChat:false,
+  updateProductState: () => {},
+  toggleChat: () => {},
+  showChat: false,
+  handleMessageSubmit:()=>{},
 });
 
 export const ProductProvider = ({ children }: ProductProviderProps) => {
   const [products, setProducts] = useState<FetchProduct[]>([]);
   const [showChat, setShowChat] = useState<boolean>(false);
+
   const [dashboardProducts, setDashboardProducts] = useState<
   FetchFilterProduct | undefined
   >(undefined);
@@ -55,6 +67,27 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   const toggleChat = () => {
     setShowChat(!showChat);
   };
+  
+
+    const handleMessageSubmit = (
+      values: FormikValues,
+      { resetForm }: FormikHelpers<FormikValues>,
+      socket:Socket,
+      user:User,
+      roomId:string
+
+    ) => {
+      if (user && socket) {
+        socket.emit("sendMessage", {
+          roomId: roomId,
+          senderId: user?._id,
+          message: values.message,
+          senderDetails: user,
+        });
+        console.log('sending the message: ',roomId,values.message);
+      }
+      resetForm();
+    };
 
   const addProduct = (product: FetchProduct) => {
     setProducts((prevProduct) => [product, ...prevProduct]);
@@ -139,6 +172,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
         updateProductState,
         toggleChat,
         showChat,
+        handleMessageSubmit
       }}
     >
       {children}

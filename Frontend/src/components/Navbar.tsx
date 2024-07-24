@@ -9,20 +9,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { useSocket } from "@/contexts/SocketContext";
+import { User } from "@/Types/Auth";
 import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import { LuShoppingCart } from "react-icons/lu";
-import {
-  MdOutlineFavoriteBorder,
-  MdOutlineNotificationsNone,
-} from "react-icons/md";
+import { LuMessageCircle, LuShoppingCart } from "react-icons/lu";
+import { MdOutlineFavoriteBorder } from "react-icons/md";
 import { RiSearchLine } from "react-icons/ri";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "./Auth/ProtectedRoutes";
+import PersonalChat from "./PersonalChat";
 import { ModeToggle } from "./ThemeToggle";
 import ToolTip from "./ToolTip";
+import { useProduct } from "@/contexts/ProductContext";
 
 const initialValues = {
   search: "",
@@ -33,11 +33,18 @@ const Navbar = () => {
   const auth = useAuth();
   const { user } = useAuth();
   const { socket } = useSocket();
-  const[showNotification,setShowNotification] = useState<boolean>(false);
-
+  const [showNotification, setShowNotification] = useState<boolean>(false);
+  const [activeUser, setActiveUser] = useState<User>();
+  const { showChat, toggleChat, handleMessageSubmit } = useProduct();
+  const [roomId, setRoomId] = useState<string>("");
 
   const [notifications, setNotifications] = useState<
-    { senderId: string; message: string }[]
+    {
+      senderId: string;
+      message: string;
+      senderDetails: User;
+      productId: string;
+    }[]
   >([]);
   useEffect(() => {
     if (user?.role === "SELLER") {
@@ -77,8 +84,14 @@ const Navbar = () => {
       console.log(error);
     }
   };
-  const handleNotificationClick=()=>{
-
+  const handleMessageClick = (senderDetails: User, productId: string) => {
+    setActiveUser(senderDetails);
+    toggleChat();
+    if (socket) {
+      const sellerRoomId = `${productId}-${user?._id}-${senderDetails._id}`;
+      setRoomId(sellerRoomId);
+      socket.emit("joinPrivateRoom", sellerRoomId);
+    }
   };
 
   return (
@@ -125,23 +138,45 @@ const Navbar = () => {
             </Link>
           </ToolTip>
           {user?.role === "SELLER" && (
-            <ToolTip name={"Notifications"} >
-              <MdOutlineNotificationsNone onClick={()=>{setShowNotification(!showNotification)}} className="text-xl hover:cursor-pointer font-semibold" />
+            <ToolTip name={"Messages"}>
+              <LuMessageCircle
+                onClick={() => {
+                  setShowNotification(!showNotification);
+                }}
+                className="text-xl hover:cursor-pointer font-semibold"
+              />
             </ToolTip>
           )}
-          {showNotification && 
+          {showNotification && (
             <div className="h-[400px] py-2 px-3 absolute top-9 z-20 -right-30 w-[350px] bg-white shadow">
-              <h3 className="text-xl font-semibold">Notifications</h3>
+              <h3 className="text-xl font-semibold">Messages</h3>
               <div>
-                {notifications.map((n,i)=>(
-                  <div key={i} onClick={handleNotificationClick} className="border-b-2 hover:cursor-pointer mb-2">
-                    <p>{n.senderId}</p>
-                    <p>{n.message}</p>
+                {notifications.map((n, i) => (
+                  <div
+                    key={i}
+                    className="border-b-2 hover:cursor-pointer mb-2 gap-3 items-center flex"
+                    onClick={() =>
+                      handleMessageClick(n.senderDetails, n.productId)
+                    }
+                  >
+                    <div className="rounded-full mt-2">
+                      <img
+                        className="h-[30px] w-[30px] rounded-full"
+                        src={`http://localhost:5100/${n.senderDetails.profileImage}`}
+                        alt=""
+                      />
+                    </div>
+                    <div>
+                      <p className="font-semibold">
+                        {n.senderDetails.username}
+                      </p>
+                      <p>{n.message}</p>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-          }
+          )}
         </div>
         <div>
           {user ? (
@@ -176,7 +211,6 @@ const Navbar = () => {
                     </DropdownMenuItem>
                   </Link>
                 )}
-                <DropdownMenuItem>Team</DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={handleLogout}
                   className="hover:cursor-pointer"
@@ -230,6 +264,17 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="h-[1px] w-full bg-slate-300 opacity-50 mb-3"></div>
+
+      {showChat && (
+        <PersonalChat
+          activeUser={activeUser}
+          handleMessageSubmit={handleMessageSubmit}
+          socket={socket!}
+          user={user!}
+          roomId={roomId}
+          toggleChat={toggleChat}
+        />
+      )}
     </nav>
   );
 };
