@@ -40,11 +40,11 @@ const Comment = ({ product, updateRating }: CommentProps) => {
   const [commentValue, setCommentValue] = useState<string>("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [averageRating, setAverageRating] = useState<number>(0);
-  const {socket}= useSocket();
+  const { socket } = useSocket();
 
   useEffect(() => {
     if (socket) {
-      console.log('send the comment')
+      console.log("send the comment");
       socket.emit("joinProduct", product._id);
       socket.on(
         "newComment",
@@ -58,15 +58,15 @@ const Comment = ({ product, updateRating }: CommentProps) => {
           setComments((prevComment) => [commentData, ...prevComment]);
         }
       );
-      return ()=>{
-        socket.off('newComment');
-      }
+      return () => {
+        socket.off("newComment");
+      };
     }
-  }, [product._id,socket]);
+  }, [product._id, socket]);
 
-  useEffect(()=>{
-    console.log('This is comment value',comments);
-  },[comments]);
+  useEffect(() => {
+    console.log("This is comment value", comments);
+  }, [comments]);
   useEffect(() => {
     if (product.rating && product.rating.length > 0) {
       const totalRating = product.rating.reduce((sum, r) => sum + r.rating, 0);
@@ -107,16 +107,16 @@ const Comment = ({ product, updateRating }: CommentProps) => {
         <h6 className="font-semibold border-b-[1px] -mx-4 mb-2 -my-4 p-3 bg-gray-100">
           Ratings and Reviews
         </h6>
-        <div className="flex py-3 h-fit gap-3 border-b-[1px] mb-3">
-          <div>
-            <h6 className="mb-2">All ratings</h6>
-            <p className="text-2xl font-semibold">
-              {averageRating ? averageRating.toFixed(1) : "No ratings yet"}
-            </p>
+          <div className="flex py-3 h-fit items-center gap-3 border-b-[1px] mb-3">
+            <div className="self-start mr-5">
+              <h6 className="mb-2 font-semibold mt-1">All ratings</h6>
+              <p className="text-2xl text-center font-semibold">
+                {averageRating ? averageRating.toFixed(1) : "No ratings yet"}
+              </p>
+            </div>
+            <RatingBars product={product} />
+            <Ratings product={product} updateRating={updateRating} />
           </div>
-          <RatingBars product={product} />
-          <Ratings product={product} updateRating={updateRating} />
-        </div>
       </div>
       <p>
         Tell us about your experience or queries.
@@ -171,9 +171,18 @@ const Comment = ({ product, updateRating }: CommentProps) => {
                     />
                   </div>
                   <div>
-                    <p className="capitalize text-sm font-semibold">
+                    <p className="capitalize flex gap-2 items-center text-sm font-semibold">
                       {item.user}
-                      {product.rating?.some((r) => r.user === item.userId)?<RatingStars rating={product.rating.find(r=>r.user === item.userId)?.rating ?? 0} />:0}
+                      {product.rating?.some((r) => r.user === item.userId) ? (
+                        <RatingStars
+                          rating={
+                            product.rating.find((r) => r.user === item.userId)
+                              ?.rating ?? 0
+                          }
+                        />
+                      ) : (
+                        0
+                      )}
                     </p>
                     <p className="break-all break-words ml-2 px-2  line-clamp-2">
                       {item.comment}

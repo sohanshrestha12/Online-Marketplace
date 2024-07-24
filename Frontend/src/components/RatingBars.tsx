@@ -10,7 +10,7 @@ const RatingBars = ({ product }: RatingsBarProps) => {
   if (!ratingCounts) return;
   const maxCount = Math.max(...ratingCounts);
   return (
-    <div className="w-[300px]">
+    <div className="w-[350px] border-r-2 pr-10">
       <h2 className="text-xl font-semibold mb-4">Rating Distribution</h2>
       <div className="space-y-2">
         {[5, 4, 3, 2, 1].map((star, index) => (

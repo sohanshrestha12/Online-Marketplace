@@ -41,7 +41,7 @@ const Ratings = ({ product,updateRating }: RatingProps) => {
   };
 
   return (
-    <div>
+    <div className="ml-5">
       <p className="mb-2">
         Your Rating:{" "}
         {currentRating
