@@ -6,6 +6,8 @@ import { FetchProduct } from "@/pages/ProductDetails";
 import { User } from "@/Types/Auth";
 import { Socket } from "socket.io-client";
 import { useEffect, useRef, useState } from "react";
+import { fetchPrivateMessages } from "@/api/Message";
+import { FetchPrivateInterface } from "@/Types/Message";
 
 interface PersonalChatProps {
   activeProduct?: FetchProduct;
@@ -61,6 +63,23 @@ const PersonalChat = ({
        console.log("Cleanup function called");
      };
   }, [socket]);
+
+  useEffect(()=>{
+    const fetchMessages = async() =>{
+      try {
+        const response = await fetchPrivateMessages(roomId);
+        const formatResponse = response.data.data.map((item:FetchPrivateInterface)=>({
+          message:item.message,
+          senderDetails:item.senderId
+        }))
+        setPrivateMessage(formatResponse);
+        console.log('This is private Messages',response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchMessages();
+  },[roomId])
 
   return (
     <div className="h-[450px] w-[380px] rounded-t-md flex flex-col fixed bottom-0 right-10 shadow z-10 bg-white">

@@ -1,3 +1,4 @@
+import { createMessage } from "@/api/Message";
 import { getAllProducts } from "@/api/Product";
 import { FetchFilterProduct, FetchProduct } from "@/pages/ProductDetails";
 import { User } from "@/Types/Auth";
@@ -28,12 +29,12 @@ interface ProductContextValue {
   ) => void;
   toggleChat: () => void;
   showChat: boolean;
-  handleMessageSubmit:(
+  handleMessageSubmit: (
     values: FormikValues,
     helpers: FormikHelpers<FormikValues>,
-    socket:Socket,
-    user:User,
-    roomId:string,
+    socket: Socket,
+    user: User,
+    roomId: string
   ) => void;
 }
 interface ProductProviderProps {
@@ -50,7 +51,7 @@ const ProductContext = createContext<ProductContextValue>({
   updateProductState: () => {},
   toggleChat: () => {},
   showChat: false,
-  handleMessageSubmit:()=>{},
+  handleMessageSubmit: () => {},
 });
 
 export const ProductProvider = ({ children }: ProductProviderProps) => {
@@ -58,36 +59,40 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   const [showChat, setShowChat] = useState<boolean>(false);
 
   const [dashboardProducts, setDashboardProducts] = useState<
-  FetchFilterProduct | undefined
+    FetchFilterProduct | undefined
   >(undefined);
-  useEffect(()=>{
-    console.log("This is the changing dashboard product",dashboardProducts);
-  },[dashboardProducts]);
+  useEffect(() => {
+    console.log("This is the changing dashboard product", dashboardProducts);
+  }, [dashboardProducts]);
 
   const toggleChat = () => {
     setShowChat(!showChat);
   };
-  
 
-    const handleMessageSubmit = (
-      values: FormikValues,
-      { resetForm }: FormikHelpers<FormikValues>,
-      socket:Socket,
-      user:User,
-      roomId:string
-
-    ) => {
-      if (user && socket) {
+  const handleMessageSubmit = async(
+    values: FormikValues,
+    { resetForm }: FormikHelpers<FormikValues>,
+    socket: Socket,
+    user: User,
+    roomId: string
+  ) => {
+    if (user && socket) {
+      try {
+        const response = await createMessage({roomId,senderId:user._id,message:values.message});
+        console.log(response);
         socket.emit("sendMessage", {
           roomId: roomId,
           senderId: user?._id,
           message: values.message,
           senderDetails: user,
         });
-        console.log('sending the message: ',roomId,values.message);
+      } catch (error) {
+        console.log(error);
       }
-      resetForm();
-    };
+      console.log("sending the message: ", roomId, values.message);
+    }
+    resetForm();
+  };
 
   const addProduct = (product: FetchProduct) => {
     setProducts((prevProduct) => [product, ...prevProduct]);
@@ -107,20 +112,25 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
     });
   };
 
-  const updateProductState = (updatedProduct:FetchProduct,fullCategory:string) =>{
-    if(!dashboardProducts) return;
+  const updateProductState = (
+    updatedProduct: FetchProduct,
+    fullCategory: string
+  ) => {
+    if (!dashboardProducts) return;
     updatedProduct.category = fullCategory;
-     const updatedProducts = dashboardProducts.product.map((product) =>
-       product._id === updatedProduct._id ? updatedProduct : product
-     );
-     
-     setDashboardProducts({ ...dashboardProducts, product: updatedProducts });
-  }
+    const updatedProducts = dashboardProducts.product.map((product) =>
+      product._id === updatedProduct._id ? updatedProduct : product
+    );
+
+    setDashboardProducts({ ...dashboardProducts, product: updatedProducts });
+  };
 
   const deleteMultipleProductState = (products: FetchProduct[]) => {
     setDashboardProducts((prevState) => {
       if (!prevState || !prevState.product) return prevState;
-      const productIdsToDelete = products.map(product => product._id).filter(id => id !== undefined) as string[];
+      const productIdsToDelete = products
+        .map((product) => product._id)
+        .filter((id) => id !== undefined) as string[];
       const updatedProducts = prevState.product.filter((product) => {
         return (
           product._id !== undefined && !productIdsToDelete.includes(product._id)
@@ -137,10 +147,18 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
       };
     });
   };
-  const fetchDashboardProducts = async (userId: string, page?: number,category?:string) => {
+  const fetchDashboardProducts = async (
+    userId: string,
+    page?: number,
+    category?: string
+  ) => {
     try {
       setDashboardProducts(undefined);
-      const response = await getAllProducts({ createdBy: userId, page: page,category:category });
+      const response = await getAllProducts({
+        createdBy: userId,
+        page: page,
+        category: category,
+      });
       console.log("dashboard products", response);
       setDashboardProducts(response.data.data);
     } catch (error) {
@@ -172,7 +190,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
         updateProductState,
         toggleChat,
         showChat,
-        handleMessageSubmit
+        handleMessageSubmit,
       }}
     >
       {children}
