@@ -57,3 +57,11 @@ export const profileUpdate=async(body:UserProfile,userId:string):Promise<UserDoc
   user.phNumber = body.phNumber?body.phNumber:"";
   return user.save();
 };
+
+export const saveResetPassword = async (user: UserDocument) => {
+  return UserModel.findByIdAndUpdate(
+    user._id,
+    { password: user.password },
+    { new: true }
+  );
+};

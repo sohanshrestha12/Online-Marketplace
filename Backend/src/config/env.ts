@@ -11,4 +11,5 @@ export default {
   authPassword: process.env.OTP_AUTH_PASSWORD,
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
+  forgetPasswordSecret: process.env.FORGET_PASSWORD_TOKEN || "forgetPassword",
 };

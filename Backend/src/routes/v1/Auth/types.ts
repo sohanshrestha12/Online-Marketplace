@@ -11,3 +11,9 @@ export interface CookieOptions {
     httpOnly?: boolean;    
     sameSite?: "Strict" | "Lax" | "None";
 }
+export interface ForgetPassword {
+  email: string;
+}
+export interface ResetTokenPayload {
+  userId: string;
+}

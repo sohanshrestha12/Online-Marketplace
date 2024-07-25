@@ -21,3 +21,15 @@ export const logout = () => {
 export const verifyUser = (id: string, code: string) => {
   return MarketUrl.post(`/users/verifyOtp/${id}/${code}`);
 };
+
+
+export const forgetPassword = async (value: { email: string }) => {
+  return await MarketUrl.post("/auth/forgetPassword", value);
+};
+
+export const resetPassword = async (
+  value: { password: string; confirmPassword: string },
+  token: string
+) => {
+  return await MarketUrl.post(`/auth/reset-password/${token}`, value);
+};

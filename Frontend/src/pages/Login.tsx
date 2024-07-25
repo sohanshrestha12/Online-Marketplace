@@ -68,7 +68,9 @@ const Login = () => {
             <Card className="w-[450px] px-5 py-3">
               <div className="flex flex-col h-full">
                 <div className="flex flex-col items-center">
-                  <h2 className="text-lg text-black font-semibold">GrandBazaar</h2>
+                  <h2 className="text-lg text-black font-semibold">
+                    GrandBazaar
+                  </h2>
                   <h3 className="text-sm text-black">
                     Welcome to GrandBazaar! Please login.
                   </h3>
@@ -110,7 +112,9 @@ const Login = () => {
                       Sign Up
                     </Link>
                   </p>
-                  <p className="text-blue-500">Forgot your password?</p>
+                  <Link to={"/forgotPassword"}>
+                    <p className="text-blue-500">Forgot your password?</p>
+                  </Link>
                 </div>
               </div>
             </Card>

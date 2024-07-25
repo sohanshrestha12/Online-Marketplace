@@ -48,8 +48,8 @@ const Ratings = ({ product,updateRating }: RatingProps) => {
           ? currentRating + " out of 5"
           : "You haven't rated this product yet"}{" "}
       </p>
-
-      <ReactStars
+     {user ?
+     ( <ReactStars
         key={currentRating}
         count={5}
         isHalf={true}
@@ -62,7 +62,8 @@ const Ratings = ({ product,updateRating }: RatingProps) => {
           <FaStarHalfAlt style={{ fontSize: "50px", color: "#ffd700" }} />
         }
         filledIcon={<FaStar style={{ fontSize: "50px", color: "#ffd700" }} />}
-      />
+      />):(<p>Please Login to rate the product</p>)
+     }
     </div>
   );
 };

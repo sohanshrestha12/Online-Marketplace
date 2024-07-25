@@ -2,11 +2,13 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
 import RequireAuth from "./components/Auth/RequireAuth";
 import RequireSeller from "./components/Auth/RequireSeller";
-import Seller from "./pages/Seller";
+import Favourites from "./components/Favourites";
 import AddProduct from "./pages/AddProduct";
 import AddToCart from "./pages/AddToCart";
+import Dashboard from "./pages/Dashboard";
 import EmailVerification from "./pages/EmailVerification";
 import Error from "./pages/Error";
+import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import MyOrder from "./pages/MyOrder";
@@ -15,10 +17,11 @@ import ProductDetails from "./pages/ProductDetails";
 import ProductLists from "./pages/ProductLists";
 import Profile from "./pages/Profile";
 import ProfileLayout from "./pages/ProfileLayout";
+import Seller from "./pages/Seller";
 import SellerDashboardLayout from "./pages/SellerDashboardLayout";
 import SignUp from "./pages/SignUp";
-import Dashboard from "./pages/Dashboard";
-import Favourites from "./components/Favourites";
+import ResetPassword from "./pages/ResetPassword";
+import ReturnBack from "./pages/ReturnBack";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +44,18 @@ const router = createBrowserRouter([
       {
         path: "signUp",
         element: <SignUp />,
+      },
+      {
+        path:"forgotPassword",
+        element:<ForgotPassword />
+      },
+      {
+        path:"reset_password/:token",
+        element:<ResetPassword/>
+      },
+      {
+        path:"returnBack",
+        element:<ReturnBack/>
       },
       {
         path: "productDetails/:id",
