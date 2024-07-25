@@ -23,6 +23,8 @@ import PersonalChat from "./PersonalChat";
 import { ModeToggle } from "./ThemeToggle";
 import ToolTip from "./ToolTip";
 import { useProduct } from "@/contexts/ProductContext";
+import { getNotifications } from "@/api/Notification";
+import { FetchNotificationInterface } from "@/Types/Message";
 
 const initialValues = {
   search: "",
@@ -66,6 +68,26 @@ const Navbar = () => {
       }
     }
   }, [user, socket]);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (!user || user!.role === 'USER') return;
+      try {
+        const response = await getNotifications(user._id);
+        console.log('This is fetched notification',response);
+        const formatNotification = response.data.data.map((items:FetchNotificationInterface)=>({
+          senderId:items.senderId._id,
+          message:items.message,
+          senderDetails:items.senderId,
+          productId: items.productId,
+        }));
+        setNotifications(formatNotification);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchNotifications();
+  }, [user]);
   useEffect(() => {
     console.log(notifications);
   }, [notifications]);

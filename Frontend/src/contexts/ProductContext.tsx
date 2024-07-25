@@ -1,4 +1,5 @@
 import { createMessage } from "@/api/Message";
+import { createNotification } from "@/api/Notification";
 import { getAllProducts } from "@/api/Product";
 import { FetchFilterProduct, FetchProduct } from "@/pages/ProductDetails";
 import { User } from "@/Types/Auth";
@@ -34,7 +35,8 @@ interface ProductContextValue {
     helpers: FormikHelpers<FormikValues>,
     socket: Socket,
     user: User,
-    roomId: string
+    roomId: string,
+    productId?:string
   ) => void;
 }
 interface ProductProviderProps {
@@ -74,12 +76,18 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
     { resetForm }: FormikHelpers<FormikValues>,
     socket: Socket,
     user: User,
-    roomId: string
+    roomId: string,
+    productId?:string,
   ) => {
     if (user && socket) {
       try {
-        const response = await createMessage({roomId,senderId:user._id,message:values.message});
-        console.log(response);
+        await createMessage({roomId,senderId:user._id,message:values.message});
+        const ids = roomId.split("-");
+        const receiverId = ids[1];
+        if(user._id !== receiverId){
+          const notification = await createNotification({receiverId,senderId:user._id,message:values.message,productId });
+          console.log('this is notification',notification);
+        }
         socket.emit("sendMessage", {
           roomId: roomId,
           senderId: user?._id,

@@ -11,3 +11,17 @@ export interface FetchPrivateInterface{
   roomId:string,
   senderId:User
 }
+
+export interface FetchNotificationInterface{
+  message:string,
+  receiverId:string,
+  senderId:User,
+  productId:string
+}
+
+export interface NotificationInterface{
+  senderId:string,
+  receiverId:string,
+  message:string,
+  productId?:string,
+}

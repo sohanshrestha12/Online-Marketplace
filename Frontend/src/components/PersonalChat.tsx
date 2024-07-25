@@ -18,7 +18,8 @@ interface PersonalChatProps {
     helpers: FormikHelpers<FormikValues>,
     socket: Socket,
     user: User,
-    roomId: string
+    roomId: string,
+    productId?:string,
   ) => void;
   socket: Socket;
   user: User;
@@ -66,6 +67,7 @@ const PersonalChat = ({
 
   useEffect(()=>{
     const fetchMessages = async() =>{
+      console.log('msg not fetched?');
       try {
         const response = await fetchPrivateMessages(roomId);
         const formatResponse = response.data.data.map((item:FetchPrivateInterface)=>({
@@ -122,7 +124,7 @@ const PersonalChat = ({
         <Formik
           initialValues={initialValue}
           onSubmit={(values, helpers) =>
-            handleMessageSubmit(values, helpers, socket, user, roomId)
+            handleMessageSubmit(values, helpers, socket, user, roomId,activeProduct?._id)
           }
         >
           <Form className="relative w-full">

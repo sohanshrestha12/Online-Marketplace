@@ -10,6 +10,7 @@ import CommentsRouter from "./Comment";
 import RatingRouter from "./Rating";
 import PurchaseProductRouter from "./Purchase";
 import MessageRouter from "./Message";
+import NotificationRouter from "./Notification";
 
 const routes = Router();
 
@@ -22,6 +23,7 @@ routes.use("/cart", CartRouter);
 routes.use("/favourite", FavouriteProductRouter);
 routes.use("/purchase", PurchaseProductRouter);
 routes.use('/message',MessageRouter);
+routes.use('/notification',NotificationRouter);
 routes.use("/product/:productId/rating",RatingRouter);
 routes.use("/product/:productId/comment", CommentsRouter);
 

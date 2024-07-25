@@ -87,6 +87,7 @@ import { verifyJwt } from "./src/utils/Jwt";
       });
 
       const[productId,sellerId] = roomId.split("-")
+
       if(sellerId !== senderId){
         socket.to(sellerId).emit('messageNotification',{senderId,message,senderDetails,productId});
       }
