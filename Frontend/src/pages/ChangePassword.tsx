@@ -1,9 +1,12 @@
+import { changeUserPassword } from "@/api/User"
 import { Button } from "@/components/ui/button"
 import { Card, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ChangeUserPassword } from "@/Types/User"
 import { PasswordChangeValidationSchema } from "@/Validation/PasswordChange"
+import axios from "axios"
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik"
+import { toast } from "sonner"
 
 const ChangePassword = () => {
     const initialValues:ChangeUserPassword = {
@@ -11,9 +14,19 @@ const ChangePassword = () => {
         newPassword:"",
         confirmPassword:"",
     }
-    const handleSubmit = (values:ChangeUserPassword,{resetForm}:FormikHelpers<ChangeUserPassword>)=>{
+    const handleSubmit = async(values:ChangeUserPassword,{resetForm}:FormikHelpers<ChangeUserPassword>)=>{
         console.log(values);
-        resetForm();
+        try {
+            const response = await changeUserPassword(values);
+            console.log(response);
+            toast.success("Password Changed Successfully");
+            resetForm();
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                toast.error(error.response?.data.message);
+            }
+            console.log(error);
+        }
     }
    
   return (

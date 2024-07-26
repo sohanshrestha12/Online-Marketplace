@@ -1,7 +1,7 @@
 import { MarketUrl } from "@/config/Axios";
 import "../config/AxiosInterceptor";
 import { SellerUser } from "@/Types/Auth";
-import { ProfileTypes } from "@/Types/User";
+import { ChangeUserPassword, ProfileTypes } from "@/Types/User";
 
 
 export const updateImage = (image: FormData) => {
@@ -16,5 +16,9 @@ export const sellerRegistration = (values:SellerUser) =>{
 
 export const profileUpdate = (values:ProfileTypes)=>{
   return MarketUrl.post("/users/profileUpdate",values);
+}
+
+export const changeUserPassword = (values:ChangeUserPassword) =>{
+  return MarketUrl.post("/users/changePassword",values);
 }
 

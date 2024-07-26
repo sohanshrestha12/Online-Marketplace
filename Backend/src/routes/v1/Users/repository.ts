@@ -1,8 +1,7 @@
+import bcrypt from 'bcrypt';
 import CustomError from "../../../utils/Error";
 import { User, UserDocument, UserModel } from "./model";
-import UserService from "./services";
 import { ChangePassword, SellerUser, UserProfile } from "./types";
-import bcrypt from 'bcrypt';
 
 type UserWithoutPassword = Omit<UserDocument, "password">;
 
@@ -81,6 +80,9 @@ export const changePassword = async (body:ChangePassword,userId:string) =>{
 
   const hashedNewPassword = await bcrypt.hash(body.newPassword,10);
 
-  user.password = hashedNewPassword;
-  return await user.save();
+  return UserModel.findByIdAndUpdate(
+    user._id,
+    {password:hashedNewPassword},
+    {new:true}
+  ).select('-password');
 }
