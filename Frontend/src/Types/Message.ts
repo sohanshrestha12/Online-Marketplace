@@ -17,6 +17,7 @@ export interface FetchNotificationInterface{
   receiverId:string,
   senderId:User,
   productId:string
+  createdAt?:string,
 }
 
 export interface NotificationInterface{

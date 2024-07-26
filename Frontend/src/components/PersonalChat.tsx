@@ -50,24 +50,23 @@ const PersonalChat = ({
   }, [privateMessage]);
 
   useEffect(() => {
-    if(socket){
-        socket.on("receivedMessage", (message) => {
-          console.log("listening on the new message", message);
-          setPrivateMessage((prevMessages) => [...prevMessages, message]);
-        });
-        return () =>{
-            console.log("Cleanup socket event listener");
-            socket.off("receivedMessage");
-        }
+    if (socket) {
+      console.log(console.log("Socket connected:",socket.connected));
+      socket.on("receivedMessage", (message) => {
+        console.log("listening on the new message", message);
+        setPrivateMessage((prevMessages) => [...prevMessages, message]);
+      });
+      return () => {
+        console.log("Cleanup socket event listener");
+        socket.off("receivedMessage");
+      };
+    } else {
+      console.log("Socket is not defined");
     }
-     return () => {
-       console.log("Cleanup function called");
-     };
   }, [socket]);
 
   useEffect(()=>{
     const fetchMessages = async() =>{
-      console.log('msg not fetched?');
       try {
         const response = await fetchPrivateMessages(roomId);
         const formatResponse = response.data.data.map((item:FetchPrivateInterface)=>({
@@ -80,8 +79,11 @@ const PersonalChat = ({
         console.log(error);
       }
     }
-    fetchMessages();
-  },[roomId])
+    if(roomId){
+
+      fetchMessages();
+    }
+  },[roomId,activeProduct])
 
   return (
     <div className="h-[450px] w-[380px] rounded-t-md flex flex-col fixed bottom-0 right-10 shadow z-10 bg-white">
@@ -104,10 +106,10 @@ const PersonalChat = ({
         {privateMessage.map((item, i) => (
           <div
             key={i}
-            className={`flex gap-3 rounded-full items-center ${
+            className={`flex gap-3 rounded-full  items-center ${
               item.senderDetails._id === user._id
-                ? ""
-                : "flex-row-reverse justify-start"
+                ? "flex-row-reverse justify-start"
+                : "flex-row"
             } `}
           >
             <img
@@ -115,16 +117,25 @@ const PersonalChat = ({
               src={`http://localhost:5100/${item.senderDetails.profileImage}`}
               alt="404 not found"
             />
-            <p className="px-2 py-2 bg-blue-500 rounded-xl break-words break-all text-white">{item.message}</p>
+            <p className="px-2 py-2 bg-blue-500 rounded-xl break-words break-all text-white">
+              {item.message}
+            </p>
           </div>
         ))}
-        <div ref={endofMessageRef}/>
+        <div ref={endofMessageRef} />
       </div>
       <div className="h-fit mb-2 mt-2 flex items-center bg-gray-100 text-black">
         <Formik
           initialValues={initialValue}
           onSubmit={(values, helpers) =>
-            handleMessageSubmit(values, helpers, socket, user, roomId,activeProduct?._id)
+            handleMessageSubmit(
+              values,
+              helpers,
+              socket,
+              user,
+              roomId,
+              activeProduct?._id
+            )
           }
         >
           <Form className="relative w-full">

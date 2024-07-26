@@ -31,5 +31,7 @@ const notificationSchema = new mongoose.Schema<NotificationInterface>({
         required:false,
     }
 
+},{
+    timestamps:true
 });
 export const NotificationModel = mongoose.model<NotificationInterface>("Notification",notificationSchema);

@@ -54,7 +54,13 @@ const Navbar = () => {
         socket.emit("joinSellerRoom", user._id);
         socket.on("messageNotification", (notification) => {
           console.log("Received notification", notification);
-          setNotifications((prev) => [...prev, notification]);
+          // setNotifications((prev) => [...prev, notification]);
+          setNotifications((prev) => {
+            const updatedNotifications = prev.filter(
+              (n) => n.senderId !== notification.senderId
+            );
+            return [...updatedNotifications, notification];
+          });
           toast.success(
             `New message from user ${
               notification.senderId + " " + notification.message
@@ -75,13 +81,35 @@ const Navbar = () => {
       try {
         const response = await getNotifications(user._id);
         console.log('This is fetched notification',response);
-        const formatNotification = response.data.data.map((items:FetchNotificationInterface)=>({
-          senderId:items.senderId._id,
-          message:items.message,
-          senderDetails:items.senderId,
-          productId: items.productId,
-        }));
-        setNotifications(formatNotification);
+          const formatNotification = response.data.data 
+            .sort(
+              (a: FetchNotificationInterface, b: FetchNotificationInterface) =>
+                new Date(b.createdAt!).getTime() -
+                new Date(a.createdAt!).getTime()
+            )
+            .reduce(
+              (
+                acc: Record<string, FetchNotificationInterface>,
+                current: FetchNotificationInterface
+              ) => {
+                const senderId = current.senderId._id;
+                if (!acc[senderId]) {
+                  acc[senderId] = current;
+                }
+                return acc;
+              },
+              {}
+            );
+
+          const notifications = (Object.values(formatNotification) as FetchNotificationInterface[]).map(
+            (items: FetchNotificationInterface) => ({
+              senderId: items.senderId._id,
+              message: items.message,
+              senderDetails: items.senderId,
+              productId: items.productId,
+            })
+          );
+        setNotifications(notifications);
       } catch (error) {
         console.log(error);
       }

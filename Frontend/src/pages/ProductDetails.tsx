@@ -92,6 +92,7 @@ const ProductDetails = () => {
     setSelectedSize(index);
   };
 
+
   useEffect(() => {
     if (socket) {
       if (activeProduct && activeProduct.createdBy && user) {
@@ -109,7 +110,7 @@ const ProductDetails = () => {
         socket.off("joinPrivateRoom");
       };
     }
-  }, [activeProduct, activeProduct?._id, user, socket,roomId]);
+  }, [activeProduct, user, socket]);
   useEffect(() => {
     if (!activeProduct) return;
     if (activeProduct.rating && activeProduct.rating.length > 0) {
