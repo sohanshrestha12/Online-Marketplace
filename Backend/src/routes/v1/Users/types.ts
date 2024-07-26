@@ -13,3 +13,9 @@ export interface UserProfile {
   address?: string;
   phNumber?: string;
 }
+
+export interface ChangePassword{
+  confirmPassword:string,
+  newPassword:string,
+  currentPassword:string,
+}

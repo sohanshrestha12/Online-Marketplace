@@ -22,6 +22,7 @@ import SellerDashboardLayout from "./pages/SellerDashboardLayout";
 import SignUp from "./pages/SignUp";
 import ResetPassword from "./pages/ResetPassword";
 import ReturnBack from "./pages/ReturnBack";
+import ChangePassword from "./pages/ChangePassword";
 
 const router = createBrowserRouter([
   {
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Profile />,
+          },
+          {
+            path:"changePassword",
+            element:<ChangePassword/>
           },
           {
             path: "cart",

@@ -16,3 +16,10 @@ export interface Profile {
   profileImage:string;
   isVerified: boolean;
 }
+
+
+export interface ChangeUserPassword{
+  currentPassword:string,
+  newPassword:string,
+  confirmPassword:string,
+}

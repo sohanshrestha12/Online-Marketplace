@@ -255,7 +255,7 @@ const Profile = () => {
                 )}
               </div>
             </div>
-            <div className="mt-[100px] grid gap-2 grid-cols-12 mb-3">
+            <div className="mt-[60px] grid gap-2 grid-cols-12 mb-3">
               {isEditing ? (
                 <>
                   <Button

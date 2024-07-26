@@ -1,5 +1,8 @@
+import CustomError from "../../../utils/Error";
 import { User, UserDocument, UserModel } from "./model";
-import { SellerUser, UserProfile } from "./types";
+import UserService from "./services";
+import { ChangePassword, SellerUser, UserProfile } from "./types";
+import bcrypt from 'bcrypt';
 
 type UserWithoutPassword = Omit<UserDocument, "password">;
 
@@ -20,6 +23,10 @@ export const getUserByEmail = (email: string): Promise<UserDocument | null> => {
 export const getUserById = (id: string): Promise<UserDocument | null> => {
   return UserModel.findById(id).select("-password");
 };
+export const getUserWithPassword = (id: string):Promise<UserDocument | null>  => {
+  return UserModel.findById(id);
+};
+
 
 export const updateImage = async(userId:string,file:string)=>{
   const user =await UserModel.findById(userId);
@@ -65,3 +72,15 @@ export const saveResetPassword = async (user: UserDocument) => {
     { new: true }
   );
 };
+
+export const changePassword = async (body:ChangePassword,userId:string) =>{
+  const user = await getUserWithPassword(userId);
+  if(!user) throw new CustomError('Invalid user',400);
+  const isMatch = await bcrypt.compare(body.currentPassword,user.password);
+  if(!isMatch) throw new CustomError('Current Password is incorrect',400);
+
+  const hashedNewPassword = await bcrypt.hash(body.newPassword,10);
+
+  user.password = hashedNewPassword;
+  return await user.save();
+}

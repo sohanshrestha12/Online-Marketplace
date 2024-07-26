@@ -57,6 +57,17 @@ const ProfileLayout = () => {
                 My Cart
               </li>
             </Link>
+            <Link to={"/profile/changePassword"}>
+              <li
+                className={`px-3 py-2 hover:bg-slate-100 hover:border-l-2 hover:font-semibold hover:border-orange-500 transition-all ease ${
+                  location.pathname === "/profile/changePassword"
+                    ? "bg-slate-100 font-semibold border-l-2 border-orange-500"
+                    : ""
+                }`}
+              >
+                Change Password
+              </li>
+            </Link>
           </ul>
         </div>
         <div className="col-span-9">

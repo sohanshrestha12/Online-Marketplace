@@ -3,7 +3,7 @@ import CustomError from "../../../utils/Error";
 import { successResponse } from "../../../utils/HttpResponse";
 import { User } from "./model";
 import UserService from "./services";
-import { SellerUser, UserProfile } from "./types";
+import { ChangePassword, SellerUser, UserProfile } from "./types";
 import { findUserOtp } from "../Otp/repository";
 
 const UserController = {
@@ -39,7 +39,11 @@ const UserController = {
       next(error);
     }
   },
-  async verifyOtp(req: Request<{id:string,code:string}>, res: Response, next: NextFunction) {
+  async verifyOtp(
+    req: Request<{ id: string; code: string }>,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { id, code } = req.params;
       const user = await UserService.getUserById(id);
@@ -102,21 +106,44 @@ const UserController = {
       next(error);
     }
   },
-  async profileUpdate(req:Request<unknown,unknown,UserProfile>,res:Response,next:NextFunction){
+  async profileUpdate(
+    req: Request<unknown, unknown, UserProfile>,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const body = req.body;
       const userId = res.locals.user._id;
-       const response = await UserService.profileUpdate(body,userId);
-       return successResponse({
-         response: res,
-         message: "User Profile Updated Successfully",
-         data: response,
-         status: 200,
-       });
+      const response = await UserService.profileUpdate(body, userId);
+      return successResponse({
+        response: res,
+        message: "User Profile Updated Successfully",
+        data: response,
+        status: 200,
+      });
     } catch (error) {
       next(error);
     }
-  }
+  },
+  async changePassword(
+    req: Request<unknown, unknown, ChangePassword>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const body = req.body;
+      const userId = res.locals.user._id;
+      const response = await UserService.changePassword(body, userId);
+      return successResponse({
+        response: res,
+        message: "User Password changed Successfully",
+        data: response,
+        status: 200,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 export default UserController;

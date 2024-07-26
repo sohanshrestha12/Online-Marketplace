@@ -20,6 +20,7 @@ UserRouter.post(
   UserController.updateImage
 );
 UserRouter.route('/profileUpdate').post(UserController.profileUpdate);
+UserRouter.route('/changePassword').post(requireUser,UserController.changePassword)
 
 
 
