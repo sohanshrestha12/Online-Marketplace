@@ -32,5 +32,9 @@ export interface AuthContextType {
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
-  updateUser:(user:User)=>void;
+  updateUser: (user: User) => void;
+  activeUser?: User;
+  updateActiveUser: (user: User) => void;
+  updateRoomId:(roomId:string)=>void;
+  roomId:string;
 }

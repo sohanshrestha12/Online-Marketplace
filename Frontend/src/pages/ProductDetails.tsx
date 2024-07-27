@@ -60,6 +60,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const auth = useAuth();
 
   const [quantity, setQuantity] = useState<string>("1");
   const [activeProduct, setActiveProduct] = useState<FetchProduct>();
@@ -94,7 +95,8 @@ const ProductDetails = () => {
 
 
   useEffect(() => {
-    if (socket) {
+    if (socket && user?.role !== 'SELLER') {
+      console.log('going here in product')
       if (activeProduct && activeProduct.createdBy && user) {
         if (activeProduct.createdBy._id !== user._id) {
           setRoomId(
@@ -498,7 +500,7 @@ const ProductDetails = () => {
           <Comment product={activeProduct} updateRating={updateRating} />
         </div>
       )}
-      {showChat && <PersonalChat activeProduct={activeProduct!} toggleChat={toggleChat} socket={socket!} roomId={roomId} user={user!} handleMessageSubmit={handleMessageSubmit}/>
+      {showChat && <PersonalChat activeProduct={activeProduct!} toggleChat={toggleChat} socket={socket!} {...(auth.roomId?{roomId:auth.roomId}: {roomId})} user={user!} handleMessageSubmit={handleMessageSubmit}/>
       //  (
       //   <div className="h-[450px] w-[380px] rounded-t-md flex flex-col fixed bottom-0 right-10 shadow z-10 bg-white" >
       //     <div className="p-3 flex gap-2 items-center  justify-between bg-blue-600 rounded">

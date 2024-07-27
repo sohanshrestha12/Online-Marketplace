@@ -33,12 +33,10 @@ const initialValues = {
 const Navbar = () => {
   const navigate = useNavigate();
   const auth = useAuth();
-  const { user } = useAuth();
+  const { user,activeUser,updateActiveUser} = useAuth();
   const { socket } = useSocket();
   const [showNotification, setShowNotification] = useState<boolean>(false);
-  const [activeUser, setActiveUser] = useState<User>();
   const { showChat, toggleChat, handleMessageSubmit } = useProduct();
-  const [roomId, setRoomId] = useState<string>("");
 
   const [notifications, setNotifications] = useState<
     {
@@ -123,6 +121,9 @@ const Navbar = () => {
   const handleSearch = (values: { search: string }) => {
     navigate(`/productLists?category=${values.search}`);
   };
+    useEffect(() => {
+      console.log("This is the active user", activeUser);
+    }, [activeUser]);
 
   const handleLogout = async () => {
     try {
@@ -135,12 +136,16 @@ const Navbar = () => {
     }
   };
   const handleMessageClick = (senderDetails: User, productId: string) => {
-    setActiveUser(senderDetails);
+    // setActiveUser(senderDetails);
+    console.log('senders detail',senderDetails);
+    updateActiveUser(senderDetails);
     toggleChat();
     if (socket) {
       const sellerRoomId = `${productId}-${user?._id}-${senderDetails._id}`;
-      setRoomId(sellerRoomId);
-      socket.emit("joinPrivateRoom", sellerRoomId);
+      if(sellerRoomId){
+        auth.updateRoomId(sellerRoomId);
+        socket.emit("joinPrivateRoom", sellerRoomId);
+      }
     }
   };
 
@@ -317,11 +322,10 @@ const Navbar = () => {
 
       {showChat && (
         <PersonalChat
-          activeUser={activeUser}
           handleMessageSubmit={handleMessageSubmit}
           socket={socket!}
           user={user!}
-          roomId={roomId}
+          roomId={auth.roomId}
           toggleChat={toggleChat}
         />
       )}

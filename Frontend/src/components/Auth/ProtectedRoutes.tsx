@@ -13,6 +13,10 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeUser, setActiveUser] = useState<User>();
+  const [roomId, setRoomId] = useState<string>("");
+
+
   // useEffect(()=>{
   //   console.log("User is :", user);
   // },[user])
@@ -21,6 +25,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }
   const updateUser = (user:User) =>{
     setUser(user);
+  } 
+  const updateActiveUser = (user:User)=>{
+    setActiveUser(user);
+  }
+  const updateRoomId = (roomId:string)=>{
+    setRoomId(roomId);
   } 
 
   const logout = () => {
@@ -50,7 +60,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
      return null; // keep loader here
    }
   return (
-    <AuthContext.Provider value={{ user, logout,login,updateUser }}>
+    <AuthContext.Provider value={{ user, logout,login,updateUser ,activeUser,updateActiveUser,updateRoomId,roomId}}>
       {children}
     </AuthContext.Provider>
   );
