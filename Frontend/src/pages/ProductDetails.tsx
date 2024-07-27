@@ -95,7 +95,7 @@ const ProductDetails = () => {
 
 
   useEffect(() => {
-    if (socket && user?.role !== 'SELLER') {
+    if (socket) {
       console.log('going here in product')
       if (activeProduct && activeProduct.createdBy && user) {
         if (activeProduct.createdBy._id !== user._id) {
