@@ -145,6 +145,7 @@ const ProductController = {
       const { categoryBrand, filter } = await ProductService.filterProducts(
         query
       );
+      console.log(colorFamily);
       return successResponse({
         response: res,
         message: "Successfully retrieved the filtered product",

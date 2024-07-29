@@ -140,14 +140,14 @@ const CategoryFilter = ({
           {colors.map((color, i) => (
             <div
               key={i}
-              onClick={() => handleColorClick(color.colorName)}
+              onClick={() => handleColorClick(color.hexCode)}
               style={{
-                border: selectedColors.includes(color.colorName)
+                border: selectedColors.includes(color.hexCode)
                   ? "1px solid #f85606"
                   : "none",
               }}
               className={`${
-                selectedColors.includes(color.colorName)
+                selectedColors.includes(color.hexCode)
                   ? "bg-gray-200 font-semibold"
                   : "bg-gray-50"
               } flex items-center gap-2 bg-gray-50 py-1 px-2 hover:font-semibold hover:bg-gray-200 rounded hover:cursor-pointer`}

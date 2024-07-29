@@ -96,7 +96,7 @@ export const fetchProductsByFilter = (
   }
   if (selectedColors && selectedColors.length > 0) {
     const colorsQueryParam = selectedColors
-      .map((color) => `colorFamily=${color}`)
+      .map((color) => `colorFamily=${encodeURIComponent(color)}`)
       .join("&");
     url += url.includes("?") ? `&${colorsQueryParam}` : `?${colorsQueryParam}`;
   }  

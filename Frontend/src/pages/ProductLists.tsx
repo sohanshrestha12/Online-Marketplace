@@ -74,6 +74,8 @@ const ProductLists = () => {
     localStorage.setItem("selectedColors", JSON.stringify(selectedColors));
   }, [selectedColors]);
 
+
+
   const fetchProductsFilter = async (
     category?: string,
     checkedBrands?: string[],
