@@ -60,7 +60,7 @@ const ProductContext = createContext<ProductContextValue>({
   toggleChat: () => {},
   showChat: false,
   handleMessageSubmit: () => {},
-  getCombinedDataForChart: () =>  Promise.resolve(undefined),
+  getCombinedDataForChart: () => Promise.resolve(undefined),
 });
 
 export const ProductProvider = ({ children }: ProductProviderProps) => {
@@ -79,9 +79,9 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   > => {
     try {
       const createdData = await getCreatedDataByMonth();
-      console.log("created products data", createdData);
+
       const salesData = await getSalesDataByMonth();
-      console.log("sales product data", salesData);
+
       const combinedData = Array.from({ length: 12 }, (_, i) => ({
         month: new Date(0, i).toLocaleString("en-US", { month: "long" }),
         totalSold: 0,
@@ -97,7 +97,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
           created.totalCreated
         );
       });
-      console.log("The month combined data is: ", combinedData);
+
       return combinedData;
     } catch (error) {
       console.log(error);

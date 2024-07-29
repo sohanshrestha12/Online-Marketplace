@@ -15,15 +15,13 @@ interface DashboardChartProps {
 }
 
 const DashboardChart = ({combinedData}:DashboardChartProps) => {
-  useEffect(()=>{
-    console.log('this is form combined usedeffect state value',combinedData);
-  },[combinedData])
+
     const chartConfig = {
-      desktop: {
+      create: {
         label: "Products Created",
         color: "#2563eb",
       },
-      mobile: {
+      sale: {
         label: "Products Sold",
         color: "#60a5fa",
       },
@@ -49,8 +47,8 @@ const DashboardChart = ({combinedData}:DashboardChartProps) => {
         />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="totalCreated" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="totalSold" fill="var(--color-mobile)" radius={4} />
+        <Bar dataKey="totalCreated" fill="var(--color-create)" radius={4} />
+        <Bar dataKey="totalSold" fill="var(--color-sale)" radius={4} />
       </BarChart>
     </ChartContainer>
   );
