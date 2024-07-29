@@ -17,6 +17,7 @@ import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
 import { IoIosClose } from "react-icons/io";
 import { toast } from "sonner";
 import { colorOptions } from "@/utils/Colors";
+import { addProductValidation } from "@/Types/Product";
 
 export interface Option {
   value: string;
@@ -40,6 +41,22 @@ const BasicInfo = () => {
   const [level1Category, setLevel1Category] = useState<Option | null>(null);
   const [level2Category, setLevel2Category] = useState<Option | null>(null);
   const [brands, setBrands] = useState<Brand[]>([]);
+  const [FormErrorMessage, setFormErrorMessage] =
+    useState<addProductValidation>({});
+
+  const validateFields = () => {
+    const newErrors: addProductValidation = {};
+    if (size.length <= 0) {
+      newErrors.size = "Size is required";
+    }
+    if (images.length <= 0) {
+      newErrors.image = "Image is required";
+    }
+
+    setFormErrorMessage(newErrors);
+    console.log("Errors", newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const insertImage = (files: File[]) => {
     setImages([...images, ...files]);
@@ -81,71 +98,83 @@ const BasicInfo = () => {
   ) => {
     // console.log(images);
     // console.log("form values", values);
-    const formData = new FormData();
-    Object.keys(values).forEach((key) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const value = (values as any)[key];
+    if (validateFields()) {
+      const formData = new FormData();
+      Object.keys(values).forEach((key) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const value = (values as any)[key];
 
-      if (value !== null && value !== undefined) {
-        if (Array.isArray(value)) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          value.forEach((item: any) => {
-            formData.append(key, item.value.toString());
-          });
-        } else if (typeof value === "object") {
-          formData.append(key, value.value);
-        } else {
-          formData.append(key, value.toString());
+        if (value !== null && value !== undefined) {
+          if (Array.isArray(value)) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            value.forEach((item: any) => {
+              formData.append(key, item.value.toString());
+            });
+          } else if (typeof value === "object") {
+            formData.append(key, value.value);
+          } else {
+            formData.append(key, value.toString());
+          }
         }
-      }
-    });
-    size.forEach((item) => {
-      formData.append("size", item.toString());
-    });
+      });
+      size.forEach((item) => {
+        formData.append("size", item.toString());
+      });
 
-    images.forEach((image) => {
-      // console.log("this is console img", image);
-      formData.append("images", image);
-    });
+      images.forEach((image) => {
+        // console.log("this is console img", image);
+        formData.append("images", image);
+      });
 
-    formData.append("uploadType", "product");
-    try {
-      const response = await createProduct(formData);
-      addProduct(response.data.data);
-      //need to scroll top of the page.
-      window.scrollTo({top:0,behavior:"smooth"});
-      toast.success("Product added Successfully");
-      console.log(response);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+      formData.append("uploadType", "product");
+      try {
+        const response = await createProduct(formData);
+        addProduct(response.data.data);
+        //need to scroll top of the page.
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        toast.success("Product added Successfully");
+        console.log(response);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data.message);
+        }
+        console.log(error);
       }
-      console.log(error);
+      // for (const pair of formData.entries()) {
+      //   // console.log(`${pair[0]}: ${pair[1]}`);
+      //   if (pair[1] instanceof File) {
+      //     console.log(`${pair[0]}:`);
+      //     console.log(`  Name: ${pair[1].name}`);
+      //     console.log(`  Type: ${pair[1].type}`);
+      //     console.log(`  Size: ${pair[1].size} bytes`);
+      //   } else {
+      //     console.log(`${pair[0]}: ${pair[1]}`);
+      //   }
+      // }
+      resetForm();
+      setImages([]);
+      setImageShow([]);
+      setSize([]);
+      setSizeInput("");
+      setValue("");
+      setLevel1Category(null);
+      setLevel2Category(null);
     }
-    // for (const pair of formData.entries()) {
-    //   // console.log(`${pair[0]}: ${pair[1]}`);
-    //   if (pair[1] instanceof File) {
-    //     console.log(`${pair[0]}:`);
-    //     console.log(`  Name: ${pair[1].name}`);
-    //     console.log(`  Type: ${pair[1].type}`);
-    //     console.log(`  Size: ${pair[1].size} bytes`);
-    //   } else {
-    //     console.log(`${pair[0]}: ${pair[1]}`);
-    //   }
-    // }
-    resetForm();
-    setImages([]);
-    setImageShow([]);
-    setSize([]);
-    setSizeInput("");
-    setValue("");
-    setLevel1Category(null);
-    setLevel2Category(null);
   };
 
   const handleAddSize = () => {
-    setSize([...size, parseInt(sizeInput.trim())]);
-    setSizeInput("");
+    const trimmedSizeInput = sizeInput.trim();
+    const parsedSize = parseInt(trimmedSizeInput);
+
+    if (
+      trimmedSizeInput !== "" &&
+      !isNaN(parsedSize) &&
+      parsedSize > 0 &&
+      !size.includes(parsedSize)
+    ) {
+      setSize([...size, parsedSize]);
+      setSizeInput("");
+    }
   };
 
   const handleRemoveSize = (i: number) => {
@@ -204,8 +233,6 @@ const BasicInfo = () => {
       label: item.name,
     }));
 
-
-
   return (
     <>
       <Formik
@@ -246,6 +273,11 @@ const BasicInfo = () => {
                       imageShow={imageShow}
                       changeImageUrl={changeImageUrl}
                     />
+                    {FormErrorMessage.image && (
+                      <div className="text-red-500 text-sm">
+                        {FormErrorMessage.image}
+                      </div>
+                    )}
                   </div>
                   <div className="flex space-x-2 items-center">
                     <label
@@ -485,7 +517,17 @@ const BasicInfo = () => {
                               value={sizeInput}
                               onChange={(
                                 e: React.ChangeEvent<HTMLInputElement>
-                              ) => setSizeInput(e.target.value)}
+                              ) => {
+                                const value = e.target.value;
+                                setSizeInput(value);
+
+                                if (size.length > 0) {
+                                  setFormErrorMessage((prevErrors) => ({
+                                    ...prevErrors,
+                                    size: undefined,
+                                  }));
+                                }
+                              }}
                               onKeyDown={(
                                 e: React.KeyboardEvent<HTMLInputElement>
                               ) => {
@@ -505,6 +547,11 @@ const BasicInfo = () => {
                               Add Size
                             </Button>
                           </div>
+                          {FormErrorMessage.size && (
+                            <div className="text-sm text-red-500 mt-1">
+                              {FormErrorMessage.size}
+                            </div>
+                          )}
                         </div>
                         {size && (
                           <div className="flex items-center gap-2">
@@ -547,6 +594,11 @@ const BasicInfo = () => {
                       setFieldValue("description", content);
                     }}
                     className="h-auto mb-[25px]"
+                  />
+                  <ErrorMessage
+                    name="description"
+                    component="div"
+                    className="ml-2 -mt-4 text-red-500 text-xs"
                   />
                 </Card>
               </div>

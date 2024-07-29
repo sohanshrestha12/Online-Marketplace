@@ -61,3 +61,8 @@ export interface CombinedData {
   totalSold: number;
   totalCreated: number;
 }
+
+export interface addProductValidation{
+  size?:string,
+  image?:string,
+}

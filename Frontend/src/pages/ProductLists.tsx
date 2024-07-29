@@ -178,7 +178,7 @@ const ProductLists = () => {
               <div
                 key={index}
                 onClick={() => handleClick(item)}
-                className="col-span-3 h-[300px] hover:shadow-xl transition-shadow duration-300 ease-in-out hover:cursor-pointer"
+                className="col-span-4 h-[300px] hover:shadow-xl transition-shadow duration-300 ease-in-out hover:cursor-pointer"
                 style={{
                   margin: "20px",
                   borderRadius: "5px",
@@ -187,12 +187,14 @@ const ProductLists = () => {
                 <img
                   src={`http://localhost:5100/${item.images[0]}`}
                   alt={item.name}
-                  style={{ width: "200px", height: "200px" }}
+                  style={{ width: "300px", height: "200px" }}
                   className="object-cover"
                 />
-                <div className="px-1 py-2">
-                  <h3 className="font-semibold">{item.name}</h3>
-                  <p className="text-md">RS. {item.price.toFixed(2)}</p>
+                <div className="py-2 h-[100px] flex flex-col justify-around px-2">
+                  <h3 className="font-semibold line-clamp-2 ">{item.name}</h3>
+                  <p className="text-lg text-[#f85606] font-semibold">
+                    RS. {item.price.toFixed(2)}
+                  </p>
                 </div>
               </div>
             ))}
