@@ -88,8 +88,52 @@ import eth from "../../assets/images/Ethernet.jpeg";
 import aa from "../../assets/images/aa.jpeg";
 import aaa from "../../assets/images/aaa.jpeg";
 import rech from "../../assets/images/rech.jpeg";
+import potatoChip from "../../assets/images/potatoChip.jpeg"
+import beverage from "../../assets/images/beverage.jpeg"
+import canned from "../../assets/images/canned.jpeg"
+import dog from "../../assets/images/dog.jpeg"
+import cat from "../../assets/images/cat.jpeg"
+import toys from "../../assets/images/ptoys.jpeg"
+import kapp from "../../assets/images/kapp.jpeg"
+import b1 from "../../assets/images/beddings1jpeg.jpg"
+import clean from "../../assets/images/clean.jpeg"
+import fd from "../../assets/images/fd.jpeg"
+import babyDoll from "../../assets/images/babyd.jpeg"
+import collectible from "../../assets/images/collectibled.jpeg"
+import superHero from "../../assets/images/superhero.jpeg"
+import mFigures from "../../assets/images/mFigures.jpeg"
+import fFig from "../../assets/images/fFig.jpeg"
+import strategyG from "../../assets/images/strategyG.jpeg"
+import fg from "../../assets/images/fg.jpeg"
+import eg from "../../assets/images/eg.jpeg"
+import swing from "../../assets/images/swing.jpeg"
+import tob from "../../assets/images/tob.jpeg"
+import wt from "../../assets/images/wt.jpeg"
 
 export const imageMapping: { [key: string]: string } = {
+  "Fashion Dolls": fd,
+  "Baby Dolls": babyDoll,
+  "Collectible Dolls": collectible,
+  "Superhero Action Figures": superHero,
+  "Movie Character Action Figures": mFigures,
+  "Fantasy Action Figures": fFig,
+  "Strategy Games": strategyG,
+  "Family Games": fg,
+  "Educational Games": eg,
+  "Swing Sets": swing,
+  Trampolines: tob,
+  "Water Toys": wt,
+
+  Snacks: potatoChip,
+  Beverages: beverage,
+  "Canned Food": canned,
+  "Dog Food": dog,
+  "Cat Food": cat,
+  "Pet Toys": toys,
+  "Kitchen Appliances": kapp,
+  Beddings: b1,
+  "Cleaning Supplies": clean,
+
   "Over-Ear Headphones": h1,
   "On-Ear Headphones": h2,
   "In-Ear Headphones": h3,
