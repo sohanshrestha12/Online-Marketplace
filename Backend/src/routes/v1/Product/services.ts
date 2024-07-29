@@ -20,7 +20,7 @@ const ProductService = {
     return task;
   },
   async filterProducts(query:SearchQuery){
-    const categoryBrand = await getCategoryBrand(query.category)
+    const categoryBrand = await getCategoryBrand(query.category);
     const filter = await filterProducts(query);
     return { categoryBrand, filter };
   },

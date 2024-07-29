@@ -34,9 +34,11 @@ const ProductController = {
     next: NextFunction
   ) {
     try {
+
       const body = req.body;
       const files = req.files as Express.Multer.File[];
       const user = res.locals.user;
+
 
       if (!files && !body.existingImage) {
         throw new CustomError("Image is Required", 400);
@@ -94,7 +96,7 @@ const ProductController = {
   },
 
   async filterProducts(
-    req: Request<unknown, unknown, unknown, SearchQuery>,
+    req: Request<unknown, unknown,unknown, SearchQuery>,
     res: Response,
     next: NextFunction
   ) {
@@ -102,27 +104,15 @@ const ProductController = {
       let query: SearchQuery = {};
       const { category, brand, colorFamily, minPrice, maxPrice } = req.query;
       if (category) {
-        const searchInput = category;
-
-        if (searchInput) {
-          const normalizedInput = (searchInput as string)
-            .replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
-            .toLowerCase()
-            .trim();
-
-          if (normalizedInput) {
-            const regex = new RegExp(normalizedInput, "i");
-
-            query = {
-              $or: [
-                { name: { $regex: regex } },
-                { category: { $regex: regex } },
-              ],
-            };
-          } else {
-            query = {};
-          }
-        }
+        const normalizedCategory = (category as string)
+          .replace(/[^a-zA-Z0-9]/g, "")
+          .toLowerCase();
+        query.category = {
+          $regex: new RegExp(
+            normalizedCategory.split("").join("[^a-zA-Z0-9]*"),
+            "i"
+          ),
+        };
       }
       if (brand) {
         if (typeof brand === "string") {
@@ -205,7 +195,7 @@ const ProductController = {
       next(error);
     }
   },
-  async getCreatedDataByMonth(req: Request, res: Response, next: NextFunction) {
+  async getCreatedDataByMonth(req:Request,res:Response,next:NextFunction){
     try {
       const sellerId = res.locals.user._id;
       const result = await ProductService.getCreatedDataByMonth(sellerId);
@@ -219,7 +209,7 @@ const ProductController = {
     } catch (error) {
       next(error);
     }
-  },
+  }
 };
 
 export default ProductController;
