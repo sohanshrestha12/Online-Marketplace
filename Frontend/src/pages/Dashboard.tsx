@@ -2,19 +2,22 @@ import { useAuth } from "@/components/Auth/ProtectedRoutes";
 import DashboardChart from "@/components/DashboardChart";
 import { Card } from "@/components/ui/card";
 import { useProduct } from "@/contexts/ProductContext";
-import { useEffect } from "react";
+import { CombinedData } from "@/Types/Product";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
     const {user} = useAuth();
-    const {dashboardProducts} = useProduct();
-    const {fetchDashboardProducts} = useProduct();
+    const {fetchDashboardProducts,dashboardProducts,getCombinedDataForChart} = useProduct();
+    const [combinedData,setCombinedData] = useState<CombinedData[] | undefined>([]);
     useEffect(()=>{
+      if(!user) return;
       const fetchProducts = async() =>{
-        if(!user) return;
-        await fetchDashboardProducts(user._id);
+         await fetchDashboardProducts(user._id);
+         const dataCombined = await getCombinedDataForChart();
+         setCombinedData(dataCombined);
       }
       fetchProducts();
-    },[]);
+    },[user]);
   return (
     <div className="p-4 w-full">
       <h1 className="text-xl font-bold capitalize">Hello {user?.username}!</h1>
@@ -35,7 +38,7 @@ const Dashboard = () => {
           <p className="text-semibold">View all products</p>
         </Card>
       </div>
-      <DashboardChart/>
+      <DashboardChart combinedData = {combinedData} />
     </div>
   );
 }

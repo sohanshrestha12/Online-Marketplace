@@ -195,6 +195,21 @@ const ProductController = {
       next(error);
     }
   },
+  async getCreatedDataByMonth(req:Request,res:Response,next:NextFunction){
+    try {
+      const sellerId = res.locals.user._id;
+      const result = await ProductService.getCreatedDataByMonth(sellerId);
+
+      return successResponse({
+        response: res,
+        message: "Successfully retrieved created product by month",
+        data: result,
+        status: 200,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 };
 
 export default ProductController;

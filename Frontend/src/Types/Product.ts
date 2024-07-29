@@ -45,3 +45,19 @@ export interface FilterPurchasedProduct{
   totalPage:number;
   totalPurchasedProduct:number;
 }
+
+export interface SalesData{
+  totalSold:string,
+  month:string
+}
+
+export interface CreatedData{
+  totalCreated:string,
+  month:string,
+}
+
+export interface CombinedData {
+  month: string;
+  totalSold: number;
+  totalCreated: number;
+}

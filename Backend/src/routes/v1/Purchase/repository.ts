@@ -1,4 +1,4 @@
-import mongoose, { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery, Types } from "mongoose";
 import ProductService from "../Product/services";
 import { PurchaseModel, PurchaseProduct } from "./model";
 import { PurchasedProductQuery, PurchasedProductReturn } from "./types";
@@ -47,6 +47,38 @@ export const getPurchaseProduct = async (
    totalPage: Math.ceil(totalPurchasedProduct / pageSize),
    limit: pageSize,
  };
+};
 
-
+export const getSalesDataByMonth = async (sellerId: string) => {
+  return await PurchaseModel.aggregate([
+    {
+      $lookup: {
+        from: "products",
+        localField: "productId",
+        foreignField: "_id",
+        as: "product",
+      },
+    },
+    {
+      $unwind: "$product",
+    },
+    {
+      $match: {
+        "product.createdBy": new Types.ObjectId(sellerId),
+      },
+    },
+    {
+      $group: {
+        _id: {$month:'$createdAt'},
+        totalSold: { $sum: "$quantity" },
+      },
+    },
+    {
+      $project:{
+        _id:0,
+        month:'$_id',
+        totalSold:1
+      }
+    }
+  ]);
 };

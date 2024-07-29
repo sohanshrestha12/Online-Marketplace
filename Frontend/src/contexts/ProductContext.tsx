@@ -1,8 +1,13 @@
 import { createMessage } from "@/api/Message";
 import { createNotification } from "@/api/Notification";
-import { getAllProducts } from "@/api/Product";
+import {
+  getAllProducts,
+  getCreatedDataByMonth,
+  getSalesDataByMonth,
+} from "@/api/Product";
 import { FetchFilterProduct, FetchProduct } from "@/pages/ProductDetails";
 import { User } from "@/Types/Auth";
+import { CombinedData, CreatedData, SalesData } from "@/Types/Product";
 import { FormikHelpers, FormikValues } from "formik";
 import {
   ReactNode,
@@ -36,8 +41,9 @@ interface ProductContextValue {
     socket: Socket,
     user: User,
     roomId: string,
-    productId?:string
+    productId?: string
   ) => void;
+  getCombinedDataForChart: () => Promise<CombinedData[] | undefined>;
 }
 interface ProductProviderProps {
   children: ReactNode;
@@ -54,6 +60,7 @@ const ProductContext = createContext<ProductContextValue>({
   toggleChat: () => {},
   showChat: false,
   handleMessageSubmit: () => {},
+  getCombinedDataForChart: () =>  Promise.resolve(undefined),
 });
 
 export const ProductProvider = ({ children }: ProductProviderProps) => {
@@ -67,26 +74,65 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
     console.log("This is the changing dashboard product", dashboardProducts);
   }, [dashboardProducts]);
 
+  const getCombinedDataForChart = async (): Promise<
+    CombinedData[] | undefined
+  > => {
+    try {
+      const createdData = await getCreatedDataByMonth();
+      console.log("created products data", createdData);
+      const salesData = await getSalesDataByMonth();
+      console.log("sales product data", salesData);
+      const combinedData = Array.from({ length: 12 }, (_, i) => ({
+        month: new Date(0, i).toLocaleString("en-US", { month: "long" }),
+        totalSold: 0,
+        totalCreated: 0,
+      }));
+      salesData.data.data.forEach((sale: SalesData) => {
+        combinedData[parseInt(sale.month) - 1].totalSold = parseInt(
+          sale.totalSold
+        );
+      });
+      createdData.data.data.forEach((created: CreatedData) => {
+        combinedData[parseInt(created.month) - 1].totalCreated = parseInt(
+          created.totalCreated
+        );
+      });
+      console.log("The month combined data is: ", combinedData);
+      return combinedData;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const toggleChat = () => {
     setShowChat(!showChat);
   };
 
-  const handleMessageSubmit = async(
+  const handleMessageSubmit = async (
     values: FormikValues,
     { resetForm }: FormikHelpers<FormikValues>,
     socket: Socket,
     user: User,
     roomId: string,
-    productId?:string,
+    productId?: string
   ) => {
     if (user && socket) {
       try {
-        await createMessage({roomId,senderId:user._id,message:values.message});
+        await createMessage({
+          roomId,
+          senderId: user._id,
+          message: values.message,
+        });
         const ids = roomId.split("-");
         const receiverId = ids[1];
-        if(user._id !== receiverId){
-          const notification = await createNotification({receiverId,senderId:user._id,message:values.message,productId });
-          console.log('this is notification',notification);
+        if (user._id !== receiverId) {
+          const notification = await createNotification({
+            receiverId,
+            senderId: user._id,
+            message: values.message,
+            productId,
+          });
+          console.log("this is notification", notification);
         }
         socket.emit("sendMessage", {
           roomId: roomId,
@@ -199,6 +245,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
         toggleChat,
         showChat,
         handleMessageSubmit,
+        getCombinedDataForChart,
       }}
     >
       {children}

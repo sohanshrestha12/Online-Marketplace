@@ -9,6 +9,7 @@ import axios from "axios";
 import { Field, FieldProps, Form, Formik } from "formik";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { FiEdit } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import Select from "react-select";
 import { toast } from "sonner";
 
@@ -282,7 +283,9 @@ const Profile = () => {
                   >
                     Edit Profile
                   </Button>
-                  <Button className="col-span-4">Change Password</Button>
+                  <Link className="col-span-4 w-full" to={"/profile/changePassword"}>
+                    <Button className="w-full" type="button">Change Password</Button>
+                  </Link>
                 </>
               )}
             </div>

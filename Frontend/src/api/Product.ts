@@ -71,6 +71,14 @@ export const getPurchasedProduct = ({page=1}:{page?:number}={})=>{
   return MarketUrl.get('/purchase',{params:{page}});
 }
 
+export const getCreatedDataByMonth  = () =>{
+  return MarketUrl.get("/product/getCreatedDataByMonth");
+}
+
+export const getSalesDataByMonth= () =>{
+  return MarketUrl.get("/purchase/getSalesDataByMonth");
+};
+
 export const fetchProductsByFilter = (
   category?: string,
   brands?: string[],

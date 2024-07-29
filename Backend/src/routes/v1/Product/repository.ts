@@ -1,4 +1,4 @@
-import mongoose, { FilterQuery, SortOrder } from "mongoose";
+import mongoose, { FilterQuery, SortOrder, Types } from "mongoose";
 import { isInteger } from "../../../utils";
 import CustomError from "../../../utils/Error";
 import { CategoryModel } from "../Category/model";
@@ -249,5 +249,27 @@ export const updateQuantityProduct=async(productId:string,quantity:number)=>{
   if(product.quantity < quantity) throw new CustomError("Insufficient product quantity",400);
   product.quantity -=quantity;
   return product.save();
-
 }
+
+export const getCreatedDataByMonth=async(sellerId:string)=>{
+  return ProductModel.aggregate([
+    {
+      $match:{
+        createdBy: new Types.ObjectId(sellerId),
+      }
+    },
+    {
+      $group:{
+        _id:{$month:'$createdAt'},
+        totalCreated:{$sum:1},
+      }
+    },
+    {
+      $project:{
+        _id:0,
+        month:'$_id',
+        totalCreated:1,
+      }
+    }
+  ])
+};

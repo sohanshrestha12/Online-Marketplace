@@ -1,7 +1,7 @@
 import CustomError from "../../../utils/Error";
 import { getCategoryBrand } from "../Brand/repository";
 import { Product } from "./model";
-import { createProduct, deleleteProduct, deleteMultipleProducts, filterProducts, getAllProducts, getProductById, updateProduct } from "./repository";
+import { createProduct, deleleteProduct, deleteMultipleProducts, filterProducts, getAllProducts, getCreatedDataByMonth, getProductById, updateProduct } from "./repository";
 import { ProductQuery, SearchQuery, updateProducts } from "./types";
 
 const ProductService = {
@@ -30,6 +30,9 @@ const ProductService = {
   },
   async deleteMultipleProduct(ids:string[],userId:string){
      return deleteMultipleProducts(ids,userId);
+  },
+  async getCreatedDataByMonth(sellerId:string){
+    return getCreatedDataByMonth(sellerId);
   }
 };
 
