@@ -175,9 +175,6 @@ const comments = product.comments as Comment[];
 export const filterProducts = async (
   query: SearchQuery
 ): Promise<Product[] | null> => {
-  if (!query.category) {
-    return ProductModel.find({});
-  }
   return ProductModel.find(query);
 };
 

@@ -2,6 +2,7 @@ import { Product } from "./model";
 
 export interface SearchQuery {
   search?: string;
+  name?: string | { $regex: RegExp };
   brand?: string | string[] | { $in: string[] };
   category?: string | { $regex: RegExp };
   minPrice?: string;
@@ -13,6 +14,7 @@ export interface SearchQuery {
     | RegExp[]
     | { $in: (string | RegExp)[] };
   price?: { $gte?: number; $lte?: number };
+  $or?: Array<{ [key: string]: { $regex: RegExp } }>;
 }
 
 export interface ProductQuery {

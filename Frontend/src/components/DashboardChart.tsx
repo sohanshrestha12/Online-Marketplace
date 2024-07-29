@@ -1,13 +1,12 @@
 import {
   type ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { CombinedData } from "@/Types/Product";
-import { useEffect } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 interface DashboardChartProps {

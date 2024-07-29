@@ -80,8 +80,10 @@ const SideBar = ({ children }: SideBarProps) => {
             overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"}`}
           >
             <div className="leading-4">
-              <h4 className="font-semibold capitalize">{auth.user?.username}</h4>
-              <span className="text-sm">{auth.user?.email.split('@')[0]}</span>
+              <h4 className="font-semibold capitalize">
+                {auth.user?.username}
+              </h4>
+              <span className="text-sm">{auth.user?.email.split("@")[0]}</span>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger>
@@ -90,10 +92,12 @@ const SideBar = ({ children }: SideBarProps) => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <Link to={'/profile'}>
-                <DropdownMenuItem>My Profile</DropdownMenuItem>
+                <Link to={"/profile"}>
+                  <DropdownMenuItem>My Profile</DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
