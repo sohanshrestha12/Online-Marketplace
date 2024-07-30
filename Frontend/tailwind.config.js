@@ -41,6 +41,11 @@ module.exports = {
           to: { height: "0" },
         },
       },
+      backgroundClip: {
+        padding: "padding-box",
+        content: "content-box",
+        border: "border-box",
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
@@ -50,7 +55,7 @@ module.exports = {
   },
   variants: {
     extend: {
-      textColor: ["group-hover"], 
+      textColor: ["group-hover"],
     },
   },
   plugins: [require("tailwindcss-animate")],

@@ -150,7 +150,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex flex-col gap-3 max-w-screen-2xl pt-3 pb-3">
+    <nav className="flex flex-col dark:text-white gap-3 max-w-screen-2xl pt-3 pb-3">
       <div className="flex gap-5 items-center">
         <div>
           <Link to={"/"}>
@@ -165,7 +165,7 @@ const Navbar = () => {
               {({ handleSubmit }) => (
                 <Form className="w-[80%] flex items-center relative">
                   <Field
-                    className="w-full padding_Right rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus-visible:border-2 focus:border-black focus-visible:shadow-sm"
+                    className="w-full dark:!bg-slate-800 padding_Right rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus-visible:border-2 focus:border-black focus-visible:shadow-sm"
                     placeholder="Search"
                     as={Input}
                     name="search"
@@ -203,7 +203,7 @@ const Navbar = () => {
             </ToolTip>
           )}
           {showNotification && (
-            <div className="h-[400px] py-2 px-3 absolute top-9 z-20 -right-30 w-[350px] bg-white shadow">
+            <div className="h-[400px]py-2 px-3 absolute top-9 z-20 -right-30 w-[350px] bg-white shadow">
               <h3 className="text-xl font-semibold mb-2">Messages</h3>
               <div>
                 {notifications.map((n, i) => (
@@ -300,18 +300,24 @@ const Navbar = () => {
       <div>
         <ul>
           <li className="flex gap-5 text-sm font-medium">
-            <Link className="no-underline text-black" to="/">
+            <Link className="no-underline dark:text-white" to="/">
               Home
             </Link>
-            <Link className="no-underline text-black" to="/">
+            <Link className="no-underline dark:text-white" to="/">
               Help & Support
             </Link>
             {user?.role === "SELLER" ? (
-              <Link className="no-underline text-black" to="/profile">
+              <Link
+                className="no-underline dark:text-white"
+                to="/profile"
+              >
                 Manage Profile
               </Link>
             ) : (
-              <Link className="no-underline text-black" to="/seller">
+              <Link
+                className="no-underline dark:text-white "
+                to="/seller"
+              >
                 Become a seller
               </Link>
             )}

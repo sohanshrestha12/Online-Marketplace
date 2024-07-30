@@ -6,7 +6,7 @@ import ScrollToTop from "./ScrollToTop";
 const AppLayout = () => {
   return (
     <>
-      <div className="min-h-screen px-[80px]">
+      <div className="min-h-screen dark:bg-slate-800 px-[80px]">
         <ScrollToTop/>
         <Navbar />
         <Outlet />
