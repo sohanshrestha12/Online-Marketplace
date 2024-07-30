@@ -173,16 +173,15 @@ const Comment = ({ product, updateRating }: CommentProps) => {
                   <div>
                     <p className="capitalize flex gap-2 items-center text-sm font-semibold">
                       {item.user}
-                      {product.rating?.some((r) => r.user === item.userId) ? (
+                      {product.rating &&
                         <RatingStars
                           rating={
                             product.rating.find((r) => r.user === item.userId)
                               ?.rating ?? 0
                           }
                         />
-                      ) : (
-                        0
-                      )}
+                      
+                      }
                     </p>
                     <p className="break-all break-words ml-2 px-2  line-clamp-2">
                       {item.comment}
