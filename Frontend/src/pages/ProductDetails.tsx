@@ -203,6 +203,7 @@ const ProductDetails = () => {
     }
   };
 
+
   useEffect(() => {
     const getProductFromId = async () => {
       try {
@@ -492,6 +493,7 @@ const ProductDetails = () => {
       {activeProduct && (
         <div className="col-span-12 mt-5 py-2">
           <ProductDescription activeProduct={activeProduct} />
+          
         </div>
       )}
 
@@ -500,49 +502,59 @@ const ProductDetails = () => {
           <Comment product={activeProduct} updateRating={updateRating} />
         </div>
       )}
-      {showChat && <PersonalChat activeProduct={activeProduct!} toggleChat={toggleChat} socket={socket!} {...(auth.roomId?{roomId:auth.roomId}: {roomId})} user={user!} handleMessageSubmit={handleMessageSubmit}/>
-      //  (
-      //   <div className="h-[450px] w-[380px] rounded-t-md flex flex-col fixed bottom-0 right-10 shadow z-10 bg-white" >
-      //     <div className="p-3 flex gap-2 items-center  justify-between bg-blue-600 rounded">
-      //       <div className="flex gap-3 items-center">
-      //         <img
-      //           src={`http://localhost:5100/${activeProduct?.createdBy?.profileImage}`}
-      //           className="rounded-full object-contain h-[40px] w-[40px]"
-      //           alt="404 profile not found"
-      //         />
-      //         <h5 className="text-lg font-semibold capitalize text-white">
-      //           {activeProduct?.createdBy?.username}
-      //         </h5>
-      //       </div>
-      //       <div
-      //         className="p-2 hover:cursor-pointer group"
-      //         onClick={toggleChat}
-      //       >
-      //         <IoClose className="text-white text-xl -mt-6 -mr-3 transition-all group-hover:!text-gray-200" />
-      //       </div>
-      //     </div>
-      //     <div className="flex-1 h-full">Content</div>
-      //     <div className="h-fit mb-2 flex items-center bg-gray-100 text-black">
-      //       <Formik initialValues={initialValue} onSubmit={handleMessageSubmit}>
-      //         <Form className="relative w-full">
-      //           <Field
-      //             className="focus-visible:outline-none focus-visible:ring-offset-transparent focus-visible:ring-none focus:border-none focus-visible:ring-offset-0 focus-visible:box-shadow-none focus-visible:border-none "
-      //             placeholder="Enter your message"
-      //             name="message"
-      //             as={Input}
-      //           />
-      //           <div className="absolute flex items-center top-[50%] transform -translate-y-[50%] right-3">
-      //             <button type="submit" className="p-0 m-0 flex items-center">
-      //               <ToolTip name="Send">
-      //                 <IoSend className="text-lg" />
-      //               </ToolTip>
-      //             </button>
-      //           </div>
-      //         </Form>
-      //       </Formik>
-      //     </div>
-      //   </div>
-      // )
+      {
+        showChat && (
+          <PersonalChat
+            activeProduct={activeProduct!}
+            toggleChat={toggleChat}
+            socket={socket!}
+            {...(auth.roomId ? { roomId: auth.roomId } : { roomId })}
+            user={user!}
+            handleMessageSubmit={handleMessageSubmit}
+          />
+        )
+        //  (
+        //   <div className="h-[450px] w-[380px] rounded-t-md flex flex-col fixed bottom-0 right-10 shadow z-10 bg-white" >
+        //     <div className="p-3 flex gap-2 items-center  justify-between bg-blue-600 rounded">
+        //       <div className="flex gap-3 items-center">
+        //         <img
+        //           src={`http://localhost:5100/${activeProduct?.createdBy?.profileImage}`}
+        //           className="rounded-full object-contain h-[40px] w-[40px]"
+        //           alt="404 profile not found"
+        //         />
+        //         <h5 className="text-lg font-semibold capitalize text-white">
+        //           {activeProduct?.createdBy?.username}
+        //         </h5>
+        //       </div>
+        //       <div
+        //         className="p-2 hover:cursor-pointer group"
+        //         onClick={toggleChat}
+        //       >
+        //         <IoClose className="text-white text-xl -mt-6 -mr-3 transition-all group-hover:!text-gray-200" />
+        //       </div>
+        //     </div>
+        //     <div className="flex-1 h-full">Content</div>
+        //     <div className="h-fit mb-2 flex items-center bg-gray-100 text-black">
+        //       <Formik initialValues={initialValue} onSubmit={handleMessageSubmit}>
+        //         <Form className="relative w-full">
+        //           <Field
+        //             className="focus-visible:outline-none focus-visible:ring-offset-transparent focus-visible:ring-none focus:border-none focus-visible:ring-offset-0 focus-visible:box-shadow-none focus-visible:border-none "
+        //             placeholder="Enter your message"
+        //             name="message"
+        //             as={Input}
+        //           />
+        //           <div className="absolute flex items-center top-[50%] transform -translate-y-[50%] right-3">
+        //             <button type="submit" className="p-0 m-0 flex items-center">
+        //               <ToolTip name="Send">
+        //                 <IoSend className="text-lg" />
+        //               </ToolTip>
+        //             </button>
+        //           </div>
+        //         </Form>
+        //       </Formik>
+        //     </div>
+        //   </div>
+        // )
       }
       <BuyNowDialog
         activeProduct={activeProduct}

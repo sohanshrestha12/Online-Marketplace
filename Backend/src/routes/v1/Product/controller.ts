@@ -13,6 +13,7 @@ const ProductController = {
   ) {
     try {
       const body = req.body;
+      console.log(body);
       const files = req.files as Express.Multer.File[];
       const user = res.locals.user;
       if (!files) throw new CustomError("Image is required", 400);

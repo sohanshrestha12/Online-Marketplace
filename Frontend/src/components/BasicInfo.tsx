@@ -79,7 +79,7 @@ const BasicInfo = () => {
     quantity: number | string;
     price: number | string;
     description: string;
-    video: string;
+    videoUrl: string;
   }
   const initialValues: FormValues = {
     name: "",
@@ -89,7 +89,7 @@ const BasicInfo = () => {
     price: "",
     quantity: "",
     description: "",
-    video: "",
+    videoUrl: "",
   };
 
   const handleSubmit = async (
@@ -151,7 +151,7 @@ const BasicInfo = () => {
       //     console.log(`${pair[0]}: ${pair[1]}`);
       //   }
       // }
-      resetForm();
+      resetForm({values:initialValues});
       setImages([]);
       setImageShow([]);
       setSize([]);
@@ -281,16 +281,26 @@ const BasicInfo = () => {
                   </div>
                   <div className="flex space-x-2 items-center">
                     <label
-                      htmlFor="video"
+                      htmlFor="videoUrl"
                       className="font-semibold whitespace-no-wrap !w-[100px]"
                     >
                       Video Url
                     </label>
-                    <div className="w-full">
+                    <div className="flex flex-col w-full">
                       <p className="py-1 text-xs text-gray-500">
                         Leave empty if no video url.
                       </p>
-                      <Field name="video" type="text" id="video" as={Input} />
+                      <Field
+                        name="videoUrl"
+                        type="text"
+                        id="videoUrl"
+                        as={Input}
+                      />
+                    <ErrorMessage
+                      name="videoUrl"
+                      component="div"
+                      className="ml-2 mt-1 text-red-500 text-xs"
+                    />
                     </div>
                   </div>
                 </Card>

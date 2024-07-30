@@ -111,9 +111,7 @@ export const updateProduct = async (
     ? [body.existingImage]
     : [];
   const mergedImages = [...existingImages, ...files];
-  console.log("files", files);
-  console.log("existing Image", body.existingImage);
-  console.log("Merged Image", mergedImages);
+
   const c3 = await CategoryModel.findOne({ name: body.category }).lean();
   const c2 = await CategoryModel.findOne({ name: c3?.parent }).lean();
   const c1 = await CategoryModel.findOne({ name: c2?.parent }).lean();
@@ -168,6 +166,7 @@ const comments = product.comments as Comment[];
     createdAt: product.createdAt,
     createdBy: product.createdBy,
     rating:product.rating,
+    videoUrl:product.videoUrl,
   };
   return modifiedProduct;
 };

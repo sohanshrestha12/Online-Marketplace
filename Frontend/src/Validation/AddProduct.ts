@@ -22,7 +22,7 @@ const validationSchema = Yup.object().shape({
     .required("Price is required")
     .positive("Price must be a positive number"),
   description: Yup.string().trim().required("Description is required").matches(/^(?!\s*$).+/, "Description cannot be just whitespace"),
-  video: Yup.string().url("Must be a valid URL"),
+  videoUrl: Yup.string().url("Must be a valid URL"),
 });
 
 export default validationSchema;

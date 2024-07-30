@@ -79,7 +79,7 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
     price: product.price,
     quantity: product.quantity,
     description: product.description,
-    video: product.videoUrl,
+    videoUrl: product.videoUrl,
   };
 
   useEffect(() => {
@@ -277,7 +277,7 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
                       Video Url
                     </label>
                     <div className="w-full">
-                      <Field name="video" type="text" id="video" as={Input} />
+                      <Field name="videoUrl" type="text" id="Url" as={Input} />
                     </div>
                   </div>
                 </div>
