@@ -1,5 +1,7 @@
 import { Category } from "@/Types/Category";
+import { imageMapping } from "@/utils/Mapping/ImageMapping";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 interface CategoriesProps {
@@ -15,6 +17,7 @@ const shuffleArray = (array: Category[]) => {
 };
 const Categories: React.FC<CategoriesProps> = ({ categories }) => {
   const [shuffledCategories, setShuffledCategories] = useState<Category[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setShuffledCategories(shuffleArray([...categories]));
@@ -28,6 +31,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
           .splice(0, 12)
           .map((item, i) => (
             <div
+              onClick={()=>navigate(`/productLists?category=${item.name}`)}
               className="col-span-2 gap-1 h-[150px] w-[180px] hover:cursor-pointer hover:shadow-md bg-white hover:border-b"
               key={i}
             >
@@ -36,7 +40,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
                   <img
                     className="h-full w-full object-cover"
                     src={
-                      "https://images.unsplash.com/photo-1718804714822-8b81342a5e9d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                      imageMapping[item.name]
                     }
                     alt="404 categories"
                   />

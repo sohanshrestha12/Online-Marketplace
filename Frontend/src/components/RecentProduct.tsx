@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 const RecentProduct = () => {
   const { products } = useProduct();
+
   return (
     <div className="mt-5 max-w-screen-2xl">
       <h3 className="text-lg font-semibold mb-4">Recent Products</h3>

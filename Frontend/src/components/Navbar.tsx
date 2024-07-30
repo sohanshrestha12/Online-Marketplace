@@ -138,8 +138,8 @@ const Navbar = () => {
   const handleMessageClick = (senderDetails: User, productId: string) => {
     // setActiveUser(senderDetails);
     console.log('senders detail',senderDetails);
+    setShowNotification(!showNotification);
     updateActiveUser(senderDetails);
-    toggleChat();
     if (socket) {
       const sellerRoomId = `${productId}-${user?._id}-${senderDetails._id}`;
       if(sellerRoomId){
@@ -204,7 +204,7 @@ const Navbar = () => {
           )}
           {showNotification && (
             <div className="h-[400px] py-2 px-3 absolute top-9 z-20 -right-30 w-[350px] bg-white shadow">
-              <h3 className="text-xl font-semibold">Messages</h3>
+              <h3 className="text-xl font-semibold mb-2">Messages</h3>
               <div>
                 {notifications.map((n, i) => (
                   <div
