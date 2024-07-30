@@ -5,6 +5,9 @@ import {
   CImage,
 } from "@coreui/react";
 import "@coreui/coreui/dist/css/coreui.min.css";
+import banner1 from '../assets/images/banner/banner1.jpg'
+import banner2 from '../assets/images/banner/banner1.jpeg'
+import banner3 from '../assets/images/banner/banner3.jpg'
 
 const CarouselComponent = () => {
   return (
@@ -12,37 +15,36 @@ const CarouselComponent = () => {
       <CCarouselItem style={{ height: "70vh" }}>
         <CImage
           className="d-block w-100"
-          style={{ height: "70vh", objectFit: "cover" }}
-          src="https://images.unsplash.com/photo-1718804714822-8b81342a5e9d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          style={{ height: "70vh", objectFit: "fill" }}
+          src={banner1}
           alt="slide 1"
         />
         <CCarouselCaption className="d-none d-md-block">
-          <h5>First slide label</h5>
-          <p>Some representative placeholder content for the first slide.</p>
+          <h5>Premium Online Shop</h5>
+          <p>Special Offer 75% off! Shop online Now!</p>
         </CCarouselCaption>
       </CCarouselItem>
       <CCarouselItem style={{ height: "70vh" }}>
         <CImage
           className="d-block w-100"
-          style={{ height: "70vh", objectFit: "cover" }}
-          src="https://images.unsplash.com/photo-1718804714822-8b81342a5e9d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          style={{ height: "70vh", objectFit: "fill" }}
+          src={banner2}
           alt="slide 2"
         />
         <CCarouselCaption className="d-none d-md-block">
-          <h5>Second slide label</h5>
-          <p>Some representative placeholder content for the first slide.</p>
+          <h5>Flash Sales</h5>
+          <p>Special Offer upto 70% off! Shop online Now!</p>
         </CCarouselCaption>
       </CCarouselItem>
       <CCarouselItem style={{ height: "70vh" }}>
         <CImage
           className="d-block w-100"
-          style={{ height: "70vh", objectFit: "cover" }}
-          src="https://images.unsplash.com/photo-1718804714822-8b81342a5e9d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="slide 3"
+          style={{ height: "70vh", objectFit: "fill" }}
+          src={banner3}
         />
         <CCarouselCaption className="d-none d-md-block">
-          <h5>Third slide label</h5>
-          <p>Some representative placeholder content for the first slide.</p>
+          <h5>Global Collection</h5>
+          <p>Shop online to get upto 50% off on your first product</p>
         </CCarouselCaption>
       </CCarouselItem>
     </CCarousel>
