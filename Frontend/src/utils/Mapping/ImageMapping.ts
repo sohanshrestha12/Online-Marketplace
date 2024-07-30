@@ -88,29 +88,90 @@ import eth from "../../assets/images/Ethernet.jpeg";
 import aa from "../../assets/images/aa.jpeg";
 import aaa from "../../assets/images/aaa.jpeg";
 import rech from "../../assets/images/rech.jpeg";
-import potatoChip from "../../assets/images/potatoChip.jpeg"
-import beverage from "../../assets/images/beverage.jpeg"
-import canned from "../../assets/images/canned.jpeg"
-import dog from "../../assets/images/dog.jpeg"
-import cat from "../../assets/images/cat.jpeg"
-import toys from "../../assets/images/ptoys.jpeg"
-import kapp from "../../assets/images/kapp.jpeg"
-import b1 from "../../assets/images/beddings1jpeg.jpg"
-import clean from "../../assets/images/clean.jpeg"
-import fd from "../../assets/images/fd.jpeg"
-import babyDoll from "../../assets/images/babyd.jpeg"
-import collectible from "../../assets/images/collectibled.jpeg"
-import superHero from "../../assets/images/superhero.jpeg"
-import mFigures from "../../assets/images/mFigures.jpeg"
-import fFig from "../../assets/images/fFig.jpeg"
-import strategyG from "../../assets/images/strategyG.jpeg"
-import fg from "../../assets/images/fg.jpeg"
-import eg from "../../assets/images/eg.jpeg"
-import swing from "../../assets/images/swing.jpeg"
-import tob from "../../assets/images/tob.jpeg"
-import wt from "../../assets/images/wt.jpeg"
+import potatoChip from "../../assets/images/potatoChip.jpeg";
+import beverage from "../../assets/images/beverage.jpeg";
+import canned from "../../assets/images/canned.jpeg";
+import dog from "../../assets/images/dog.jpeg";
+import cat from "../../assets/images/cat.jpeg";
+import toys from "../../assets/images/ptoys.jpeg";
+import kapp from "../../assets/images/kapp.jpeg";
+import b1 from "../../assets/images/beddings1jpeg.jpg";
+import clean from "../../assets/images/clean.jpeg";
+import fd from "../../assets/images/fd.jpeg";
+import babyDoll from "../../assets/images/babyd.jpeg";
+import collectible from "../../assets/images/collectibled.jpeg";
+import superHero from "../../assets/images/superhero.jpeg";
+import mFigures from "../../assets/images/mFigures.jpeg";
+import fFig from "../../assets/images/fFig.jpeg";
+import strategyG from "../../assets/images/strategyG.jpeg";
+import fg from "../../assets/images/fg.jpeg";
+import eg from "../../assets/images/eg.jpeg";
+import swing from "../../assets/images/swing.jpeg";
+import tob from "../../assets/images/tob.jpeg";
+import wt from "../../assets/images/wt.jpeg";
+import sofa from "../../assets/images/sofa.jpeg";
+import bdr from "../../assets/images/bdr.jpeg";
+import office from "../../assets/images/officef.jpeg";
+import wallArt from "../../assets/images/wallArt.jpeg";
+import pillow from "../../assets/images/pillow.jpeg";
+import vases from "../../assets/images/vases.jpeg";
+import cookWare from "../../assets/images/cookware.jpeg";
+import ut from "../../assets/images/ut.jpeg";
+import cut from "../../assets/images/cut.jpeg";
+import bsheets from "../../assets/images/bsheets.jpeg";
+import comfort from "../../assets/images/comfort.jpeg";
+import p1 from "../../assets/images/pillow1.jpeg";
+import mss from "../../assets/images/mensSports.jpeg";
+import wss from "../../assets/images/womensSport.jpeg";
+import childrenss from "../../assets/images/childrenSports.jpeg";
+import tm from "../../assets/images/tm.jpeg";
+import dumbell from "../../assets/images/dumbell.jpeg";
+import ygMats from "../../assets/images/ygMats.jpeg";
+import camp from "../../assets/images/camp.jpeg";
+import hicking from "../../assets/images/hicking.jpeg";
+import ca1 from "../../assets/images/ca1.jpeg";
+import cp1 from "../../assets/images/cp1.jpeg";
+import tire from "../../assets/images/tire.jpeg";
+import pt from "../../assets/images/pt.jpeg";
+import ht from "../../assets/images/ht.jpeg";
+import tss from "../../assets/images/tss.jpeg";
+import paint from "../../assets/images/paint.jpeg";
+import lighting from "../../assets/images/lighting.jpeg";
+import hardware from "../../assets/images/hw.jpeg";
 
 export const imageMapping: { [key: string]: string } = {
+  "Car Accessories": ca1,
+  "Car Parts": cp1,
+  "Tires & Wheels": tire,
+  "Power Tools": pt,
+  "Hand Tools": ht,
+  "Tool Sets": tss,
+  "Paint & Supplies": paint,
+  Lighting: lighting,
+  Hardware: hardware,
+
+  "Men's Sportswear": mss,
+  "Women's Sportswear": wss,
+  "Children's Sportswear": childrenss,
+  Treadmills: tm,
+  Dumbbells: dumbell,
+  "Yoga Mats": ygMats,
+  "Camping Equipment": camp,
+  "Hiking Gear": hicking,
+
+  "Living Room Furniture": sofa,
+  "Bedroom Furniture": bdr,
+  "Office Furniture": office,
+  "Wall Art": wallArt,
+  "Decorative Pillows": pillow,
+  Vases: vases,
+  Cookware: cookWare,
+  Utensils: ut,
+  Cutlery: cut,
+  Sheets: bsheets,
+  Comforters: comfort,
+  Pillows: p1,
+
   "Fashion Dolls": fd,
   "Baby Dolls": babyDoll,
   "Collectible Dolls": collectible,
