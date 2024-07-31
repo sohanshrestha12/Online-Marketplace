@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { getLastWord } from "@/utils/Category";
 import MyProductFilters from "@/components/MyProductFilters";
 import { FormikValues } from "formik";
+import { BiSortAlt2 } from "react-icons/bi";
 
 const MyProduct = () => {
   const {
@@ -25,6 +26,24 @@ const MyProduct = () => {
   const handleActionOpen = (index: number) => setActionOpen(index);
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [filter,setFilter] = useState<string>("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [shortField,setShortField] = useState<string>("price");
+  const [sortOrder,setShortOrder] = useState<"asc"|"des">("asc");
+
+        
+  const toggleSortOrder=()=>{
+    setShortOrder((prevOrder) => prevOrder === "asc"?"des":"asc");
+  }
+
+  const handleShort = (field:string) =>{
+    if(!user) return;
+    setShortField(field);
+    toggleSortOrder();
+    fetchDashboardProducts(user?._id,1,filter,field,sortOrder);
+  }
+
+
+
   const handleActionClose = () => {
     setActionOpen(null);
   };
@@ -142,8 +161,9 @@ const MyProduct = () => {
                       <th scope="col" className="px-6 py-4">
                         Brand
                       </th>
-                      <th scope="col" className="px-6 py-4">
+                      <th scope="col" className="px-6 relative py-4">
                         Price
+                        <BiSortAlt2 onClick={()=>handleShort("price")} className="absolute top-6 right-2 text-lg text-gray-600 hover:text-black hover:cursor-pointer" />
                       </th>
                       <th scope="col" className="px-6 py-4">
                         Stock
@@ -231,12 +251,12 @@ const MyProduct = () => {
               <p className="text-sm font-semibold text-slate-500">
                 Total items: {dashboardProducts?.totalProduct}
               </p>
-                <Button
-                  onClick={handleMultipleDelete}
-                  disabled={selectedRows.length<1}
-                >
-                  Delete
-                </Button>
+              <Button
+                onClick={handleMultipleDelete}
+                disabled={selectedRows.length < 1}
+              >
+                Delete
+              </Button>
             </div>
             <div className="flex gap-2 items-center">
               <div>

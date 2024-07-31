@@ -24,10 +24,10 @@ export const createProduct = (
 export const getAllProducts = async (
   query: ProductQuery
 ): Promise<ProductReturn> => {
-  const { page = "1", limit, sort, title, category, createdBy } = query;
-
+  const { page = "1", limit, sort, title, category, createdBy,shortField,sortOrder } = query;
+  console.log(shortField,sortOrder);
   const conditions: FilterQuery<ProductQuery> = {};
-  const sortQuery: { createdAt: SortOrder } = { createdAt: "asc" };
+  const sortQuery: { [key:string]: SortOrder } = {};
 
   if (category) {
     conditions.category = {
@@ -47,7 +47,10 @@ export const getAllProducts = async (
       $options: "i",
     };
   }
-  if (sort && sort === "desc") {
+  if(shortField){
+    sortQuery[shortField] = sortOrder === "des" ? "desc" : "asc";
+  }
+  else if (sort && sort === "desc") {
     sortQuery.createdAt = "desc";
   }
 

@@ -24,7 +24,9 @@ interface ProductContextValue {
   fetchDashboardProducts: (
     userId: string,
     page?: number,
-    category?: string
+    category?: string,
+    shortField?: string,
+    sortOrder?: string
   ) => void;
   dashboardProducts: FetchFilterProduct | undefined;
   deleteProductState: (productId: string) => void;
@@ -204,7 +206,9 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   const fetchDashboardProducts = async (
     userId: string,
     page?: number,
-    category?: string
+    category?: string,
+    shortField?:string,
+    sortOrder?:string
   ) => {
     try {
       setDashboardProducts(undefined);
@@ -212,6 +216,8 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
         createdBy: userId,
         page: page,
         category: category,
+        shortField:shortField,
+        sortOrder:sortOrder
       });
       console.log("dashboard products", response);
       setDashboardProducts(response.data.data);

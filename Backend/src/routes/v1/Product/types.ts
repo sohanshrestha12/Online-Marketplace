@@ -24,6 +24,8 @@ export interface ProductQuery {
   sort?: string;
   title?: string;
   category?: string;
+  shortField?:string,
+  sortOrder?:string,
 }
 
 export interface ProductReturn {
