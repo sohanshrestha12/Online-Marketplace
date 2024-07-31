@@ -25,7 +25,7 @@ const MyProduct = () => {
   const [selectedRows, setSelectedRows] = useState<FetchProduct[]>([]);
   const handleActionOpen = (index: number) => setActionOpen(index);
   const [selectAll, setSelectAll] = useState<boolean>(false);
-  const [filter,setFilter] = useState<string>("");
+  const [filter,setFilter] = useState<{title?:string,category?:string}>({});
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [shortField,setShortField] = useState<string>("price");
   const [sortOrder,setShortOrder] = useState<"asc"|"des">("asc");
@@ -126,8 +126,7 @@ const MyProduct = () => {
   };
 
   const handleSearch=(values:FormikValues)=>{
-    setFilter(values.search);
-
+    setFilter({[values.filterType.value]:values.search.trim()});
   };
   return (
     <div className="w-full p-4 overflow-x-hidden">

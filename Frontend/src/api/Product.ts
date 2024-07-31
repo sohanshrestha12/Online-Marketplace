@@ -29,18 +29,21 @@ export const getAllBrands = () => {
 export const getAllProducts = (params: {
   page?: number;
   limit?: number;
-  category?: string;
+  filter?: {
+    category?:string,
+    title?:string
+  };
   createdBy?: string;
   shortField?:string,
   sortOrder?:string,
 }) => {
-  const { page,limit, category, createdBy,shortField,sortOrder } = params;
+  const { page,limit, filter, createdBy,shortField,sortOrder } = params;
 
   return MarketUrl.get("/product",{
     params:{
       page,
       limit,
-      category,
+      ...filter,
       createdBy,
       shortField,
       sortOrder

@@ -24,7 +24,10 @@ interface ProductContextValue {
   fetchDashboardProducts: (
     userId: string,
     page?: number,
-    category?: string,
+    filter?: {
+      category?:string,
+      title?:string,
+    },
     shortField?: string,
     sortOrder?: string
   ) => void;
@@ -211,7 +214,10 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   const fetchDashboardProducts = async (
     userId: string,
     page?: number,
-    category?: string,
+    filter?:{
+      category?:string,
+      title?:string,
+    },
     shortField?:string,
     sortOrder?:string
   ) => {
@@ -220,7 +226,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
       const response = await getAllProducts({
         createdBy: userId,
         page: page,
-        category: category,
+        filter:filter,
         shortField:shortField,
         sortOrder:sortOrder
       });

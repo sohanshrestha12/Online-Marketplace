@@ -25,7 +25,6 @@ export const getAllProducts = async (
   query: ProductQuery
 ): Promise<ProductReturn> => {
   const { page = "1", limit, sort, title, category, createdBy,shortField,sortOrder } = query;
-  console.log(shortField,sortOrder);
   const conditions: FilterQuery<ProductQuery> = {};
   const sortQuery: { [key:string]: SortOrder } = {};
 
@@ -42,7 +41,7 @@ export const getAllProducts = async (
   }
 
   if (title) {
-    conditions.title = {
+    conditions.name = {
       $regex: title,
       $options: "i",
     };
