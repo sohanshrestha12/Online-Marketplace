@@ -36,7 +36,7 @@ const Navbar = () => {
   const { user,activeUser,updateActiveUser} = useAuth();
   const { socket } = useSocket();
   const [showNotification, setShowNotification] = useState<boolean>(false);
-  const { showChat, toggleChat, handleMessageSubmit } = useProduct();
+  const { showChat,setChat, toggleChat, handleMessageSubmit } = useProduct();
 
   const [notifications, setNotifications] = useState<
     {
@@ -139,6 +139,7 @@ const Navbar = () => {
     // setActiveUser(senderDetails);
     console.log('senders detail',senderDetails);
     setShowNotification(!showNotification);
+    setChat();
     updateActiveUser(senderDetails);
     if (socket) {
       const sellerRoomId = `${productId}-${user?._id}-${senderDetails._id}`;
@@ -203,7 +204,7 @@ const Navbar = () => {
             </ToolTip>
           )}
           {showNotification && (
-            <div className="h-[400px]py-2 px-3 absolute top-9 z-20 -right-30 w-[350px] bg-white shadow">
+            <div className="h-[400px] py-2 px-3 absolute top-9 z-20 -right-30 w-[350px] bg-white shadow">
               <h3 className="text-xl font-semibold mb-2">Messages</h3>
               <div>
                 {notifications.map((n, i) => (

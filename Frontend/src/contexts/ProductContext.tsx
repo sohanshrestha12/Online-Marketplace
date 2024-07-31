@@ -46,6 +46,7 @@ interface ProductContextValue {
     productId?: string
   ) => void;
   getCombinedDataForChart: () => Promise<CombinedData[] | undefined>;
+  setChat:()=>void;
 }
 interface ProductProviderProps {
   children: ReactNode;
@@ -63,6 +64,7 @@ const ProductContext = createContext<ProductContextValue>({
   showChat: false,
   handleMessageSubmit: () => {},
   getCombinedDataForChart: () => Promise.resolve(undefined),
+  setChat:()=>{},
 });
 
 export const ProductProvider = ({ children }: ProductProviderProps) => {
@@ -109,6 +111,9 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   const toggleChat = () => {
     setShowChat(!showChat);
   };
+  const setChat = () =>{
+    setShowChat(true);
+  }
 
   const handleMessageSubmit = async (
     values: FormikValues,
@@ -252,6 +257,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
         showChat,
         handleMessageSubmit,
         getCombinedDataForChart,
+        setChat
       }}
     >
       {children}
