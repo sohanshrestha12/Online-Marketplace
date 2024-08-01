@@ -4,6 +4,7 @@ import CategoryFilter from "@/components/CategoryFilter";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FetchProduct } from "./ProductDetails";
+import ProductSkeleton from "@/components/ProductSkeleton";
 
 const ProductLists = () => {
   const location = useLocation();
@@ -11,27 +12,27 @@ const ProductLists = () => {
   const [filteredProducts, setFilteredProducts] = useState<FetchProduct[]>([]);
   const [allBrands, setAllBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-//   const [checkedBrands, setCheckedBrands] = useState<string[]>(() => {
-//     const storedBrands = localStorage.getItem("checkedBrands");
-//     return storedBrands ? JSON.parse(storedBrands) : [];
-//   });
-//   const [selectedColors, setSelectedColors] = useState<string[]>(() => {
-//     const storedColors = localStorage.getItem("selectedColors");
-//     return storedColors ? JSON.parse(storedColors) : [];
-//   });
-//  const [minPrice, setMinPrice] = useState<string>(() => {
-//    const storedMinPrice = localStorage.getItem("minPrice");
-//    return storedMinPrice ? JSON.parse(storedMinPrice): "";
-//  });
+  //   const [checkedBrands, setCheckedBrands] = useState<string[]>(() => {
+  //     const storedBrands = localStorage.getItem("checkedBrands");
+  //     return storedBrands ? JSON.parse(storedBrands) : [];
+  //   });
+  //   const [selectedColors, setSelectedColors] = useState<string[]>(() => {
+  //     const storedColors = localStorage.getItem("selectedColors");
+  //     return storedColors ? JSON.parse(storedColors) : [];
+  //   });
+  //  const [minPrice, setMinPrice] = useState<string>(() => {
+  //    const storedMinPrice = localStorage.getItem("minPrice");
+  //    return storedMinPrice ? JSON.parse(storedMinPrice): "";
+  //  });
 
-//  const [maxPrice, setMaxPrice] = useState<string>(() => {
-//    const storedMaxPrice = localStorage.getItem("maxPrice");
-//    return storedMaxPrice ? JSON.parse(storedMaxPrice) :"";
-//  });
- const [checkedBrands, setCheckedBrands] = useState<string[]>([]);
- const [selectedColors, setSelectedColors] = useState<string[]>([]);
- const [minPrice, setMinPrice] = useState<string>("");
- const [maxPrice, setMaxPrice] = useState<string>("");
+  //  const [maxPrice, setMaxPrice] = useState<string>(() => {
+  //    const storedMaxPrice = localStorage.getItem("maxPrice");
+  //    return storedMaxPrice ? JSON.parse(storedMaxPrice) :"";
+  //  });
+  const [checkedBrands, setCheckedBrands] = useState<string[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [minPrice, setMinPrice] = useState<string>("");
+  const [maxPrice, setMaxPrice] = useState<string>("");
   const handleMinPrice = (price: string) => {
     setMinPrice(price);
   };
@@ -73,8 +74,6 @@ const ProductLists = () => {
   useEffect(() => {
     localStorage.setItem("selectedColors", JSON.stringify(selectedColors));
   }, [selectedColors]);
-
-
 
   const fetchProductsFilter = async (
     category?: string,
@@ -170,15 +169,35 @@ const ProductLists = () => {
             fetchProductsFilter={fetchProductsFilter}
           />
         </div>
-        {loading ? (
-          "Loading..."
-        ) : (
-          <div className="col-span-9 grid grid-cols-12">
+      
+          <div className="col-span-9 h-fit grid grid-cols-12 items-start">
+            {loading && 
+            <>
+            <div className="col-span-4">
+              <ProductSkeleton />
+            </div>
+            <div className="col-span-4">
+              <ProductSkeleton />
+            </div>
+            <div className="col-span-4">
+              <ProductSkeleton />
+            </div>
+            <div className="col-span-4">
+              <ProductSkeleton />
+            </div>
+            <div className="col-span-4">
+              <ProductSkeleton />
+            </div>
+            <div className="col-span-4">
+              <ProductSkeleton />
+            </div>
+            </>
+            }
             {filteredProducts.map((item, index) => (
               <div
                 key={index}
                 onClick={() => handleClick(item)}
-                className="col-span-4 h-[300px] hover:shadow-xl transition-shadow duration-300 ease-in-out hover:cursor-pointer"
+                className="col-span-4 h-[300px] w-[230px] hover:shadow-xl transition-shadow duration-300 ease-in-out hover:cursor-pointer"
                 style={{
                   margin: "20px",
                   borderRadius: "5px",
@@ -199,7 +218,7 @@ const ProductLists = () => {
               </div>
             ))}
           </div>
-        )}
+    
       </div>
     </>
   );

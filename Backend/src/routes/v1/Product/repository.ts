@@ -27,7 +27,7 @@ export const getAllProducts = async (
   const { page = "1", limit, sort, title, category, createdBy,shortField,sortOrder } = query;
   const conditions: FilterQuery<ProductQuery> = {};
   const sortQuery: { [key:string]: SortOrder } = {};
-
+ 
   if (category) {
     conditions.category = {
       $regex: category,
@@ -49,8 +49,8 @@ export const getAllProducts = async (
   if(shortField){
     sortQuery[shortField] = sortOrder === "des" ? "desc" : "asc";
   }
-  else if (sort && sort === "desc") {
-    sortQuery.createdAt = "desc";
+  else if (sort) {
+    sortQuery.createdAt = sort === "desc"?"desc":"asc";
   }
 
   const pageSize = limit && isInteger(limit) ? parseInt(limit) : 10;

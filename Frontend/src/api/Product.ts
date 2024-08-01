@@ -36,8 +36,9 @@ export const getAllProducts = (params: {
   createdBy?: string;
   shortField?:string,
   sortOrder?:string,
+  sort?:string,
 }) => {
-  const { page,limit, filter, createdBy,shortField,sortOrder } = params;
+  const { page,limit, filter, createdBy,shortField,sortOrder,sort } = params;
 
   return MarketUrl.get("/product",{
     params:{
@@ -46,7 +47,8 @@ export const getAllProducts = (params: {
       ...filter,
       createdBy,
       shortField,
-      sortOrder
+      sortOrder,
+      sort
     }
   });
 };

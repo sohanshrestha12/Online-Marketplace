@@ -10,7 +10,7 @@ import ToolTip from "./ToolTip";
 const Footer = () => {
   return (
     <>
-      <div className="bg-black px-[80px] py-4 text-white grid grid-cols-12 mt-24">
+      <div className="bg-black px-[80px] py-4 text-white grid grid-cols-12">
         <div className="col-span-3">
           <p className="text-lg font-semibold mb-2 text-[#f85606]">
             Customer Care

@@ -159,7 +159,15 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   };
 
   const addProduct = (product: FetchProduct) => {
-    setProducts((prevProduct) => [product, ...prevProduct]);
+    setProducts((prevProduct) => {
+      const updatedProduct = [product, ...prevProduct];
+      if(updatedProduct.length > 12){
+        updatedProduct.pop();
+      }
+      return updatedProduct;
+    });
+
+    
   };
 
   const deleteProductState = (productId: string) => {
@@ -239,7 +247,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   useEffect(() => {
     const fetchAllProduct = async () => {
       try {
-        const response = await getAllProducts({ limit: 12 });
+        const response = await getAllProducts({ limit: 12,sort:"desc" });
         console.log("all products", response.data.data);
         setProducts(response.data.data.product);
       } catch (error) {

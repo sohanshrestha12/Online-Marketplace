@@ -110,7 +110,7 @@ const Home = () => {
   return (
     <>
       <div className="grid grid-cols-12 gap-3 max-w-screen-2xl">
-        <div className="col-span-3 bg-[#fffefe] shadow-md py-3 justify-center flex flex-col gap-1 rounded-lg relative">
+        <div className="col-span-3 bg-[#fffefe] dark:bg-slate-700 dark:text-white shadow-md py-3 justify-center flex flex-col gap-1 rounded-lg relative">
           {level1Category.map((item, i) => (
             <div
               key={i}
@@ -147,7 +147,7 @@ const Home = () => {
                     if (subHoverTimeout) clearTimeout(subHoverTimeout);
                   }}
                   onMouseLeave={handleSubCategoryLeave}
-                  className="absolute left-[102%] z-10 top-0 h-full flex flex-col gap-1 py-3 w-[200px] shadow-md bg-[#fffefe] rounded-md p-2"
+                  className="absolute  dark:bg-slate-700 left-[102%] z-10 top-0 h-full flex flex-col gap-1 py-3 w-[200px] shadow-md bg-[#fffefe] rounded-md p-2"
                 >
                   {level2Category
                     .filter(
@@ -160,7 +160,7 @@ const Home = () => {
                         onMouseEnter={() => {
                           handleSubCategoryHover(subcategory.name);
                         }}
-                        className="transition-all"
+                        className="transition-all "
                       >
                         <li className="text-sm hover:text-[#f85606] px-3 transition-all py-1 hover:bg-[#e4e3e3]">
                           <p
@@ -174,7 +174,7 @@ const Home = () => {
                           </p>
                         </li>
                         {activeSubCategory === subcategory.name && (
-                          <ul className="absolute content-start left-[102%] z-10 top-0 h-full flex flex-wrap transition-all gap-3 py-3 w-[500px] shadow-md bg-[#fffefe] rounded-md p-2">
+                          <ul className="absolute  dark:bg-slate-700 content-start left-[102%] z-10 top-0 h-full flex flex-wrap transition-all gap-3 py-3 w-[500px] shadow-md bg-[#fffefe] rounded-md p-2">
                             {level3Category.filter(
                               (l3category) =>
                                 activeSubCategory === l3category.parent
@@ -192,7 +192,7 @@ const Home = () => {
                                       handleCategoryClick(l3cat.name)
                                     }
                                   >
-                                    <li className="text-sm m-0 flex flex-col gap-2 items-center  hover:text-[#f85606] px-3 transition-all py-1 h-full hover:bg-[#f0efef]">
+                                    <li className="text-sm m-0 flex flex-col gap-2 items-center  hover:text-[#f85606] px-3 transition-all py-1 h-full hover:bg-[#f0efef] dark:hover:bg-slate-600">
                                       <img
                                         className="w-[80px] h-[80px] object-cover rounded-full"
                                         src={imageMapping[l3cat.name]}
