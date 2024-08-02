@@ -25,24 +25,23 @@ const MyProduct = () => {
   const [selectedRows, setSelectedRows] = useState<FetchProduct[]>([]);
   const handleActionOpen = (index: number) => setActionOpen(index);
   const [selectAll, setSelectAll] = useState<boolean>(false);
-  const [filter,setFilter] = useState<{title?:string,category?:string}>({});
+  const [filter, setFilter] = useState<{ title?: string; category?: string }>(
+    {}
+  );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [shortField,setShortField] = useState<string>("price");
-  const [sortOrder,setShortOrder] = useState<"asc"|"des">("asc");
+  const [shortField, setShortField] = useState<string>("price");
+  const [sortOrder, setShortOrder] = useState<"asc" | "des">("asc");
 
-        
-  const toggleSortOrder=()=>{
-    setShortOrder((prevOrder) => prevOrder === "asc"?"des":"asc");
-  }
-
-  const handleShort = (field:string) =>{
-    if(!user) return;
+  const handleShort = (field: string) => {
+    if (!user) return;
+    const newSortOrder = sortOrder === "asc" ? "des" : "asc";
     setShortField(field);
-    toggleSortOrder();
-    fetchDashboardProducts(user?._id,1,filter,field,sortOrder);
-  }
-
-
+    setShortOrder(newSortOrder);
+    fetchDashboardProducts(user?._id, 1, filter, field, newSortOrder);
+  };
+  useEffect(() => {
+    console.log("This is the sort order: ", sortOrder);
+  }, [sortOrder]);
 
   const handleActionClose = () => {
     setActionOpen(null);
@@ -50,14 +49,20 @@ const MyProduct = () => {
 
   useEffect(() => {
     if (!user) return;
-    fetchDashboardProducts(user._id,undefined,filter);
-  }, [user,filter]);
+    fetchDashboardProducts(user._id, undefined, filter);
+  }, [user, filter]);
 
   const handleNextPage = () => {
     if (!dashboardProducts) return;
     if (!user) return;
     if (dashboardProducts?.page < dashboardProducts?.totalPage) {
-      fetchDashboardProducts(user._id, dashboardProducts?.page + 1,filter);
+      fetchDashboardProducts(
+        user._id,
+        dashboardProducts?.page + 1,
+        filter,
+        "price",
+        sortOrder
+      );
     }
   };
 
@@ -65,7 +70,13 @@ const MyProduct = () => {
     if (!dashboardProducts) return;
     if (!user) return;
     if (dashboardProducts?.page > 1) {
-      fetchDashboardProducts(user._id, dashboardProducts?.page - 1,filter);
+      fetchDashboardProducts(
+        user._id,
+        dashboardProducts?.page - 1,
+        filter,
+        "price",
+        sortOrder
+      );
     }
   };
 
@@ -125,8 +136,8 @@ const MyProduct = () => {
     setSelectAll(!selectAll);
   };
 
-  const handleSearch=(values:FormikValues)=>{
-    setFilter({[values.filterType.value]:values.search.trim()});
+  const handleSearch = (values: FormikValues) => {
+    setFilter({ [values.filterType.value]: values.search.trim() });
   };
   return (
     <div className="w-full p-4 overflow-x-hidden">
@@ -162,7 +173,10 @@ const MyProduct = () => {
                       </th>
                       <th scope="col" className="px-6 relative py-4">
                         Price
-                        <BiSortAlt2 onClick={()=>handleShort("price")} className="absolute top-6 right-2 text-lg text-gray-600 hover:text-black hover:cursor-pointer" />
+                        <BiSortAlt2
+                          onClick={() => handleShort("price")}
+                          className="absolute top-6 right-2 text-lg text-gray-600 hover:text-black hover:cursor-pointer"
+                        />
                       </th>
                       <th scope="col" className="px-6 py-4">
                         Stock

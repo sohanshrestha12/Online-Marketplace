@@ -256,6 +256,9 @@ const ProductDetails = () => {
         : prev
     );
   };
+   useEffect(() => {
+     console.log("This is the selected color value",selectedColor);
+   }, [selectedColor]);
   const decrementQuantity = () => {
     setQuantity((prev) =>
       (parseInt(prev) > 1 ? parseInt(prev) - 1 : 1).toString()
@@ -264,6 +267,8 @@ const ProductDetails = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
+
+ 
   const segments = activeProduct?.category.split("/");
   const lastSegment = segments && segments.pop();
 
@@ -453,7 +458,7 @@ const ProductDetails = () => {
         <div className="flex gap-2 mt-5">
           <Button
             onClick={handleBuyNowDialogOpen}
-            disabled={activeProduct && activeProduct.quantity < 1}
+            disabled={(activeProduct && activeProduct.quantity < 1 ) || selectedColor === -1 || selectedSize === -1}
             className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-[#f85606] hover:bg-[#f85606] text-white py-2"
           >
             Buy Now{" "}
