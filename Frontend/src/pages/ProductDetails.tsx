@@ -46,6 +46,7 @@ export interface FetchProduct {
   videoUrl?: string;
   images: string[];
   comments?: comment[];
+  createdAt?:string;
 }
 
 export interface FetchFilterProduct {

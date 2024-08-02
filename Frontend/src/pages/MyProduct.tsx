@@ -12,6 +12,7 @@ import { getLastWord } from "@/utils/Category";
 import MyProductFilters from "@/components/MyProductFilters";
 import { FormikValues } from "formik";
 import { BiSortAlt2 } from "react-icons/bi";
+import { formatDistanceToNow, parseISO } from "date-fns";
 
 const MyProduct = () => {
   const {
@@ -39,9 +40,6 @@ const MyProduct = () => {
     setShortOrder(newSortOrder);
     fetchDashboardProducts(user?._id, 1, filter, field, newSortOrder);
   };
-  useEffect(() => {
-    console.log("This is the sort order: ", sortOrder);
-  }, [sortOrder]);
 
   const handleActionClose = () => {
     setActionOpen(null);
@@ -240,7 +238,9 @@ const MyProduct = () => {
                             status
                           </td>
                           <td className="whitespace-nowrap font-medium  px-6 py-4">
-                            createdAt
+                            {formatDistanceToNow(parseISO(item.createdAt!), {
+                              addSuffix: true,
+                            })}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 font-medium ">
                             <Action
