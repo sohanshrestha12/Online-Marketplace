@@ -25,8 +25,8 @@ interface ProductContextValue {
     userId: string,
     page?: number,
     filter?: {
-      category?:string,
-      title?:string,
+      category?: string;
+      title?: string;
     },
     shortField?: string,
     sortOrder?: string
@@ -49,7 +49,10 @@ interface ProductContextValue {
     productId?: string
   ) => void;
   getCombinedDataForChart: () => Promise<CombinedData[] | undefined>;
-  setChat:()=>void;
+  setChat: () => void;
+  homeAllProducts: FetchProduct[];
+  handleNextPage: () => void;
+  hasMore: boolean;
 }
 interface ProductProviderProps {
   children: ReactNode;
@@ -67,19 +70,58 @@ const ProductContext = createContext<ProductContextValue>({
   showChat: false,
   handleMessageSubmit: () => {},
   getCombinedDataForChart: () => Promise.resolve(undefined),
-  setChat:()=>{},
+  setChat: () => {},
+  homeAllProducts: [],
+  handleNextPage() {},
+  hasMore: false,
 });
 
 export const ProductProvider = ({ children }: ProductProviderProps) => {
   const [products, setProducts] = useState<FetchProduct[]>([]);
   const [showChat, setShowChat] = useState<boolean>(false);
+  const [homeAllProducts, setHomeAllProducts] = useState<FetchProduct[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [hasMore, setHasMore] = useState<boolean>(false);
 
   const [dashboardProducts, setDashboardProducts] = useState<
     FetchFilterProduct | undefined
   >(undefined);
+
   useEffect(() => {
-    console.log("This is the changing dashboard product", dashboardProducts);
-  }, [dashboardProducts]);
+    const fetchAllProduct = async () => {
+      try {
+        const response = await getAllProducts({ limit: 12, page: page });
+        setHomeAllProducts(response.data.data.product);
+        setHasMore(
+          response.data.data.product.length > 0 ||
+            response.data.data.product.length === 12
+        );
+        console.log("This is all product", response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAllProduct();
+  }, []);
+
+  const handleNextPage = async () => {
+    try {
+      const newPage = page + 1;
+      setPage(newPage);
+      const response = await getAllProducts({ limit: 12, page: newPage });
+      setHomeAllProducts((prevData) => [
+        ...prevData,
+        ...response.data.data.product,
+      ]);
+      setHasMore(
+        response.data.data.product.length > 0 &&
+          response.data.data.product.length === 12
+      );
+      console.log("This is next page product", response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getCombinedDataForChart = async (): Promise<
     CombinedData[] | undefined
@@ -114,9 +156,9 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   const toggleChat = () => {
     setShowChat(!showChat);
   };
-  const setChat = () =>{
+  const setChat = () => {
     setShowChat(true);
-  }
+  };
 
   const handleMessageSubmit = async (
     values: FormikValues,
@@ -161,13 +203,11 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   const addProduct = (product: FetchProduct) => {
     setProducts((prevProduct) => {
       const updatedProduct = [product, ...prevProduct];
-      if(updatedProduct.length > 12){
+      if (updatedProduct.length > 12) {
         updatedProduct.pop();
       }
       return updatedProduct;
     });
-
-    
   };
 
   const deleteProductState = (productId: string) => {
@@ -222,21 +262,21 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   const fetchDashboardProducts = async (
     userId: string,
     page?: number,
-    filter?:{
-      category?:string,
-      title?:string,
+    filter?: {
+      category?: string;
+      title?: string;
     },
-    shortField?:string,
-    sortOrder?:string
+    shortField?: string,
+    sortOrder?: string
   ) => {
     try {
       setDashboardProducts(undefined);
       const response = await getAllProducts({
         createdBy: userId,
         page: page,
-        filter:filter,
-        shortField:shortField,
-        sortOrder:sortOrder
+        filter: filter,
+        shortField: shortField,
+        sortOrder: sortOrder,
       });
       console.log("dashboard products", response);
       setDashboardProducts(response.data.data);
@@ -247,7 +287,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
   useEffect(() => {
     const fetchAllProduct = async () => {
       try {
-        const response = await getAllProducts({ limit: 12,sort:"desc" });
+        const response = await getAllProducts({ limit: 12, sort: "desc" });
         console.log("all products", response.data.data);
         setProducts(response.data.data.product);
       } catch (error) {
@@ -271,7 +311,10 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
         showChat,
         handleMessageSubmit,
         getCombinedDataForChart,
-        setChat
+        setChat,
+        homeAllProducts,
+        handleNextPage,
+        hasMore,
       }}
     >
       {children}

@@ -1,5 +1,6 @@
 import { Category } from "@/Types/Category";
 import { getAllCategories } from "@/api/Product";
+import AllProducts from "@/components/AllProducts";
 import CarouselComponent from "@/components/Carousel";
 import Categories from "@/components/Categories";
 import RecentProduct from "@/components/RecentProduct";
@@ -226,6 +227,7 @@ const Home = () => {
       </div>
       <Categories categories={allCategory} />
       <RecentProduct />
+      <AllProducts/>
     </>
   );
 };
