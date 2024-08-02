@@ -193,7 +193,10 @@ const ProductLists = () => {
             </div>
             </>
             }
-            {filteredProducts.map((item, index) => (
+            {filteredProducts.length <=0?<div className="col-span-12 flex justify-center">
+              <p className="font-semibold mt-2">No products available of this category!</p>
+            </div>:
+            filteredProducts.map((item, index) => (
               <div
                 key={index}
                 onClick={() => handleClick(item)}
