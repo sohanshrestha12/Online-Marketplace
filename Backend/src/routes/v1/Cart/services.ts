@@ -1,4 +1,4 @@
-import { addToCart, getCartProducts, getTotalCartProduct } from "./repository";
+import { addToCart, getCartProducts, getTotalCartProduct, removeCartItems } from "./repository";
 import { CartType } from "./types";
 
 const CartService ={
@@ -10,6 +10,9 @@ const CartService ={
     },
     async getTotalCartProduct(sellerId:string){
         return getTotalCartProduct(sellerId);
+    },
+    async removeCartItems(productId:string){
+        return removeCartItems(productId);
     }
 }
 

@@ -8,6 +8,7 @@ const CartRouter = Router();
 CartRouter.route("/").get(requireUser,CartController.getCartProducts);
 CartRouter.route("/add").post(requireUser,CartController.addToCart);
 
+CartRouter.route("/:cartId").delete(requireUser,CartController.removeCartItem);
 CartRouter.route("/totalCartProduct").get(requireUser,checkUserRole("SELLER"),CartController.getTotalCartProduct);
 
 export default CartRouter;

@@ -271,3 +271,7 @@ export const getCreatedDataByMonth=async(sellerId:string)=>{
     }
   ])
 };
+
+export const updateCartQuantity = async(productId:string,quantity:number) =>{
+  return ProductModel.updateOne({_id:productId},{$set:{quantity}});
+} 

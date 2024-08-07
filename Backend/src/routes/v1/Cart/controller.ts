@@ -48,6 +48,21 @@ const CartController = {
         data: result,
         status: 200,
       });
+      
+    } catch (error) {
+      next(error);
+    }
+  },
+  async removeCartItem(req:Request<{cartId:string}>,res:Response,next:NextFunction){
+    try {
+      const {cartId} = req.params;
+      const result = await CartService.removeCartItems(cartId);
+      return successResponse({
+        response: res,
+        message: "Removed Cart Item successfully",
+        data: result,
+        status: 200,
+      });
 
     } catch (error) {
       next(error);
