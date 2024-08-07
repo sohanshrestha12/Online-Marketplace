@@ -1,3 +1,5 @@
+import { Product } from "../Product/model";
+import { UserDocument } from "../Users/model";
 import { PurchaseProduct } from "./model";
 
 export interface PurchasedProductQuery {
@@ -11,4 +13,13 @@ export interface PurchasedProductReturn {
   page: number;
   totalPage: number;
   limit: number;
+}
+
+export interface Purchases {
+  productId: Product;
+  userId: UserDocument;
+  selectedColor: string;
+  selectedSize: string;
+  quantity: number;
+  totalPrice: number;
 }

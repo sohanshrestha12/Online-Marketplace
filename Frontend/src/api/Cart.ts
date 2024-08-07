@@ -12,3 +12,7 @@ export const addToCart = (
 export const getCartItems = () => {
   return MarketUrl.get("/cart");
 };
+
+export const getTotalCartProduct = () =>{
+  return MarketUrl.get("/cart/totalCartProduct");
+} 

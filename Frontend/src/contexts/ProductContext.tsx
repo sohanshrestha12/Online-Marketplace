@@ -123,6 +123,7 @@ export const ProductProvider = ({ children }: ProductProviderProps) => {
     }
   };
 
+
   const getCombinedDataForChart = async (): Promise<
     CombinedData[] | undefined
   > => {

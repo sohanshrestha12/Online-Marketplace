@@ -87,6 +87,9 @@ export const getCreatedDataByMonth  = () =>{
 export const getSalesDataByMonth= () =>{
   return MarketUrl.get("/purchase/getSalesDataByMonth");
 };
+export const getCustomers = () =>{
+  return MarketUrl.get("/purchase/getCustomers");
+}
 
 export const fetchProductsByFilter = (
   category?: string,

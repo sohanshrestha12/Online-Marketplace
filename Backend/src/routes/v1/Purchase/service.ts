@@ -1,6 +1,6 @@
 import { updateQuantityProduct } from "../Product/repository";
 import { PurchaseProduct } from "./model";
-import { addPurchaseProduct, getPurchaseProduct, getSalesDataByMonth } from "./repository";
+import { addPurchaseProduct, getCustomers, getPurchaseProduct, getSalesDataByMonth } from "./repository";
 import { PurchasedProductQuery } from "./types";
 
 const PurchaseProductService = {
@@ -18,6 +18,9 @@ const PurchaseProductService = {
   async getSalesDataByMonth(sellerId: string) {
     return getSalesDataByMonth(sellerId);
   },
+  async getCustomers(sellerId:string){
+    return getCustomers(sellerId);
+  }
 };
 
 export default PurchaseProductService;

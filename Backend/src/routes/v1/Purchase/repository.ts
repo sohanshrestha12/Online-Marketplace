@@ -1,9 +1,10 @@
 import mongoose, { FilterQuery, Types } from "mongoose";
+import { isInteger } from "../../../utils";
+import CustomError from "../../../utils/Error";
 import ProductService from "../Product/services";
 import { PurchaseModel, PurchaseProduct } from "./model";
-import { PurchasedProductQuery, PurchasedProductReturn } from "./types";
-import CustomError from "../../../utils/Error";
-import { isInteger } from "../../../utils";
+import { PurchasedProductQuery, PurchasedProductReturn, Purchases } from "./types";
+import { User } from "../Users/model";
 
 export const addPurchaseProduct = async (
   body: PurchaseProduct
@@ -81,4 +82,28 @@ export const getSalesDataByMonth = async (sellerId: string) => {
       }
     }
   ]);
+};
+
+export const getAllPurchases = async():Promise<Purchases[]> =>{
+  const purchases =  PurchaseModel.find({})
+    .populate({
+      path: "userId",
+      select: "-password -__v -createdAt -updatedAt", 
+    })
+    .populate("productId");
+    return purchases as unknown as Purchases[];
+}
+
+
+export const getCustomers = async(sellerId:string) =>{
+  const purchases = await getAllPurchases();
+  const uniqueUserIds = new Set<User>();
+
+  for(const purchase of purchases){
+    const {productId,userId} = purchase;
+    if(productId.createdBy.equals(sellerId)){
+      uniqueUserIds.add(userId);
+    }
+  }
+  return Array.from(uniqueUserIds).reverse();
 };

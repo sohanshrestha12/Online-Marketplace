@@ -34,7 +34,7 @@ const DashboardChart = ({combinedData}:DashboardChartProps) => {
   //   { month: "June", desktop: 214, mobile: 140 },
   // ];
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+    <ChartContainer config={chartConfig} className="min-h-[200px] w-full col-span-8">
       <BarChart accessibilityLayer data={combinedData}>
         <CartesianGrid vertical={false} />
         <XAxis

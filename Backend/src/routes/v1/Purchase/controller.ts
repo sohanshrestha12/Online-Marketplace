@@ -61,6 +61,20 @@ const PurchaseProductController = {
       next(error);
     }
   },
+  async getCustomers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const sellerId = res.locals.user._id;
+      const response = await PurchaseProductService.getCustomers(sellerId);
+      return successResponse({
+        response: res,
+        message: "Fetched Customers successfully",
+        data: response,
+        status: 200,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 export default PurchaseProductController;

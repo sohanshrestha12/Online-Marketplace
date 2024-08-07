@@ -180,9 +180,6 @@ const MyProduct = () => {
                         Stock
                       </th>
                       <th scope="col" className="px-6 py-4">
-                        Status
-                      </th>
-                      <th scope="col" className="px-6 py-4">
                         Created At
                       </th>
                       <th scope="col" className="px-6 py-4">
@@ -233,9 +230,6 @@ const MyProduct = () => {
                           </td>
                           <td className="whitespace-nowrap font-medium  px-6 py-4">
                             {item.quantity}
-                          </td>
-                          <td className="whitespace-nowrap px-6 py-4 font-medium ">
-                            status
                           </td>
                           <td className="whitespace-nowrap font-medium  px-6 py-4">
                             {formatDistanceToNow(parseISO(item.createdAt!), {

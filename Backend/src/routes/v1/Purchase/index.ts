@@ -13,5 +13,11 @@ PurchaseProductRouter.route("/getSalesDataByMonth").get(
   PurchaseProductController.getSalesDataByMonth
 );
 
+PurchaseProductRouter.route('/getCustomers').get(
+  requireUser,
+  checkUserRole("SELLER"),
+  PurchaseProductController.getCustomers,
+);
+
 
 export default PurchaseProductRouter;

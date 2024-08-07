@@ -1,7 +1,11 @@
+import { getTotalCartProduct } from "@/api/Cart";
+import { getCustomers } from "@/api/Product";
 import { useAuth } from "@/components/Auth/ProtectedRoutes";
+import CustomersTable from "@/components/Customers";
 import DashboardChart from "@/components/DashboardChart";
 import { Card } from "@/components/ui/card";
 import { useProduct } from "@/contexts/ProductContext";
+import { User } from "@/Types/Auth";
 import { CombinedData } from "@/Types/Product";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -14,13 +18,23 @@ const Dashboard = () => {
     []
   );
   const [totalSales, setTotalSales] = useState<number>(0);
+  const[totalCart,setTotalCart] = useState<number>(0);
+  const [Customers,setCustomers] = useState<User[]>([]);
+
   useEffect(() => {
     if (!user) return;
     const fetchProducts = async () => {
       await fetchDashboardProducts(user._id);
+      const totalCartProduct = await getTotalCartProduct();
+      setTotalCart(totalCartProduct.data.data);
+      // console.log('The total cart product is: ',totalCartProduct);
       const dataCombined = await getCombinedDataForChart();
-      console.log("Data combined data here", dataCombined);
+      // console.log("Data combined data here", dataCombined);
       setCombinedData(dataCombined);
+
+      const fetchedCustomers = await getCustomers();
+      setCustomers(fetchedCustomers.data.data);
+      console.log('This is your Customers',fetchedCustomers); 
 
       //total sales
       if (dataCombined) {
@@ -55,13 +69,14 @@ const Dashboard = () => {
           </p>
         </Card>
         <Card className="p-3 col-span-4">
-          <p className="text-semibold">My product</p>
-          <p className="text-semibold text-6xl">12</p>
+          <p className="text-semibold">Total product in cart</p>
+          <p className="text-semibold text-6xl">{totalCart}</p>
           <p className="text-semibold">View all products</p>
         </Card>
       </div>
-      <div className="w-[700px] h-[700px] mt-5">
+      <div className="mt-5 grid grid-cols-12 gap-2">
         <DashboardChart combinedData={combinedData} />
+        <CustomersTable Customers={Customers} />
       </div>
     </div>
   );
