@@ -1,4 +1,4 @@
-import { getCartItems } from "@/api/Cart";
+import { getCartItems, removeCartItems } from "@/api/Cart";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -6,9 +6,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FetchProduct } from "./ProductDetails";
+import { MdDelete } from "react-icons/md";
+import CartDeleteDialog from "@/components/CartDeleteDialog";
+import { toast } from "sonner";
 
 const AddToCart = () => {
   interface CartItems {
+    _id?: string;
     userId: string;
     productId: FetchProduct;
     quantity: number;
@@ -17,6 +21,38 @@ const AddToCart = () => {
   }
   const [selectedItems, setSelectedItems] = useState<CartItems[]>([]);
   const navigate = useNavigate();
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<CartItems[]>([]);
+  const [activeDeleteCartItem, setActiveDeleteCartItem] = useState<CartItems>();
+
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const updateCartItems = (cartItems:CartItems) =>{
+    setCartItems((prevItems)=>{
+      const filteredItems = prevItems.filter((item)=>item._id !== cartItems._id);
+      return filteredItems;
+    })
+  }
+
+
+  const handleDeleteCart = async() => {
+    if (!activeDeleteCartItem || !activeDeleteCartItem._id) return;
+    try {
+      const response = await removeCartItems(activeDeleteCartItem._id);
+      toast.success('Successfully deleted the cart item');
+      updateCartItems(response.data.data);
+      handleDeleteDialogClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleCheckbox = (item: CartItems) => {
     setSelectedItems((prevSelectedItems) => {
       if (
@@ -44,15 +80,12 @@ const AddToCart = () => {
     console.log(selectedItems);
   }, [selectedItems]);
 
-  
-  const [cartItems, setCartItems] = useState<CartItems[]>([]);
-
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
         const response = await getCartItems();
         setCartItems(response.data.data);
-        console.log('cart items',response);
+        console.log("cart items", response);
       } catch (error) {
         console.log(error);
       }
@@ -66,10 +99,12 @@ const AddToCart = () => {
         {cartItems.length >= 1 ? (
           cartItems.map((item, i) => (
             <div key={i} className="flex flex-col gap-1 -ml-[50px] py-1 ">
-              <div className={`flex gap-4 hover:bg-gray-50 pb-3 px-2 rounded ${i === 0?"":"mt-2"} `}>
-                <Checkbox
-                  onCheckedChange={() => handleCheckbox(item)}
-                />
+              <div
+                className={`flex gap-4 hover:bg-gray-50 pb-3 px-2 rounded ${
+                  i === 0 ? "" : "mt-2"
+                } `}
+              >
+                <Checkbox onCheckedChange={() => handleCheckbox(item)} />
                 <div className="grid grid-cols-12 gap-3 w-full">
                   <div className="col-span-2 rounded-sm">
                     <img
@@ -101,7 +136,7 @@ const AddToCart = () => {
                         ></span>
                       </p>
                       <p className=" font-semibold flex gap-1 items-center text-sm mt-[10px]">
-                        Size:{" " } <Badge>{item.selectedSize + " "}cm</Badge>
+                        Size: <Badge>{item.selectedSize + " "}cm</Badge>
                       </p>
                     </div>
                   </div>
@@ -110,11 +145,20 @@ const AddToCart = () => {
                       RS.{item.productId.price}
                     </p>
                   </div>
-                  <div className="col-span-2">
+                  <div className="col-span-2 flex flex-col space-between gap-3 h-[100%]">
                     <p className="text-md font-semibold">
-                      <span className="text-gray-500">Qty: </span>
+                      <span className="text-gray-500 text-center self-center">
+                        Qty:{" "}
+                      </span>
                       {item.quantity}
                     </p>
+                    <MdDelete
+                      onClick={() => {
+                        handleDeleteDialogOpen();
+                        setActiveDeleteCartItem(item);
+                      }}
+                      className="self-center text-2xl text-red-600 hover:cursor-pointer hover:!text-red-500"
+                    />
                   </div>
                 </div>
               </div>
@@ -163,6 +207,11 @@ const AddToCart = () => {
             </div>
           </div>
         </Card>
+        <CartDeleteDialog
+          isOpen={isDeleteDialogOpen}
+          onOpen={handleDeleteDialogClose}
+          handleDeleteCart={handleDeleteCart}
+        />
       </div>
     </div>
   );

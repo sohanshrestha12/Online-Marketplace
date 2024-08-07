@@ -16,3 +16,7 @@ export const getCartItems = () => {
 export const getTotalCartProduct = () =>{
   return MarketUrl.get("/cart/totalCartProduct");
 } 
+
+export const removeCartItems = (cartId:string) =>{
+  return MarketUrl.delete(`/cart/${cartId}`);
+}

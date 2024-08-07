@@ -56,10 +56,16 @@ export const getTotalCartProduct = async (
   return matchingProduct.length;
 };
 
-export const removeCartItems = async (cartId: string) => {
+export const removeCartItems = async (cartId: string,userId:string) => {
   const cartItem = await CartModel.findById(cartId);
-  if (!cartItem) {
+  if(!userId){
+    throw new CustomError("Invalid User",400);
+  }
+  if (!cartItem || !cartItem.userId) {
     throw new CustomError("Cart item not Found", 400);
+  }
+  if(!(cartItem.userId.toString() === userId)){
+    throw new CustomError("Forbidden Access Denied",403) 
   }
   const { productId, quantity } = cartItem;
 

@@ -55,8 +55,9 @@ const CartController = {
   },
   async removeCartItem(req:Request<{cartId:string}>,res:Response,next:NextFunction){
     try {
+      const userId = res.locals.user._id;
       const {cartId} = req.params;
-      const result = await CartService.removeCartItems(cartId);
+      const result = await CartService.removeCartItems(cartId,userId);
       return successResponse({
         response: res,
         message: "Removed Cart Item successfully",
