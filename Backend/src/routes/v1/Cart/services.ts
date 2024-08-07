@@ -1,4 +1,4 @@
-import { addToCart, getCartProducts } from "./repository";
+import { addToCart, getCartProducts, getTotalCartProduct } from "./repository";
 import { CartType } from "./types";
 
 const CartService ={
@@ -7,6 +7,9 @@ const CartService ={
     },
     async addToCart(userId:string,body:CartType){
         return addToCart(userId,body);
+    },
+    async getTotalCartProduct(sellerId:string){
+        return getTotalCartProduct(sellerId);
     }
 }
 

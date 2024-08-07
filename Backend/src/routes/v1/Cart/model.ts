@@ -1,8 +1,9 @@
 import mongoose, { Types } from "mongoose";
+import { Product } from "../Product/model";
 
 export interface Cart {
   userId?: Types.ObjectId,
-  productId:Types.ObjectId,
+  productId:Product,
   quantity: number
   selectedColor:string,
   selectedSize:number,

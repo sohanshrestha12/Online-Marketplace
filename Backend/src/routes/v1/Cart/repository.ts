@@ -6,6 +6,9 @@ import { CartType } from "./types";
 export const getCartProducts = async (userId: string): Promise<Cart[]> => {
   return CartModel.find({ userId: userId }).populate('productId');
 };
+export const getAllCartProducts = async (): Promise<Cart[]> => {
+  return CartModel.find({}).populate('productId');
+};
 
 export const addToCart = async (uid: string, body: CartType): Promise<Cart> => {
   const { quantity, productId,selectedSize,selectedColor } = body;
@@ -27,3 +30,10 @@ export const addToCart = async (uid: string, body: CartType): Promise<Cart> => {
     return newCartItem.save();
   }
 };
+
+export const getTotalCartProduct = async(sellerId:string):Promise<number> =>{
+  const cartProduct = await getAllCartProducts();
+  const matchingProduct = cartProduct.filter((cartProduct)=> cartProduct.productId.createdBy.equals(sellerId));
+
+  return matchingProduct.length;
+} ;

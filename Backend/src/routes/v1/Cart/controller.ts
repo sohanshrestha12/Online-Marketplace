@@ -38,6 +38,21 @@ const CartController = {
       next(error);
     }
   },
+  async getTotalCartProduct(req:Request,res:Response,next:NextFunction){
+    try {
+      const sellerId = res.locals.user._id;
+      const result = await CartService.getTotalCartProduct(sellerId);
+      return successResponse({
+        response: res,
+        message: "Retrieved total cart products successfully",
+        data: result,
+        status: 200,
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  }
 };
 
 export default CartController;
