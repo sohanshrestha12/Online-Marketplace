@@ -38,8 +38,8 @@ const ProductCarousel = ({
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious className="dark:!bg-slate-700 dark:!text-white" />
+      <CarouselNext className="dark:!bg-slate-700 dark:!text-white" />
     </Carousel>
   );
 };

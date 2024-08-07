@@ -102,9 +102,9 @@ const Comment = ({ product, updateRating }: CommentProps) => {
     setShowEmojiPicker(false);
   };
   return (
-    <Card className="p-3 min-h-[400px] w-full mb-5">
+    <Card className="p-3 min-h-[400px] w-full mb-5 dark:!bg-slate-700">
       <div>
-        <h6 className="font-semibold border-b-[1px] -mx-4 mb-2 -my-4 p-3 bg-gray-100">
+        <h6 className="font-semibold border-b-[1px] -mx-4 mb-2 -my-4 p-3 bg-gray-100 dark:!bg-slate-800">
           Ratings and Reviews
         </h6>
           <div className="flex py-3 h-fit items-center gap-3 border-b-[1px] mb-3">

@@ -54,7 +54,7 @@ const Seller = () => {
   };
   return (
     <div className="grid gap-5 grid-cols-12">
-      <Card className="col-span-7 py-5 px-5 flex items-center flex-col">
+      <Card className="col-span-7 py-5 px-5 flex items-center flex-col dark:!bg-slate-700">
         <h3 className="text-4xl font-bold mb-4 text-[#f85606]">
           Welcome to SELLER CENTER
         </h3>
@@ -104,7 +104,7 @@ const Seller = () => {
           </div>
         </div>
       </Card>
-      <Card className="col-span-5 py-4 px-3">
+      <Card className="col-span-5 py-4 px-3 dark:!bg-slate-700">
         <h3 className="text-center font-semibold text-sm mb-4">
           Welcome to Seller Center! Please fill out the form below to create
           your Seller account.

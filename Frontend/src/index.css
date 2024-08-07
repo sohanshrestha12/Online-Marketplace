@@ -19,6 +19,15 @@ body {
 .active{
     background-color: #e5e7eb;
 }
+.dark .active {
+  background-color: #374151;
+  color: white;
+}
+.dark input {
+  background-color: #374151!important;
+  
+  color: #ffffff;
+}
 li[data-sonner-toast]{
     padding: 10px;
     align-items: center;

@@ -155,7 +155,6 @@ const ProductDetails = () => {
         existingRatingIndex !== -1 &&
         prev.rating
       ) {
-        // Update the existing rating
         const updatedRatings = [...prev.rating];
         updatedRatings[existingRatingIndex] = rating;
         return {
@@ -300,9 +299,9 @@ const ProductDetails = () => {
   };
 
   return (
-    <div className="grid grid-cols-12">
+    <div className="grid grid-cols-12 dark:text-white ">
       <div className="col-span-12 -mt-6 mb-5 border-b">
-        <p className="mb-2">
+        <p className="mb-2 dark:text-white">
           {segments?.join("/")}/
           <span className="text-[#f85606]">{lastSegment}</span>
         </p>
@@ -386,7 +385,7 @@ const ProductDetails = () => {
             <div
               key={i}
               onClick={() => handleSelectColor(i)}
-              className={`hover:border-[1px] border-black rounded px-[2px] py-[1px] hover:cursor-pointer h-[35px] w-[35px] flex justify-center items-center ${
+              className={`hover:border-[1px] border-black dark:!border-white rounded px-[2px] py-[1px] hover:cursor-pointer h-[35px] w-[35px] flex justify-center items-center ${
                 selectedColor === i ? "border-[1px]" : ""
               }`}
             >
@@ -404,8 +403,10 @@ const ProductDetails = () => {
               <div
                 key={i}
                 onClick={() => handleSelectSize(i)}
-                className={`py-2 px-3 rounded hover:bg-black hover:text-white hover:cursor-pointer bg-gray-50 ${
-                  selectedSize === i ? "bg-black text-white" : ""
+                className={`py-2 px-3 rounded hover:bg-black hover:text-white dark:!bg-slate-700 dark:hover:!bg-slate-950 hover:cursor-pointer bg-gray-50 ${
+                  selectedSize === i
+                    ? "bg-black text-white dark:!bg-slate-950"
+                    : ""
                 }`}
               >
                 <span>{item}</span>
@@ -431,7 +432,7 @@ const ProductDetails = () => {
             </div>
             <div>
               <Input
-                className="w-[60px]  text-center overflow-hidden px-2 text-black"
+                className="w-[60px]  text-center overflow-hidden px-2 text-black dark:!text-white"
                 value={quantity}
                 onChange={handleQuantity}
                 type="number"
@@ -459,8 +460,12 @@ const ProductDetails = () => {
         <div className="flex gap-2 mt-5">
           <Button
             onClick={handleBuyNowDialogOpen}
-            disabled={(activeProduct && activeProduct.quantity < 1 ) || selectedColor === -1 || selectedSize === -1}
-            className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-[#f85606] hover:bg-[#f85606] text-white py-2"
+            disabled={
+              (activeProduct && activeProduct.quantity < 1) ||
+              selectedColor === -1 ||
+              selectedSize === -1
+            }
+            className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-[#f85606] hover:bg-[#f85606] text-white dark:bg-[#f85606] dark:hover:bg-[#f85606] py-2"
           >
             Buy Now{" "}
             {activeProduct && activeProduct.quantity < 1
@@ -474,7 +479,7 @@ const ProductDetails = () => {
                 handleAddToCart(activeProduct, quantity);
               }
             }}
-            className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-black text-white"
+            className="basis-1/2 flex justify-center font-semibold hover:cursor-pointer items-center bg-black dark:hover:!bg-slate-950 text-white"
           >
             Add to Cart
           </Button>
@@ -490,7 +495,7 @@ const ProductDetails = () => {
         </div>
         {activeProduct?.createdBy?._id !== user?._id && (
           <div className="flex gap-3 col-span-6 mt-5">
-            <Button type="button" onClick={toggleChat}>
+            <Button type="button" onClick={toggleChat} className="dark:!bg-slate-700 dark:hover:!bg-slate-900 dark:text-white">
               Contact with Seller
             </Button>
           </div>
@@ -499,7 +504,6 @@ const ProductDetails = () => {
       {activeProduct && (
         <div className="col-span-12 mt-5 py-2">
           <ProductDescription activeProduct={activeProduct} />
-          
         </div>
       )}
 

@@ -14,7 +14,7 @@ function extractYouTubeVideoId(url: string): string | null {
 
 const ProductDescription = ({ activeProduct }: ProductDescriptionProps) => {
   return (
-    <Card className="px-3 py-3">
+    <Card className="px-3 py-3 dark:!bg-slate-700">
       <h3 className="text-sm font-semibold">
         Product details of {activeProduct.size[0]}CM {activeProduct.name}
       </h3>
@@ -26,7 +26,7 @@ const ProductDescription = ({ activeProduct }: ProductDescriptionProps) => {
       ></div>
       {activeProduct.videoUrl && (
         <div>
-          <h5 className="text-sm text-gray-700 mb-2 mt-3">Here is the demo video of the real product</h5>
+          <h5 className="text-sm text-gray-700 mb-2 mt-3 dark:text-white">Here is the demo video of the real product</h5>
           <iframe
             src={`https://www.youtube.com/embed/${extractYouTubeVideoId(
               activeProduct.videoUrl

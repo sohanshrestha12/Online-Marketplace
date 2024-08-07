@@ -63,11 +63,13 @@ const SignUp = () => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <Card className="w-[450px] px-5 py-3">
+            <Card className="w-[450px] px-5 py-3 dark:!bg-slate-700">
               <div className="flex flex-col h-full">
                 <div className="flex flex-col items-center">
-                  <h2 className="text-lg font-semibold text-black">GrandBazaar</h2>
-                  <h3 className="text-sm text-black">
+                  <h2 className="text-lg font-semibold text-black dark:!text-white">
+                    GrandBazaar
+                  </h2>
+                  <h3 className="text-sm text-black dark:!text-white">
                     Welcome to GrandBazaar! Please SignUp.
                   </h3>
                 </div>
@@ -95,14 +97,14 @@ const SignUp = () => {
                 <div className="mt-4">
                   <Button
                     type="submit"
-                    className="w-full"
+                    className="w-full mt-4"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Signing Up..." : "Sign Up"}
                   </Button>
                 </div>
 
-                <div className="flex flex-col gap-2 mt-5 items-center text-sm text-black">
+                <div className="flex flex-col gap-2 mt-5 items-center text-sm dark:!text-white text-black">
                   <p>
                     Already have an account?
                     <Link to={"/login"} className="text-blue-500">

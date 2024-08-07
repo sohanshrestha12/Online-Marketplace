@@ -279,17 +279,21 @@ const Navbar = () => {
             <div className="flex items-center justify-between">
               <NavLink
                 to={"/login"}
-                className={"mr-3 rounded px-3 p-2 hover:bg-gray-200"}
+                className={
+                  "mr-3 rounded px-3 p-2 hover:bg-gray-200 dark:!text-white dark:hover:!bg-slate-600"
+                }
               >
                 <p className=" rounded hover:cursor-pointer font-semibold ">
                   Log in
                 </p>
               </NavLink>
-              <div className="h-10 w-[0.7px] bg-gray-600 opacity-55"></div>
+              <div className="h-10 w-[0.7px] bg-gray-600 opacity-55 s"></div>
 
               <NavLink
                 to={"/signUp"}
-                className={"ml-3 rounded px-3 p-2 hover:bg-gray-200"}
+                className={
+                  "ml-3 rounded px-3 p-2 hover:bg-gray-200 dark:!text-white dark:hover:!bg-slate-600"
+                }
               >
                 <p className=" font-semibold">Sign up</p>
               </NavLink>
@@ -308,17 +312,11 @@ const Navbar = () => {
               Help & Support
             </Link>
             {user?.role === "SELLER" ? (
-              <Link
-                className="no-underline dark:text-white"
-                to="/profile"
-              >
+              <Link className="no-underline dark:text-white" to="/profile">
                 Manage Profile
               </Link>
             ) : (
-              <Link
-                className="no-underline dark:text-white "
-                to="/seller"
-              >
+              <Link className="no-underline dark:text-white " to="/seller">
                 Become a seller
               </Link>
             )}
