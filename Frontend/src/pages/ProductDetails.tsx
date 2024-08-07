@@ -270,6 +270,9 @@ const ProductDetails = () => {
 
  
   const segments = activeProduct?.category.split("/");
+  console.log(segments);
+  const firstSegment = segments && segments[0];
+  const middleSegment = segments && segments[1];
   const lastSegment = segments && segments.pop();
 
   const handleAddToCart = async (
@@ -302,7 +305,8 @@ const ProductDetails = () => {
     <div className="grid grid-cols-12 dark:text-white ">
       <div className="col-span-12 -mt-6 mb-5 border-b">
         <p className="mb-2 dark:text-white">
-          {segments?.join("/")}/
+          <span>{firstSegment+"/"}</span>
+          <span className="hover:cursor-pointer" onClick={()=>navigate(`/productLists?category=${middleSegment}`)}>{middleSegment+"/"}</span>
           <span className="text-[#f85606]">{lastSegment}</span>
         </p>
       </div>
