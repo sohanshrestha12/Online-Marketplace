@@ -98,7 +98,7 @@
           <div className="flex gap-3 items-center">
             <img
               src={`http://localhost:5100/${profileImage}`}
-              className="rounded-full object-contain h-[40px] w-[40px]"
+              className="rounded-full object-cover h-[40px] w-[40px]"
               alt="404 profile not found"
             />
             <h5 className="text-lg font-semibold capitalize text-white">
@@ -109,7 +109,7 @@
             <IoClose className="text-white text-xl -mt-6 -mr-3 transition-all group-hover:!text-gray-200" />
           </div>
         </div>
-        <div className="flex-1 h-full overflow-hidden px-3 overflow-y-scroll flex flex-col gap-3 py-3">
+        <div className="flex-1 h-full overflow-hidden px-3 overflow-y-auto flex flex-col gap-4 py-3">
           {privateMessage.map((item, i) => (
             <div
               key={i}
@@ -120,7 +120,7 @@
               } `}
             >
               <img
-                className="h-[40px] w-[40px] rounded-full object-contain"
+                className="h-[40px] w-[40px] rounded-full object-cover"
                 src={`http://localhost:5100/${item.senderDetails.profileImage}`}
                 alt="404 not found"
               />

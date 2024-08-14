@@ -22,15 +22,15 @@ const CustomersTable = ({ Customers }: CustomersTableProps) => {
                 <th className="px-6 py-3 w-1/3 text-center">
                   Customer Profile
                 </th>
-                <th className="px-6 py-3 w-2/3">Full Name</th>
+                <th className="px-6 py-3 w-2/3">Username</th>
               </tr>
             </thead>
             <tbody>
               {Customers.map((customer) => (
                 <tr className="odd:bg-white odd:dark:bg-gray-900  hover:bg-gray-50 dark:hover:bg-gray-600 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                  <td className="px-6 py-2 w-1/3 break-all">
+                  <td className="px-6 py-2 w-1/3 align-middle text-center break-all">
                     <img
-                      className="rounded-full w-[50px] h-[50px]"
+                      className="rounded-full w-[50px] h-[50px] inline-block"
                       src={`http://localhost:5100/${customer.profileImage}`}
                       alt="Profile image not found"
                     />

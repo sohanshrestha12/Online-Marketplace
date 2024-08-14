@@ -13,7 +13,7 @@ const ProductController = {
   ) {
     try {
       const body = req.body;
-      console.log(body);
+      // console.log(body);
       const files = req.files as Express.Multer.File[];
       const user = res.locals.user;
       if (!files) throw new CustomError("Image is required", 400);
@@ -65,7 +65,7 @@ const ProductController = {
   ) {
     try {
       const query = req.query;
-      console.log(query);
+      // console.log(query);
       const product = await ProductService.getAllProducts(query);
       return successResponse({
         response: res,
@@ -146,7 +146,7 @@ const ProductController = {
       const { categoryBrand, filter } = await ProductService.filterProducts(
         query
       );
-      console.log(colorFamily);
+      // console.log(colorFamily);
       return successResponse({
         response: res,
         message: "Successfully retrieved the filtered product",

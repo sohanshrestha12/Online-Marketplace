@@ -307,7 +307,7 @@ const ProductDetails = () => {
         <p className="mb-2 dark:text-white">
           <span>{firstSegment+"/"}</span>
           <span className="hover:cursor-pointer" onClick={()=>navigate(`/productLists?category=${middleSegment}`)}>{middleSegment+"/"}</span>
-          <span className="text-[#f85606]">{lastSegment}</span>
+          <span className="text-[#f85606] hover:cursor-pointer" onClick={()=>navigate(`/productLists?category=${lastSegment}`)}>{lastSegment}</span>
         </p>
       </div>
       <div className="col-span-6 gap-5 h-[450px] w-[100%] px-2 relative bg-white">
@@ -489,7 +489,7 @@ const ProductDetails = () => {
           </Button>
         </div>
       </div>
-      <div className="gap-3 grid grid-cols-12 col-span-12 mt-5">
+      <div className="gap-3 grid grid-cols-12 col-span-12 mt-5"> 
         <div className="col-span-6">
           <ProductCarousel
             images={images[0]}

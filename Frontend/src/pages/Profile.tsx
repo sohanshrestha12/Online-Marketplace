@@ -104,7 +104,7 @@ const Profile = () => {
   };
 
   return (
-    <Card className="px-3 py-3">
+    <Card className="px-3 py-3 dark:!bg-slate-700">
       <div className="flex justify-between">
         <div>
           <h3 className="text-2xl font-semibold">My Profile</h3>

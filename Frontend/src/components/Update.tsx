@@ -17,6 +17,7 @@ import { IoIosClose } from "react-icons/io";
 import ReactQuill from "react-quill";
 import { Button } from "./ui/button";
 import { useProduct } from "@/contexts/ProductContext";
+import { toast } from "sonner";
 
 interface UpdateProps {
   isOpen: boolean;
@@ -143,6 +144,8 @@ const Update = ({ isOpen, onClose, product }: UpdateProps) => {
     try {
       const response = await updateProduct(formData);
       updateProductState(response.data.data.updatedProduct,response.data.data.categoryString);
+      toast.success("Product Updated successfully");
+      onClose();
       console.log(response);
     } catch (error) {
       console.log(error);

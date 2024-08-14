@@ -11,7 +11,7 @@ import banner3 from '../assets/images/banner/banner3.jpg'
 
 const CarouselComponent = () => {
   return (
-    <CCarousel controls indicators style={{ height: "70vh" }} interval={3000}>
+    <CCarousel controls indicators style={{ height: "65vh" }} interval={3000}>
       <CCarouselItem style={{ height: "70vh" }}>
         <CImage
           className="d-block w-100"

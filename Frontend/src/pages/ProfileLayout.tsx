@@ -6,7 +6,7 @@ const ProfileLayout = () => {
   const location = useLocation();
   return (
     <div>
-      <div className="grid grid-cols-12 gap-5">
+      <div className="grid grid-cols-12 gap-5 dark:!bg-slate-700 dark:!text-white">
         <div className="col-span-3">
           <h2 className="text-sm mb-3 font-semibold">
             Hello {auth.user?.username}

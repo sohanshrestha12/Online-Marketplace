@@ -98,11 +98,11 @@ const Login = () => {
                     {isSubmitting ? "Logging in..." : "Log in"}
                   </Button>
                 </div>
-                <div className="h-[1px] bg-black opacity-25 my-3"></div>
-                <Button variant={"secondary"} className="w-full flex gap-3">
+                {/* <div className="h-[1px] bg-black opacity-25 my-3"></div> */}
+                {/* <Button variant={"secondary"} className="w-full flex gap-3">
                   <FcGoogle className="text-lg" />
                   Log in with Google
-                </Button>
+                </Button> */}
 
                 <div className="flex flex-col gap-2 mt-5 items-center dark:!text-white text-black text-sm">
                   <p>

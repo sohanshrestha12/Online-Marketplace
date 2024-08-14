@@ -45,7 +45,7 @@ const EmailVerification = () => {
   };
   return (
     <div className="h-full w-full flex justify-center">
-      <Card className="w-[430px] py-5 px-5">
+      <Card className="w-[430px] py-5 px-5 dark:!bg-slate-700 dark:!text-white">
         <h3 className="font-semibold text-lg text-center mb-2">
           Seller Account Verification
         </h3>
@@ -67,33 +67,33 @@ const EmailVerification = () => {
                   value={value}
                   onChange={(value) => setValue(value)}
                 >
-                  <InputOTPGroup>
+                  <InputOTPGroup className="dark:!text-white">
                     <InputOTPSlot
                       index={0}
-                      className="border-[0.1px] h-[45px] w-[45px] border-gray-400"
+                      className="border-[0.1px] h-[45px] w-[45px] border-gray-400 dark:!border-white dark:!text-white"
                     />
                     <InputOTPSlot
                       index={1}
-                      className="border-[0.1px]  h-[45px] w-[45px]  border-l-0 border-gray-400"
+                      className="border-[0.1px]  h-[45px] w-[45px]  border-l-0 border-gray-400 dark:!border-white dark:!text-white"
                     />
                     <InputOTPSlot
                       index={2}
-                      className="border-[0.1px] h-[45px] w-[45px] border-l-0 border-gray-400"
+                      className="border-[0.1px] h-[45px] w-[45px] border-l-0 border-gray-400 dark:!border-white dark:!text-white"
                     />
                   </InputOTPGroup>
                   <InputOTPSeparator />
                   <InputOTPGroup>
                     <InputOTPSlot
                       index={3}
-                      className="border-[0.1px] h-[45px] w-[45px] border-gray-400"
+                      className="border-[0.1px] h-[45px] w-[45px] border-gray-400 dark:!border-white dark:!text-white"
                     />
                     <InputOTPSlot
                       index={4}
-                      className="border-[0.1px]  h-[45px] w-[45px] border-l-0 border-gray-400"
+                      className="border-[0.1px]  h-[45px] w-[45px] border-l-0 border-gray-400 dark:!border-white dark:!text-white"
                     />
                     <InputOTPSlot
                       index={5}
-                      className="border-[0.1px] h-[45px] w-[45px] border-l-0 border-gray-400"
+                      className="border-[0.1px] h-[45px] w-[45px] border-l-0 border-gray-400 dark:!border-white dark:!text-white"
                     />
                   </InputOTPGroup>
                 </InputOTP>

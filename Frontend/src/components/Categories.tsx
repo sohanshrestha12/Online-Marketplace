@@ -25,7 +25,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
   return (
     <div className="mt-5 max-w-screen-2xl">
       <h3 className="text-lg font-semibold dark:text-white mb-4">Categories</h3>
-      <div className="grid grid-cols-12">
+      <div className="grid grid-cols-12 gap-2">
         {shuffledCategories
           .filter((cate) => cate.level === 3)
           .splice(0, 12)

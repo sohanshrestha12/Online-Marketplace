@@ -10,7 +10,7 @@ const RecentProduct = () => {
         Recent Products
       </h3>
       <div className="grid gap-3 grid-cols-12">
-        {products.map((item, i) => (
+        {products.length >0? products.map((item, i) => (
           <Link
             className="col-span-2 w-full dark:!bg-slate-700 gap-1 h-fit px-2 hover:cursor-pointer hover:shadow-md bg-white hover:border-b"
             key={i}
@@ -18,7 +18,7 @@ const RecentProduct = () => {
           >
             <div>
               <div className="flex  flex-col w-full dark:text-white h-[280px]">
-                <div className="w-[150px] h-[180px] ">
+                <div className="w-[full] h-[180px] ">
                   <img
                     className="w-full h-full object-contain"
                     src={`http://localhost:5100/${item.images[0]}`}
@@ -36,7 +36,8 @@ const RecentProduct = () => {
               </div>
             </div>
           </Link>
-        ))}
+        )):
+        <p className=" px-3 col-span-12">No recent Products</p>}
       </div>
     </div>
   );

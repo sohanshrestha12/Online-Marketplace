@@ -55,6 +55,7 @@ const BuyNowDialog = ({
 
   const handleBuyProduct = async() => {
     setLoading(true);
+    if(!user) navigate('/login');
     const purchaseData:purchaseProduct = {
       productId: activeProduct!._id!,
       userId: user!._id,

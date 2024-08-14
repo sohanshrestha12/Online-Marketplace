@@ -110,7 +110,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="grid grid-cols-12 gap-3 max-w-screen-2xl">
+      <div className="grid grid-cols-12 !mb-5 gap-3 max-w-screen-2xl">
         <div className="col-span-3 bg-[#fffefe] dark:bg-slate-700 dark:text-white shadow-md py-3 justify-center flex flex-col gap-1 rounded-lg relative">
           {level1Category.map((item, i) => (
             <div

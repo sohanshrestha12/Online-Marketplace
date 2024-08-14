@@ -11,7 +11,7 @@ const AllProducts = () => {
         All Products
       </h3>
       <div className="grid gap-3 grid-cols-12">
-        {homeAllProducts.map((item, i) => (
+        {homeAllProducts.length > 0? homeAllProducts.map((item, i) => (
           <Link
             className="col-span-2 w-full dark:!bg-slate-700 gap-1 h-fit px-2 hover:cursor-pointer hover:shadow-md bg-white hover:border-b"
             key={i}
@@ -19,7 +19,7 @@ const AllProducts = () => {
           >
             <div>
               <div className="flex  flex-col w-full dark:text-white h-[280px]">
-                <div className="w-[150px] h-[180px] ">
+                <div className="w-[full] h-[180px] ">
                   <img
                     className="w-full h-full object-contain"
                     src={`http://localhost:5100/${item.images[0]}`}
@@ -37,7 +37,9 @@ const AllProducts = () => {
               </div>
             </div>
           </Link>
-        ))}
+        )):
+        <p className="px-3 col-span-12">No Products Available</p>
+        }
       </div>
       {hasMore && (
         <div className="flex justify-center mt-5">
